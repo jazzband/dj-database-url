@@ -19,6 +19,6 @@ Nice and simple.
 Installation
 ------------
 
-Installation is simple::
+Installation is simple too::
 
     $ pip install dj-database-url

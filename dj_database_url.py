@@ -4,7 +4,7 @@
 dj-database-url
 ~~~~~~~~~~~~~~~
 
-A swift samaurai blade for you Django applications.
+A swift samaurai blade for your Django applications.
 
 """
 

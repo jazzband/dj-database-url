@@ -11,7 +11,7 @@ Usage
 
 Configure your database in ``settings.py``::
 
-    DATABASES = dj_database_url.config(DATABASES)
+    DATABASES['default'] = dj_database_url.config()
 
 Nice and simple.
 

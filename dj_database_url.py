@@ -7,21 +7,18 @@ import urlparse
 urlparse.uses_netloc.append('postgres')
 urlparse.uses_netloc.append('mysql')
 
+DEFAULT_ENV = 'DATABASE_URL'
 
-def config(config=None):
+def config(env=DEFAULT_ENV):
     """Returns configured DATABASES dictionary."""
 
-    if config is None:
-        config = {}
+    config = {}
 
-    if 'DATABASE_URL' in os.environ:
-        url = urlparse.urlparse(os.environ['DATABASE_URL'])
-
-        # Ensure default database exists.
-        config.setdefault('default', {})
+    if env in os.environ:
+        url = urlparse.urlparse(os.environ[env])
 
         # Update with environment configuration.
-        config['default'].update({
+        config.update({
             'NAME': url.path[1:],
             'USER': url.username,
             'PASSWORD': url.password,
@@ -30,9 +27,9 @@ def config(config=None):
         })
 
         if url.scheme == 'postgres':
-            config['default']['ENGINE'] = 'django.db.backends.postgresql_psycopg2'
+            config['ENGINE'] = 'django.db.backends.postgresql_psycopg2'
 
         if url.scheme == 'mysql':
-            config['default']['ENGINE'] = 'django.db.backends.mysql'
+            config['ENGINE'] = 'django.db.backends.mysql'
 
     return config

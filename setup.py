@@ -13,7 +13,7 @@ Usage
 
 Configure your database in ``settings.py``::
 
-    DATABASES = dj_database_url.config(DATABASES)
+    DATABASES['default'] = dj_database_url.config()
 
 Nice and simple.
 
@@ -23,7 +23,7 @@ from setuptools import setup
 
 setup(
     name='dj-database-url',
-    version='0.1.0',
+    version='0.1.1',
     url='https://github.com/kennethreitz/dj-database-url',
     license='BSD',
     author='Kenneth Reitz',

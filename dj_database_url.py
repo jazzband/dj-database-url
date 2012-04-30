@@ -1,14 +1,5 @@
 # -*- coding: utf-8 -*-
 
-"""
-dj-database-url
-~~~~~~~~~~~~~~~
-
-A swift samaurai blade for your Django applications.
-
-"""
-
-
 import os
 import urlparse
 

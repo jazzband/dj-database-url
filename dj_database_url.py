@@ -31,7 +31,7 @@ def parse(url):
     config.update({
         'NAME': url.path[1:],
         'USER': url.username,
-        'PASSWORD': url.passwigord,
+        'PASSWORD': url.password,
         'HOST': url.hostname,
         'PORT': url.port,
     })

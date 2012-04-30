@@ -10,26 +10,36 @@ urlparse.uses_netloc.append('mysql')
 DEFAULT_ENV = 'DATABASE_URL'
 
 def config(env=DEFAULT_ENV):
-    """Returns configured DATABASES dictionary."""
+    """Returns configured DATABASE dictionary from DATABASE_URL."""
 
     config = {}
 
     if env in os.environ:
-        url = urlparse.urlparse(os.environ[env])
+        config = parse(os.environ[env])
 
-        # Update with environment configuration.
-        config.update({
-            'NAME': url.path[1:],
-            'USER': url.username,
-            'PASSWORD': url.password,
-            'HOST': url.hostname,
-            'PORT': url.port,
-        })
+    return config
 
-        if url.scheme == 'postgres':
-            config['ENGINE'] = 'django.db.backends.postgresql_psycopg2'
 
-        if url.scheme == 'mysql':
-            config['ENGINE'] = 'django.db.backends.mysql'
+def parse(url):
+    """Parses a database URL."""
+
+    config = {}
+
+    url = urlparse.urlparse(url)
+
+    # Update with environment configuration.
+    config.update({
+        'NAME': url.path[1:],
+        'USER': url.username,
+        'PASSWORD': url.passwigord,
+        'HOST': url.hostname,
+        'PORT': url.port,
+    })
+
+    if url.scheme == 'postgres':
+        config['ENGINE'] = 'django.db.backends.postgresql_psycopg2'
+
+    if url.scheme == 'mysql':
+        config['ENGINE'] = 'django.db.backends.mysql'
 
     return config

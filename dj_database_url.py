@@ -6,6 +6,7 @@ import urlparse
 # Register database schemes in URLs.
 urlparse.uses_netloc.append('postgres')
 urlparse.uses_netloc.append('mysql')
+urlparse.uses_netloc.append('sqlite')
 
 DEFAULT_ENV = 'DATABASE_URL'
 
@@ -41,5 +42,8 @@ def parse(url):
 
     if url.scheme == 'mysql':
         config['ENGINE'] = 'django.db.backends.mysql'
+
+    if url.scheme == 'sqlite':
+        config['ENGINE'] = 'django.db.backends.sqlite3'
 
     return config

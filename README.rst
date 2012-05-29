@@ -11,11 +11,11 @@ Usage
 
 Configure your database in ``settings.py`` from ``DATABASE_URL``::
 
-    DATABASES['default'] = dj_database_url.config()
+    DATABASES = {'default': dj_database_url.config()}
 
 Parse an arbitrary Database URL::
 
-    DATABASES['default'] = dj_database_url.parse('postgres://...')
+    DATABASES = {'default': dj_database_url.parse('postgres://...')}
 
 Supported databases
 -------------------

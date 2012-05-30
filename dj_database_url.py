@@ -15,10 +15,7 @@ def config(env=DEFAULT_ENV, default=None):
 
     config = {}
 
-    if env in os.environ:
-        s = os.environ[env]
-    else:
-        s = default
+    s = os.environ.get(env, default)
 
     if s:
         config = parse(s)

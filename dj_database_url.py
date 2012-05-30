@@ -21,7 +21,7 @@ def config(env=DEFAULT_ENV, default=None):
         s = default
 
     if s:
-        config = parse()
+        config = parse(s)
 
     return config
 

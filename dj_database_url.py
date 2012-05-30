@@ -10,13 +10,18 @@ urlparse.uses_netloc.append('sqlite')
 
 DEFAULT_ENV = 'DATABASE_URL'
 
-def config(env=DEFAULT_ENV):
+def config(env=DEFAULT_ENV, default=None):
     """Returns configured DATABASE dictionary from DATABASE_URL."""
 
     config = {}
 
     if env in os.environ:
-        config = parse(os.environ[env])
+        s = os.environ[env]
+    else:
+        s = default
+
+    if s:
+        config = parse()
 
     return config
 

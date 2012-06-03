@@ -20,7 +20,7 @@ Parse an arbitrary Database URL::
 Supported databases
 -------------------
 
-Support currently exists for PostgreSQL, MySQL and SQLite.
+Support currently exists for PostgreSQL, PostGIS, MySQL and SQLite.
 
 SQLite connects to file based databases. The same URL format is used, omitting
 the hostname, and using the "file" portion as the filename of the database.

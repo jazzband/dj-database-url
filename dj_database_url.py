@@ -42,6 +42,9 @@ def parse(url):
     if url.scheme == 'postgres':
         config['ENGINE'] = 'django.db.backends.postgresql_psycopg2'
 
+    if url.scheme == 'postgis':
+        config['ENGINE'] = 'django.contrib.gis.db.backends.postgis'
+
     if url.scheme == 'mysql':
         config['ENGINE'] = 'django.db.backends.mysql'
 

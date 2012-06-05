@@ -5,6 +5,7 @@ import urlparse
 
 # Register database schemes in URLs.
 urlparse.uses_netloc.append('postgres')
+urlparse.uses_netloc.append('postgis')
 urlparse.uses_netloc.append('mysql')
 urlparse.uses_netloc.append('sqlite')
 

@@ -40,7 +40,7 @@ def parse(url):
         'PORT': url.port,
     })
 
-    if url.scheme == 'postgres':
+    if url.scheme == 'postgres' or url.scheme == 'postgresql':
         config['ENGINE'] = 'django.db.backends.postgresql_psycopg2'
 
     if url.scheme == 'postgis':

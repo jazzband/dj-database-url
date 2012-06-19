@@ -11,6 +11,16 @@ urlparse.uses_netloc.append('sqlite')
 
 DEFAULT_ENV = 'DATABASE_URL'
 
+SCHEMES = {
+    'postgres': 'django.db.backends.postgresql_psycopg2',
+    'postgresql': 'django.db.backends.postgresql_psycopg2',
+    'postgis': 'django.contrib.gis.db.backends.postgis',
+    'mysql': 'django.db.backends.mysql',
+    'mysql2': 'django.db.backends.mysql',
+    'sqlite': 'django.db.backends.sqlite3'
+}
+
+
 def config(env=DEFAULT_ENV, default=None):
     """Returns configured DATABASE dictionary from DATABASE_URL."""
 
@@ -40,16 +50,7 @@ def parse(url):
         'PORT': url.port,
     })
 
-    if url.scheme == 'postgres' or url.scheme == 'postgresql':
-        config['ENGINE'] = 'django.db.backends.postgresql_psycopg2'
-
-    if url.scheme == 'postgis':
-        config['ENGINE'] = 'django.contrib.gis.db.backends.postgis'
-
-    if url.scheme == 'mysql':
-        config['ENGINE'] = 'django.db.backends.mysql'
-
-    if url.scheme == 'sqlite':
-        config['ENGINE'] = 'django.db.backends.sqlite3'
+    if url.scheme in SCHEMES:
+        config['ENGINE'] = SCHEMES[url.scheme]
 
     return config

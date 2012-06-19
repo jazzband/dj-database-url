@@ -5,8 +5,10 @@ import urlparse
 
 # Register database schemes in URLs.
 urlparse.uses_netloc.append('postgres')
+urlparse.uses_netloc.append('postgresql')
 urlparse.uses_netloc.append('postgis')
 urlparse.uses_netloc.append('mysql')
+urlparse.uses_netloc.append('mysql2')
 urlparse.uses_netloc.append('sqlite')
 
 DEFAULT_ENV = 'DATABASE_URL'
@@ -41,9 +43,13 @@ def parse(url):
 
     url = urlparse.urlparse(url)
 
+    # Remove query strings.
+    path = url.path[1:]
+    path = path.split('?', 2)[0]
+
     # Update with environment configuration.
     config.update({
-        'NAME': url.path[1:],
+        'NAME': path,
         'USER': url.username,
         'PASSWORD': url.password,
         'HOST': url.hostname,

@@ -1,6 +1,8 @@
 DJ-Database-URL
 ~~~~~~~~~~~~~~
 
+.. image:: https://secure.travis-ci.org/kennethreitz/dj_database_url.png?branch=master
+
 This simple Django utility allows you to utilize the
 `12factor <http://www.12factor.net/backing-services>`_ inspired
 ``DATABASE_URL`` environment variable to configure your Django application.

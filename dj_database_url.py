@@ -1,7 +1,13 @@
 # -*- coding: utf-8 -*-
 
 import os
-import urlparse
+
+try:
+    import urlparse
+except ImportError:
+    import urllib.parse as urlparse
+
+
 
 # Register database schemes in URLs.
 urlparse.uses_netloc.append('postgres')

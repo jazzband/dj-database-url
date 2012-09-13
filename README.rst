@@ -11,9 +11,10 @@ This simple Django utility allows you to utilize the
 Usage
 -----
 
-Configure your database in ``settings.py`` from ``DATABASE_URL``::
+Configure your database in ``settings.py`` from ``DATABASE_URL`` 
+(``default`` is optional)::
 
-    DATABASES = {'default': dj_database_url.config()}
+    DATABASES = {'default': dj_database_url.config(default='postgres://...')} 
 
 Parse an arbitrary Database URL::
 

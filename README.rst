@@ -2,6 +2,7 @@ DJ-Database-URL
 ~~~~~~~~~~~~~~
 
 .. image:: https://secure.travis-ci.org/kennethreitz/dj-database-url.png?branch=master
+   :target: http://travis-ci.org/kennethreitz/dj-database-url
 
 This simple Django utility allows you to utilize the
 `12factor <http://www.12factor.net/backing-services>`_ inspired

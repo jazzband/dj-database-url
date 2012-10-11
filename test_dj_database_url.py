@@ -5,6 +5,7 @@ import os
 import unittest
 
 import dj_database_url
+import pdb
 
 
 POSTGIS_URL = 'postgis://uf07k1i6d8ia0v:wegauwhgeuioweg@ec2-107-21-253-135.compute-1.amazonaws.com:5431/d8r82722r2kuvn'
@@ -63,6 +64,24 @@ class DatabaseTestSuite(unittest.TestCase):
         assert url['PASSWORD'] == 'wegauwhgeuioweg'
         assert url['PORT'] == 5431
 
+    def test_url_parameters(self):
+        url = 'mysql://uf07k1i6d8ia0v:secret@example.com:5431/thdbname?ssl.ca=/etc/certs/mysql-ssl.ca\
+&ssl.cert=/etc/certs/mysql-ssl.cert&autocommit=True'
+        url = dj_database_url.parse(url)
+
+        assert url['ENGINE'] == 'django.db.backends.mysql'
+        assert url['NAME'] == 'thdbname'
+        assert url['HOST'] == 'example.com'
+        assert url['USER'] == 'uf07k1i6d8ia0v'
+        assert url['PASSWORD'] == 'secret'
+        assert url['PORT'] == 5431
+        assert url['OPTIONS'] == {
+            'ssl' : {
+                'ca' : '/etc/certs/mysql-ssl.ca',
+                'cert' : '/etc/certs/mysql-ssl.cert'
+            },
+            'autocommit' : True
+        }
 
 
 

@@ -73,6 +73,10 @@ def parse(url):
             key_parts = key.split('.')
             key_parts.reverse()
             for key_item in key_parts:
+                if val == "True":
+                    val = True
+                elif val == "False":
+                    val = False
                 val = {key_item: val}
                 if key_item in options and isinstance(options[key_item], dict):
                     val[key_item].update(options[key_item])

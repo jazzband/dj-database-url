@@ -65,7 +65,8 @@ class DatabaseTestSuite(unittest.TestCase):
         assert url['PORT'] == 5431
 
     def test_url_parameters(self):
-        url = 'mysql://uf07k1i6d8ia0v:secret@example.com:5431/thdbname?ssl.ca=/etc/certs/mysql-ssl.ca&ssl.cert=/etc/certs/mysql-ssl.cert'
+        url = 'mysql://uf07k1i6d8ia0v:secret@example.com:5431/thdbname?ssl.ca=/etc/certs/mysql-ssl.ca\
+&ssl.cert=/etc/certs/mysql-ssl.cert&autocommit=True'
         url = dj_database_url.parse(url)
 
         assert url['ENGINE'] == 'django.db.backends.mysql'
@@ -78,7 +79,8 @@ class DatabaseTestSuite(unittest.TestCase):
             'ssl' : {
                 'ca' : '/etc/certs/mysql-ssl.ca',
                 'cert' : '/etc/certs/mysql-ssl.cert'
-            }
+            },
+            'autocommit' : True
         }
 
 

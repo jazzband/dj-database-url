@@ -51,7 +51,12 @@ def parse(url):
 
     # Remove query strings.
     path = url.path[1:]
-    path = path.split('?', 2)[0]
+    parts = path.split('?', 2)
+    if len(parts) > 1:
+        query = parts[1]
+    else:
+        query = None
+    path = parts[0]
 
     # Update with environment configuration.
     config.update({
@@ -61,6 +66,18 @@ def parse(url):
         'HOST': url.hostname,
         'PORT': url.port,
     })
+    if query is not None:
+        options = {}
+        for key, values in urlparse.parse_qs(query).iteritems():
+            val = values[0]
+            key_parts = key.split('.')
+            key_parts.reverse()
+            for key_item in key_parts:
+                val = {key_item: val}
+                if key_item in options and isinstance(options[key_item], dict):
+                    val[key_item].update(options[key_item])
+            options.update(val)
+        config['OPTIONS'] = options
 
     if url.scheme in SCHEMES:
         config['ENGINE'] = SCHEMES[url.scheme]

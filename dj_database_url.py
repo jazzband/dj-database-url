@@ -4,8 +4,10 @@ import os
 
 try:
     import urlparse
+    from urlparse import parse_qs
 except ImportError:
     import urllib.parse as urlparse
+    from cgi import parse_qs
 
 
 
@@ -68,7 +70,7 @@ def parse(url):
     })
     if query is not None:
         options = {}
-        for key, values in urlparse.parse_qs(query).iteritems():
+        for key, values in parse_qs(query).iteritems():
             val = values[0]
             key_parts = key.split('.')
             key_parts.reverse()

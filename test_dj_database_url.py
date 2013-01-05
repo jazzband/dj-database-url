@@ -63,6 +63,20 @@ class DatabaseTestSuite(unittest.TestCase):
         assert url['PASSWORD'] == 'wegauwhgeuioweg'
         assert url['PORT'] == 5431
 
+    def test_empty_sqlite_url(self):
+        url = 'sqlite://'
+        url = dj_database_url.parse(url)
+
+        assert url['ENGINE'] == 'django.db.backends.sqlite3'
+        assert url['NAME'] == ':memory:'
+
+    def test_memory_sqlite_url(self):
+        url = 'sqlite://:memory:'
+        url = dj_database_url.parse(url)
+
+        assert url['ENGINE'] == 'django.db.backends.sqlite3'
+        assert url['NAME'] == ':memory:'
+
 
 
 

@@ -53,7 +53,7 @@ def parse(url):
             'ENGINE': SCHEMES['sqlite'],
             'NAME': ':memory:'
         }
-	# note: no other settings are required for sqlite
+        # note: no other settings are required for sqlite
 
     # otherwise parse the url as normal
     config = {}

@@ -53,6 +53,11 @@ def parse(url):
     path = url.path[1:]
     path = path.split('?', 2)[0]
 
+    # if we are using sqlite and we have no path, then assume we
+    # want an in-memory database (this is the behaviour of sqlalchemy)
+    if url.scheme == 'sqlite' and path == '':
+        path = ':memory:'
+
     # Update with environment configuration.
     config.update({
         'NAME': path,

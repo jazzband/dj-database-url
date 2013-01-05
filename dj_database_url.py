@@ -45,6 +45,17 @@ def config(env=DEFAULT_ENV, default=None):
 def parse(url):
     """Parses a database URL."""
 
+    if url == 'sqlite://:memory:':
+        # this is a special case, because if we pass this URL into
+        # urlparse, urlparse will choke trying to interpret "memory"
+        # as a port number
+        return {
+            'ENGINE': SCHEMES['sqlite'],
+            'NAME': ':memory:'
+        }
+	# note: no other settings are required for sqlite
+
+    # otherwise parse the url as normal
     config = {}
 
     url = urlparse.urlparse(url)

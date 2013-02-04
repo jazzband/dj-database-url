@@ -15,6 +15,7 @@ urlparse.uses_netloc.append('postgresql')
 urlparse.uses_netloc.append('postgis')
 urlparse.uses_netloc.append('mysql')
 urlparse.uses_netloc.append('mysql2')
+urlparse.uses_netloc.append('spatialite')
 urlparse.uses_netloc.append('sqlite')
 
 DEFAULT_ENV = 'DATABASE_URL'

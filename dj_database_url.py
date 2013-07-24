@@ -74,9 +74,10 @@ def parse(url):
         'NAME': path,
         'USER': url.username,
         'PASSWORD': url.password,
-        'HOST': url.hostname,
         'PORT': url.port,
     })
+    if url.hostname:
+        config['HOST'] = url.hostname
 
     if url.scheme in SCHEMES:
         config['ENGINE'] = SCHEMES[url.scheme]

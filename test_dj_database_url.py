@@ -48,6 +48,17 @@ class DatabaseTestSuite(unittest.TestCase):
         assert url['PASSWORD'] == '69772142'
         assert url['PORT'] is None
 
+    def test_nohost_parsing(self):
+        url = 'postgres://john@/some_db'
+        url = dj_database_url.parse(url)
+
+        assert url['ENGINE'] == 'django.db.backends.postgresql_psycopg2'
+        assert url['NAME'] == 'some_db'
+        assert 'HOST' not in url
+        assert url['USER'] == 'john'
+        assert url['PASSWORD'] is None
+        assert url['PORT'] is None
+
     def test_database_url(self):
         a = dj_database_url.config()
         assert not a

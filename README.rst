@@ -12,10 +12,10 @@ This simple Django utility allows you to utilize the
 Usage
 -----
 
-Configure your database in ``settings.py`` from ``DATABASE_URL`` 
+Configure your database in ``settings.py`` from ``DATABASE_URL``
 (``default`` is optional)::
 
-    DATABASES = {'default': dj_database_url.config(default='postgres://...')} 
+    DATABASES = {'default': dj_database_url.config(default='postgres://...')}
 
 Parse an arbitrary Database URL::
 
@@ -24,7 +24,7 @@ Parse an arbitrary Database URL::
 Supported databases
 -------------------
 
-Support currently exists for PostgreSQL, PostGIS, MySQL and SQLite.
+Support currently exists for PostgreSQL, PostGIS, MySQL, MySQL (GIS) and SQLite.
 
 SQLite connects to file based databases. The same URL format is used, omitting
 the hostname, and using the "file" portion as the filename of the database.

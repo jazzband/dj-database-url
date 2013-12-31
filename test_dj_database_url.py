@@ -78,6 +78,13 @@ class DatabaseTestSuite(unittest.TestCase):
         assert url['NAME'] == ':memory:'
 
 
+    def test_options_sqlite_url(self):
+        url = 'sqlite://?OPTIONS={"timeout":30}'
+        url = dj_database_url.parse(url)
+
+        assert url['ENGINE'] == 'django.db.backends.sqlite3'
+        assert url['NAME'] == ':memory:'
+        assert url['OPTIONS'] == {'timeout':30}
 
 
 if __name__ == '__main__':

@@ -16,6 +16,7 @@ urlparse.uses_netloc.append('pgsql')
 urlparse.uses_netloc.append('postgis')
 urlparse.uses_netloc.append('mysql')
 urlparse.uses_netloc.append('mysql2')
+urlparse.uses_netloc.append('mysqlgis')
 urlparse.uses_netloc.append('spatialite')
 urlparse.uses_netloc.append('sqlite')
 
@@ -28,8 +29,9 @@ SCHEMES = {
     'postgis': 'django.contrib.gis.db.backends.postgis',
     'mysql': 'django.db.backends.mysql',
     'mysql2': 'django.db.backends.mysql',
+    'mysqlgis': 'django.contrib.gis.db.backends.mysql',
     'spatialite': 'django.contrib.gis.db.backends.spatialite',
-    'sqlite': 'django.db.backends.sqlite3'
+    'sqlite': 'django.db.backends.sqlite3',
 }
 
 

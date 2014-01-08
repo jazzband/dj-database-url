@@ -71,11 +71,11 @@ def parse(url):
 
     # Update with environment configuration.
     config.update({
-        'NAME': path,
-        'USER': url.username,
-        'PASSWORD': url.password,
-        'HOST': url.hostname,
-        'PORT': url.port,
+        'NAME': path or '',
+        'USER': url.username or '',
+        'PASSWORD': url.password or '',
+        'HOST': url.hostname or '',
+        'PORT': url.port or '',
     })
 
     if url.scheme in SCHEMES:

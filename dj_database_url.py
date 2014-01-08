@@ -12,6 +12,7 @@ except ImportError:
 # Register database schemes in URLs.
 urlparse.uses_netloc.append('postgres')
 urlparse.uses_netloc.append('postgresql')
+urlparse.uses_netloc.append('pgsql')
 urlparse.uses_netloc.append('postgis')
 urlparse.uses_netloc.append('mysql')
 urlparse.uses_netloc.append('mysql2')
@@ -22,6 +23,7 @@ DEFAULT_ENV = 'DATABASE_URL'
 SCHEMES = {
     'postgres': 'django.db.backends.postgresql_psycopg2',
     'postgresql': 'django.db.backends.postgresql_psycopg2',
+    'pgsql': 'django.db.backends.postgresql_psycopg2',
     'postgis': 'django.contrib.gis.db.backends.postgis',
     'mysql': 'django.db.backends.mysql',
     'mysql2': 'django.db.backends.mysql',

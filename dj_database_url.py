@@ -33,7 +33,7 @@ SCHEMES = {
 }
 
 
-def config(env=DEFAULT_ENV, default=None):
+def config(env=DEFAULT_ENV, default=None, engine=None):
     """Returns configured DATABASE dictionary from DATABASE_URL."""
 
     config = {}
@@ -41,12 +41,12 @@ def config(env=DEFAULT_ENV, default=None):
     s = os.environ.get(env, default)
 
     if s:
-        config = parse(s)
+        config = parse(s, engine)
 
     return config
 
 
-def parse(url):
+def parse(url, engine=None):
     """Parses a database URL."""
 
     if url == 'sqlite://:memory:':
@@ -82,7 +82,9 @@ def parse(url):
         'PORT': url.port or '',
     })
 
-    if url.scheme in SCHEMES:
+    if engine:
+        config['ENGINE'] = engine
+    elif url.scheme in SCHEMES:
         config['ENGINE'] = SCHEMES[url.scheme]
 
     return config

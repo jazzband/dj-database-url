@@ -49,6 +49,7 @@ setup(
     zip_safe=False,
     include_package_data=True,
     platforms='any',
+    test_suite='test_dj_database_url',
     classifiers=[
         'Environment :: Web Environment',
         'Intended Audience :: Developers',

@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import os
+import json
 
 try:
     import urlparse
@@ -72,6 +73,11 @@ def parse(url):
     # want an in-memory database (this is the behaviour of sqlalchemy)
     if url.scheme == 'sqlite' and path == '':
         path = ':memory:'
+
+    if url.query:
+        query = {d[0]: d[1] for d in urlparse.parse_qsl(url.query)}
+        if 'OPTIONS' in query:
+            config.update({'OPTIONS': json.loads(query['OPTIONS'])})
 
     # Update with environment configuration.
     config.update({

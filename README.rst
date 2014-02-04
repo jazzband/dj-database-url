@@ -37,3 +37,15 @@ Installation
 Installation is simple too::
 
     $ pip install dj-database-url
+
+Testing
+-------
+
+To run the tests in your currently installed Python version::
+
+    $ python test_dj_database_url.py
+
+If you have `tox <http://tox.readthedocs.org/>`_ installed, you can run the
+tests on all supported Python versions::
+
+    $ tox

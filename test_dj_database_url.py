@@ -54,7 +54,7 @@ class DatabaseTestSuite(unittest.TestCase):
         assert url['HOST'] == 'us-cdbr-east.cleardb.com'
         assert url['USER'] == 'bea6eb025ca0d8'
         assert url['PASSWORD'] == '69772142'
-        assert url['PORT'] is None
+        assert url['PORT'] is ''
 
     def test_database_url(self):
         del os.environ['DATABASE_URL']

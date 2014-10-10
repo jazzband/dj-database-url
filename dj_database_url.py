@@ -66,6 +66,10 @@ def parse(url, engine=None):
 
     url = urlparse.urlparse(url)
 
+    # Handle postgres percent-encoded paths.
+    hostname = url.hostname or ''
+    hostname = urlparse.unquote(hostname)
+
     # Remove query strings.
     path = url.path[1:]
     path = path.split('?', 2)[0]
@@ -75,16 +79,11 @@ def parse(url, engine=None):
     if url.scheme == 'sqlite' and path == '':
         path = ':memory:'
 
-    # Handle postgres percent-encoded paths.
-    hostname = url.hostname or ''
-    if '%2f' in hostname.lower():
-        hostname = hostname.replace('%2f', '/').replace('%2F', '/')
-
     # Update with environment configuration.
     config.update({
         'NAME': path or '',
-        'USER': url.username or '',
-        'PASSWORD': url.password or '',
+        'USER': urlparse.unquote(url.username or ''),
+        'PASSWORD': urlparse.unquote(url.password or ''),
         'HOST': hostname,
         'PORT': url.port or '',
     })

@@ -70,17 +70,22 @@ def parse(url, engine=None):
     path = url.path[1:]
     path = path.split('?', 2)[0]
 
-    # if we are using sqlite and we have no path, then assume we
+    # If we are using sqlite and we have no path, then assume we
     # want an in-memory database (this is the behaviour of sqlalchemy)
     if url.scheme == 'sqlite' and path == '':
         path = ':memory:'
+
+    # Handle postgres percent-encoded paths.
+    hostname = url.hostname or ''
+    if '%2f' in hostname.lower():
+        hostname = hostname.replace('%2f', '/').replace('%2F', '/')
 
     # Update with environment configuration.
     config.update({
         'NAME': path or '',
         'USER': url.username or '',
         'PASSWORD': url.password or '',
-        'HOST': url.hostname or '',
+        'HOST': hostname,
         'PORT': url.port or '',
     })
 

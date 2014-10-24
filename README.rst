@@ -11,7 +11,7 @@ This simple Django utility allows you to utilize the
 Supported databases
 -------------------
 
-Support currently exists for PostgreSQL, PostGIS, MySQL, MySQL (GIS) and SQLite.
+Support currently exists for PostgreSQL, PostGIS, MySQL, MySQL (GIS), Oracle, Oracle (GIS) and SQLite.
 
 Installation
 ------------
@@ -48,6 +48,10 @@ URL schema
 +-------------+--------------------------------------------+--------------------------------------------------+
 | SQLite      | ``django.db.backends.sqlite3``             | ``sqlite:///PATH`` [2]_                          |
 +-------------+--------------------------------------------+--------------------------------------------------+
+| Oracle      | ``django.db.backends.oracle``              | ``oracle://USER:PASSWORD@HOST:PORT/NAME`` [3]_   |
++-------------+--------------------------------------------+--------------------------------------------------+
+| Oracle (GIS)| ``django.contrib.gis.db.backends.oracle``  | ``oraclegis://USER:PASSWORD@HOST:PORT/NAME``     |
++-------------+--------------------------------------------+--------------------------------------------------+
 
 .. [1] With PostgreSQL, you can also use unix domain socket paths with
        `percent encoding <http://www.postgresql.org/docs/9.2/interactive/libpq-connect.html#AEN38162>`_:
@@ -56,3 +60,8 @@ URL schema
        the hostname, and using the "file" portion as the filename of the database.
        This has the effect of four slashes being present for an absolute file path:
        ``sqlite:////full/path/to/your/database/file.sqlite``.
+.. [3] Note that when connecting to Oracle the URL isn't in the form you may know
+       from using other Oracle tools (like SQLPlus) i.e. user and password are separated
+       by ``:`` not by ``/``. Also you can omit ``HOST`` and ``PORT``
+       and provide a full DSN string or TNS name in ``NAME`` part.
+

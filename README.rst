@@ -26,6 +26,7 @@ Usage
 Configure your database in ``settings.py`` from ``DATABASE_URL``
 (``default`` is optional)::
 
+    import dj_database_url
     DATABASES = {'default': dj_database_url.config(default='postgres://...')}
 
 Parse an arbitrary Database URL::

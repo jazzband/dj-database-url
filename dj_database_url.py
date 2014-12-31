@@ -82,9 +82,9 @@ def parse(url, engine=None):
 
     # Update with environment configuration.
     config.update({
-        'NAME': path or '',
-        'USER': url.username or '',
-        'PASSWORD': url.password or '',
+        'NAME': urlparse.unquote(path or ''),
+        'USER': urlparse.unquote(url.username or ''),
+        'PASSWORD': urlparse.unquote(url.password or ''),
         'HOST': hostname,
         'PORT': url.port or '',
     })

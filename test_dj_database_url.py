@@ -68,10 +68,6 @@ class DatabaseTestSuite(unittest.TestCase):
         assert url['PORT'] == ''
 
     def test_database_url(self):
-        del os.environ['DATABASE_URL']
-        a = dj_database_url.config()
-        assert not a
-
         os.environ['DATABASE_URL'] = 'postgres://uf07k1i6d8ia0v:wegauwhgeuioweg@ec2-107-21-253-135.compute-1.amazonaws.com:5431/d8r82722r2kuvn'
 
         url = dj_database_url.config()
@@ -82,6 +78,15 @@ class DatabaseTestSuite(unittest.TestCase):
         assert url['USER'] == 'uf07k1i6d8ia0v'
         assert url['PASSWORD'] == 'wegauwhgeuioweg'
         assert url['PORT'] == 5431
+
+    def test_database_url_fallsback_to_default(self):
+        del os.environ['DATABASE_URL']
+        url = dj_database_url.config()
+
+        # assert config matches the 'default' settings.py database
+        assert url['ENGINE'] == 'django.db.backends.sqlite3'
+        assert url['NAME'] == os.path.join(os.path.dirname(os.path.dirname(__file__)),
+                                           'db.sqlite3')
 
     def test_empty_sqlite_url(self):
         url = 'sqlite://'

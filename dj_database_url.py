@@ -89,9 +89,34 @@ def parse(url, engine=None):
         'PORT': url.port or '',
     })
 
+    # Parse the query string into OPTIONS.
+    qs = urlparse.parse_qs(url.query)
+    options = {}
+    for k in qs:
+        options[k] = qs[k][-1]
+    if options:
+        config['OPTIONS'] = options
+
     if engine:
         config['ENGINE'] = engine
     elif url.scheme in SCHEMES:
         config['ENGINE'] = SCHEMES[url.scheme]
 
     return config
+
+
+def main():
+    import django.db
+    from django.conf import settings
+    default = django.db.DEFAULT_DB_ALIAS
+    settings.configure()
+    settings.DATABASES[default] =  config()
+    db = django.db.connections[default]
+    db.connect()
+    import pprint
+    pprint.pprint(db.settings_dict)
+    print db.is_usable()
+
+
+if __name__ == "__main__":
+    main()

@@ -111,5 +111,26 @@ class DatabaseTestSuite(unittest.TestCase):
 
         assert url['ENGINE'] == engine
 
+    def test_database_url_with_options(self):
+        del os.environ['DATABASE_URL']
+        a = dj_database_url.config()
+        assert not a
+
+        os.environ['DATABASE_URL'] = 'postgres://uf07k1i6d8ia0v:wegauwhgeuioweg@ec2-107-21-253-135.compute-1.amazonaws.com:5431/d8r82722r2kuvn?sslrootcert=rds-combined-ca-bundle.pem&sslmode=verify-full'
+
+        url = dj_database_url.config()
+
+        assert url['ENGINE'] == 'django.db.backends.postgresql_psycopg2'
+        assert url['NAME'] == 'd8r82722r2kuvn'
+        assert url['HOST'] == 'ec2-107-21-253-135.compute-1.amazonaws.com'
+        assert url['USER'] == 'uf07k1i6d8ia0v'
+        assert url['PASSWORD'] == 'wegauwhgeuioweg'
+        assert url['PORT'] == 5431
+        assert url['OPTIONS'] == {
+            'sslrootcert': 'rds-combined-ca-bundle.pem',
+            'sslmode': 'verify-full'
+        }
+
+
 if __name__ == '__main__':
     unittest.main()

@@ -111,5 +111,25 @@ class DatabaseTestSuite(unittest.TestCase):
 
         assert url['ENGINE'] == engine
 
+    def test_urlencoded_parts(self):
+        url = 'postgres://user%20name:%23test%3F%20me%2A%3A@ec2-107-21-253-135.compute-1.amazonaws.com:5431/testdatabase'
+        url = dj_database_url.parse(url)
+
+        assert url['USER'] == 'user name'
+        assert url['PASSWORD'] == '#test? me*:'
+        assert url['NAME'] == 'testdatabase'
+        assert url['HOST'] == 'ec2-107-21-253-135.compute-1.amazonaws.com'
+        assert url['PORT'] == 5431
+
+    def test_postgres_unix_socket_parsing(self):
+        url = 'postgres://user%20name:%23test%3F%20me@%2Fvar%2Frun%2Fpostgresql/d8r82722r2kuvn'
+        url = dj_database_url.parse(url)
+
+        assert url['HOST'] == '/var/run/postgresql'
+        assert url['PORT'] == ''
+        assert url['USER'] == 'user name'
+        assert url['PASSWORD'] == '#test? me'
+        assert url['NAME'] == 'd8r82722r2kuvn'
+
 if __name__ == '__main__':
     unittest.main()

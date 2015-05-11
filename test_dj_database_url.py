@@ -110,6 +110,20 @@ class DatabaseTestSuite(unittest.TestCase):
         url = dj_database_url.config(engine=engine)
 
         assert url['ENGINE'] == engine
+        
+    def test_parse_conn_max_age_setting(self):
+        conn_max_age = 600
+        url = 'mysql://bea6eb025ca0d8:69772142@us-cdbr-east.cleardb.com/heroku_97681db3eff7580?reconnect=true'
+        url = dj_database_url.parse(url, conn_max_age=conn_max_age)
+
+        assert url['CONN_MAX_AGE'] == conn_max_age
+
+    def test_config_conn_max_age_setting(self):
+        conn_max_age = 600
+        os.environ['DATABASE_URL'] = 'mysql://bea6eb025ca0d8:69772142@us-cdbr-east.cleardb.com/heroku_97681db3eff7580?reconnect=true'
+        url = dj_database_url.config(conn_max_age=conn_max_age)
+
+        assert url['CONN_MAX_AGE'] == conn_max_age
 
 if __name__ == '__main__':
     unittest.main()

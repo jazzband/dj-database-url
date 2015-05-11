@@ -24,14 +24,19 @@ Usage
 -----
 
 Configure your database in ``settings.py`` from ``DATABASE_URL``
-(``default`` is optional)::
+(``default`` and ``conn_max_age`` are optional)::
 
     import dj_database_url
-    DATABASES = {'default': dj_database_url.config(default='postgres://...')}
+    DATABASES = {'default': dj_database_url.config(default='postgres://...', conn_max_age=600 )}
 
 Parse an arbitrary Database URL::
 
-    DATABASES = {'default': dj_database_url.parse('postgres://...')}
+    DATABASES = {'default': dj_database_url.parse('postgres://...', conn_max_age=600)}
+
+The ``conn_max_age`` attribute is the lifetime of a database connection in seconds 
+and is available in Django 1.6+. If you do not set a value, it will default to ``0`` 
+which is Django's historical behavior of using a new database connection on each 
+request. Use ``None`` for unlimited persistent connections.
 
 URL schema
 ----------

@@ -48,6 +48,17 @@ def config(env=DEFAULT_ENV, default=None, engine=None):
     return config
 
 
+def _parse_querystring_for_options(path):
+    if '?' not in path:
+        return
+    query_string = path.split('?', 2)[1]
+    if not query_string:
+        return
+    qs = urlparse.parse_qs(query_string)
+    return {key: values[-1] for key, values in qs.iteritems()}
+
+
+
 def parse(url, engine=None):
     """Parses a database URL."""
 
@@ -66,9 +77,8 @@ def parse(url, engine=None):
 
     url = urlparse.urlparse(url)
 
-    # Remove query strings.
-    path = url.path[1:]
-    path = path.split('?', 2)[0]
+    # Path (without leading '/'), and with no query string
+    path = url.path[1:].split('?')[0]
 
     # If we are using sqlite and we have no path, then assume we
     # want an in-memory database (this is the behaviour of sqlalchemy)
@@ -90,10 +100,7 @@ def parse(url, engine=None):
     })
 
     # Parse the query string into OPTIONS.
-    qs = urlparse.parse_qs(url.query)
-    options = {}
-    for k in qs:
-        options[k] = qs[k][-1]
+    options = _parse_querystring_for_options(url.path)
     if options:
         config['OPTIONS'] = options
 

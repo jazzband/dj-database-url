@@ -103,20 +103,3 @@ def parse(url, engine=None):
         config['ENGINE'] = SCHEMES[url.scheme]
 
     return config
-
-
-def main():
-    import django.db
-    from django.conf import settings
-    default = django.db.DEFAULT_DB_ALIAS
-    settings.configure()
-    settings.DATABASES[default] =  config()
-    db = django.db.connections[default]
-    db.connect()
-    import pprint
-    pprint.pprint(db.settings_dict)
-    print db.is_usable()
-
-
-if __name__ == "__main__":
-    main()

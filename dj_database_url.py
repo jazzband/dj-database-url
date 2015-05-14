@@ -55,8 +55,10 @@ def _parse_querystring_for_options(path):
     if not query_string:
         return
     qs = urlparse.parse_qs(query_string)
-    return {key: values[-1] for key, values in qs.iteritems()}
-
+    result = {}
+    for key, values in qs.iteritems():
+        result[key] = values[-1]
+    return result
 
 
 def parse(url, engine=None):

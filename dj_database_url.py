@@ -48,19 +48,6 @@ def config(env=DEFAULT_ENV, default=None, engine=None):
     return config
 
 
-def _parse_querystring_for_options(path):
-    if '?' not in path:
-        return
-    query_string = path.split('?', 2)[1]
-    if not query_string:
-        return
-    qs = urlparse.parse_qs(query_string)
-    result = {}
-    for key, values in qs.iteritems():
-        result[key] = values[-1]
-    return result
-
-
 def parse(url, engine=None):
     """Parses a database URL."""
 
@@ -102,7 +89,10 @@ def parse(url, engine=None):
     })
 
     # Parse the query string into OPTIONS.
-    options = _parse_querystring_for_options(url.path)
+    qs = urlparse.parse_qs(url.query)
+    options = {}
+    for key, values in qs.iteritems():
+        options[key] = values[-1]
     if options:
         config['OPTIONS'] = options
 

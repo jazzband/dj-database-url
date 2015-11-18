@@ -1,12 +1,21 @@
 # -*- coding: utf-8 -*-
 
 import os
+import re
 
 try:
     import urlparse
 except ImportError:
     import urllib.parse as urlparse
 
+
+class InvalidDatabaseUrl(Exception):
+    pass
+
+
+pattern = re.compile(
+        r'^(?P<scheme>(postgres|postgis|mysql|mysqlgis))://'
+         '(?P<username>.+?):(?P<password>.+?)@(?P<hostname>.+?):(?P<port>\d+)(?P<path>/.+)')
 
 
 # Register database schemes in URLs.
@@ -33,6 +42,22 @@ SCHEMES = {
     'spatialite': 'django.contrib.gis.db.backends.spatialite',
     'sqlite': 'django.db.backends.sqlite3',
 }
+
+
+
+def safe_urlparse(url):
+    """if we encounter symbol like '#' use re to parse url"""
+
+    class dictwrapper(dict):
+        def __init__(self, d):
+            self.__dict__ = d
+
+    match = pattern.search(url)
+    if match is None:
+        raise InvalidDatabaseUrl(url)
+    data = match.groupdict()
+    data['port'] = int(data['port'])
+    return dictwrapper(data)
 
 
 def config(env=DEFAULT_ENV, default=None, engine=None):
@@ -64,7 +89,11 @@ def parse(url, engine=None):
     # otherwise parse the url as normal
     config = {}
 
-    url = urlparse.urlparse(url)
+    if '#' in url:
+        url = safe_urlparse(url)
+        path = url.path
+    else:
+        url = urlparse.urlparse(url)
 
     # Remove query strings.
     path = url.path[1:]

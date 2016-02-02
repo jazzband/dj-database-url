@@ -97,7 +97,7 @@ def parse(url, engine=None, conn_max_age=0):
     # Parse the query string into OPTIONS.
     qs = urlparse.parse_qs(url.query)
     options = {}
-    for key, values in qs.iteritems():
+    for key, values in qs.items():
         options[key] = values[-1]
     if options:
         config['OPTIONS'] = options

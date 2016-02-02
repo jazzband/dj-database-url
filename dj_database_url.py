@@ -66,13 +66,9 @@ def parse(url, engine=None, conn_max_age=0):
 
     url = urlparse.urlparse(url)
 
-    # Split query strings from path.
+    # Remove query strings.
     path = url.path[1:]
-    if '?' in path and not url.query:
-        path, query = path.split('?', 2)
-    else:
-        path, query = path, url.query
-    query = urlparse.parse_qs(query)
+    path = path.split('?', 2)[0]
 
     # If we are using sqlite and we have no path, then assume we
     # want an in-memory database (this is the behaviour of sqlalchemy)
@@ -98,15 +94,5 @@ def parse(url, engine=None, conn_max_age=0):
         config['ENGINE'] = engine
     elif url.scheme in SCHEMES:
         config['ENGINE'] = SCHEMES[url.scheme]
-
-    if config['ENGINE'] == 'django.db.backends.postgresql_psycopg2':
-        try:
-            current_schema = query['currentSchema'][0]
-        except (KeyError, IndexError):
-            pass
-        else:
-            config['OPTIONS'] = {
-                'options': '-c search_path=' + current_schema
-            }
 
     return config

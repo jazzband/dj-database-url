@@ -66,9 +66,8 @@ def parse(url, engine=None, conn_max_age=0):
 
     url = urlparse.urlparse(url)
 
-    # Remove query strings.
-    path = url.path[1:]
-    path = path.split('?', 2)[0]
+    # Path (without leading '/'), and with no query string
+    path = url.path[1:].split('?')[0]
 
     # If we are using sqlite and we have no path, then assume we
     # want an in-memory database (this is the behaviour of sqlalchemy)
@@ -89,6 +88,14 @@ def parse(url, engine=None, conn_max_age=0):
         'PORT': url.port or '',
         'CONN_MAX_AGE': conn_max_age,
     })
+
+    # Parse the query string into OPTIONS.
+    qs = urlparse.parse_qs(url.query)
+    options = {}
+    for key, values in qs.iteritems():
+        options[key] = values[-1]
+    if options:
+        config['OPTIONS'] = options
 
     if engine:
         config['ENGINE'] = engine

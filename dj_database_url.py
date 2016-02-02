@@ -8,7 +8,6 @@ except ImportError:
     import urllib.parse as urlparse
 
 
-
 # Register database schemes in URLs.
 urlparse.uses_netloc.append('postgres')
 urlparse.uses_netloc.append('postgresql')
@@ -19,6 +18,8 @@ urlparse.uses_netloc.append('mysql2')
 urlparse.uses_netloc.append('mysqlgis')
 urlparse.uses_netloc.append('spatialite')
 urlparse.uses_netloc.append('sqlite')
+urlparse.uses_netloc.append('oracle')
+urlparse.uses_netloc.append('oraclegis')
 
 DEFAULT_ENV = 'DATABASE_URL'
 
@@ -32,6 +33,8 @@ SCHEMES = {
     'mysqlgis': 'django.contrib.gis.db.backends.mysql',
     'spatialite': 'django.contrib.gis.db.backends.spatialite',
     'sqlite': 'django.db.backends.sqlite3',
+    'oracle': 'django.db.backends.oracle',
+    'oraclegis': 'django.contrib.gis.db.backends.oracle',
 }
 
 

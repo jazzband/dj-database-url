@@ -158,5 +158,62 @@ class DatabaseTestSuite(unittest.TestCase):
         assert 'OPTIONS' not in url
 
 
+    def test_oracle_parsing(self):
+        url = 'oracle://scott:tiger@oraclehost:1521/hr'
+        url = dj_database_url.parse(url)
+
+        assert url['ENGINE'] == 'django.db.backends.oracle'
+        assert url['NAME'] == 'hr'
+        assert url['HOST'] == 'oraclehost'
+        assert url['USER'] == 'scott'
+        assert url['PASSWORD'] == 'tiger'
+        assert url['PORT'] == 1521
+
+    def test_oracle_gis_parsing(self):
+        url = 'oraclegis://scott:tiger@oraclehost:1521/hr'
+        url = dj_database_url.parse(url)
+
+        assert url['ENGINE'] == 'django.contrib.gis.db.backends.oracle'
+        assert url['NAME'] == 'hr'
+        assert url['HOST'] == 'oraclehost'
+        assert url['USER'] == 'scott'
+        assert url['PASSWORD'] == 'tiger'
+        assert url['PORT'] == 1521
+
+    def test_oracle_dsn_parsing(self):
+        url = (
+            'oracle://scott:tiger@/'
+            '(DESCRIPTION=(ADDRESS_LIST=(ADDRESS=(PROTOCOL=TCP)'
+            '(HOST=oraclehost)(PORT=1521)))'
+            '(CONNECT_DATA=(SID=hr)))'
+        )
+        url = dj_database_url.parse(url)
+
+        assert url['ENGINE'] == 'django.db.backends.oracle'
+        assert url['USER'] == 'scott'
+        assert url['PASSWORD'] == 'tiger'
+        assert url['HOST'] == ''
+        assert url['PORT'] == ''
+
+        dsn = (
+            '(DESCRIPTION=(ADDRESS_LIST=(ADDRESS=(PROTOCOL=TCP)'
+            '(HOST=oraclehost)(PORT=1521)))'
+            '(CONNECT_DATA=(SID=hr)))'
+        )
+
+        assert url['NAME'] == dsn
+
+    def test_oracle_tns_parsing(self):
+        url = 'oracle://scott:tiger@/tnsname'
+        url = dj_database_url.parse(url)
+
+        assert url['ENGINE'] == 'django.db.backends.oracle'
+        assert url['USER'] == 'scott'
+        assert url['PASSWORD'] == 'tiger'
+        assert url['NAME'] == 'tnsname'
+        assert url['HOST'] == ''
+        assert url['PORT'] == ''
+
+
 if __name__ == '__main__':
     unittest.main()

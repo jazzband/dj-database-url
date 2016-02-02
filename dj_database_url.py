@@ -81,9 +81,9 @@ def parse(url, engine=None, conn_max_age=0):
 
     # Update with environment configuration.
     config.update({
-        'NAME': path or '',
-        'USER': url.username or '',
-        'PASSWORD': url.password or '',
+        'NAME': urlparse.unquote(path or ''),
+        'USER': urlparse.unquote(url.username or ''),
+        'PASSWORD': urlparse.unquote(url.password or ''),
         'HOST': hostname,
         'PORT': url.port or '',
         'CONN_MAX_AGE': conn_max_age,

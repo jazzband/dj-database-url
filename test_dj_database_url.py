@@ -34,6 +34,17 @@ class DatabaseTestSuite(unittest.TestCase):
         assert url['PASSWORD'] == ''
         assert url['PORT'] == ''
 
+    def test_postgres_parsing_with_special_characters(self):
+        url = 'postgres://%23user:%23password@ec2-107-21-253-135.compute-1.amazonaws.com:5431/%23database'
+        url = dj_database_url.parse(url)
+
+        assert url['ENGINE'] == 'django.db.backends.postgresql_psycopg2'
+        assert url['NAME'] == '#database'
+        assert url['HOST'] == 'ec2-107-21-253-135.compute-1.amazonaws.com'
+        assert url['USER'] == '#user'
+        assert url['PASSWORD'] == '#password'
+        assert url['PORT'] == 5431
+
     def test_postgis_parsing(self):
         url = 'postgis://uf07k1i6d8ia0v:wegauwhgeuioweg@ec2-107-21-253-135.compute-1.amazonaws.com:5431/d8r82722r2kuvn'
         url = dj_database_url.parse(url)

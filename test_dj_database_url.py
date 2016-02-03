@@ -34,6 +34,18 @@ class DatabaseTestSuite(unittest.TestCase):
         assert url['PASSWORD'] == ''
         assert url['PORT'] == ''
 
+    def test_postgres_search_path_parsing(self):
+        url = 'postgres://uf07k1i6d8ia0v:wegauwhgeuioweg@ec2-107-21-253-135.compute-1.amazonaws.com:5431/d8r82722r2kuvn?currentSchema=otherschema'
+        url = dj_database_url.parse(url)
+        assert url['ENGINE'] == 'django.db.backends.postgresql_psycopg2'
+        assert url['NAME'] == 'd8r82722r2kuvn'
+        assert url['HOST'] == 'ec2-107-21-253-135.compute-1.amazonaws.com'
+        assert url['USER'] == 'uf07k1i6d8ia0v'
+        assert url['PASSWORD'] == 'wegauwhgeuioweg'
+        assert url['PORT'] == 5431
+        assert url['OPTIONS']['options'] == '-c search_path=otherschema'
+
+
     def test_postgres_parsing_with_special_characters(self):
         url = 'postgres://%23user:%23password@ec2-107-21-253-135.compute-1.amazonaws.com:5431/%23database'
         url = dj_database_url.parse(url)
@@ -132,7 +144,7 @@ class DatabaseTestSuite(unittest.TestCase):
         url = dj_database_url.config(engine=engine)
 
         assert url['ENGINE'] == engine
-        
+
     def test_parse_conn_max_age_setting(self):
         conn_max_age = 600
         url = 'mysql://bea6eb025ca0d8:69772142@us-cdbr-east.cleardb.com/heroku_97681db3eff7580?reconnect=true'

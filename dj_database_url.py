@@ -71,8 +71,13 @@ def parse(url, engine=None, conn_max_age=0):
 
     url = urlparse.urlparse(url)
 
-    # Path (without leading '/'), and with no query string
-    path = url.path[1:].split('?')[0]
+    # Split query strings from path.
+    path = url.path[1:]
+    if '?' in path and not url.query:
+        path, query = path.split('?', 2)
+    else:
+        path, query = path, url.query
+    query = urlparse.parse_qs(query)
 
     # If we are using sqlite and we have no path, then assume we
     # want an in-memory database (this is the behaviour of sqlalchemy)
@@ -94,17 +99,22 @@ def parse(url, engine=None, conn_max_age=0):
         'CONN_MAX_AGE': conn_max_age,
     })
 
-    # Parse the query string into OPTIONS.
-    qs = urlparse.parse_qs(url.query)
+    # Lookup specified engine.
+    engine = SCHEMES[url.scheme] if engine is None else engine
+
+    # Pass the query string into OPTIONS.
     options = {}
-    for key, values in qs.items():
+    for key, values in query.items():
         options[key] = values[-1]
+
+    # Support for Postgres Schema URLs
+    if 'currentSchema' in options and engine == 'django.db.backends.postgresql_psycopg2':
+        options['options'] = '-c search_path={0}'.format(options['currentSchema'])
+
     if options:
         config['OPTIONS'] = options
 
     if engine:
         config['ENGINE'] = engine
-    elif url.scheme in SCHEMES:
-        config['ENGINE'] = SCHEMES[url.scheme]
 
     return config

@@ -19,7 +19,7 @@ Supported Databases
 -------------------
 
 Support currently exists for PostgreSQL, PostGIS, MySQL, MySQL (GIS),
-Oracle, Oracle (GIS) and SQLite.
+Oracle, Oracle (GIS), and SQLite.
 
 Installation
 ------------

@@ -38,7 +38,7 @@ from setuptools import setup
 
 setup(
     name='dj-database-url',
-    version='0.3.0',
+    version='0.4.0',
     url='https://github.com/kennethreitz/dj-database-url',
     license='BSD',
     author='Kenneth Reitz',

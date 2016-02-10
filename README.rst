@@ -39,7 +39,7 @@ Configure your database in ``settings.py`` from ``DATABASE_URL``::
 
 Provide a default::
 
-    DATABASES['default'] = dj_database_url.config(default='postgres://...'}
+    DATABASES['default'] = dj_database_url.config(default='postgres://...')
 
 Parse an arbitrary Database URL::
 

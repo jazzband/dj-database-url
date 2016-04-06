@@ -105,6 +105,10 @@ def parse(url, engine=None, conn_max_age=0):
     # Pass the query string into OPTIONS.
     options = {}
     for key, values in query.items():
+        if url.scheme == 'mysql' and key == 'ssl-ca':
+            options['ssl'] = {'ca': values[-1]}
+            continue
+
         options[key] = values[-1]
 
     # Support for Postgres Schema URLs

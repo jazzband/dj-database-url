@@ -53,23 +53,25 @@ request. Use ``None`` for unlimited persistent connections.
 URL schema
 ----------
 
-+-------------+--------------------------------------------+--------------------------------------------------+
-| Engine      | Django Backend                             | URL                                              |
-+=============+============================================+==================================================+
-| PostgreSQL  | ``django.db.backends.postgresql_psycopg2`` | ``postgres://USER:PASSWORD@HOST:PORT/NAME`` [1]_ |
-+-------------+--------------------------------------------+--------------------------------------------------+
-| PostGIS     | ``django.contrib.gis.db.backends.postgis`` | ``postgis://USER:PASSWORD@HOST:PORT/NAME``       |
-+-------------+--------------------------------------------+--------------------------------------------------+
-| MySQL       | ``django.db.backends.mysql``               | ``mysql://USER:PASSWORD@HOST:PORT/NAME``         |
-+-------------+--------------------------------------------+--------------------------------------------------+
-| MySQL (GIS) | ``django.contrib.gis.db.backends.mysql``   | ``mysqlgis://USER:PASSWORD@HOST:PORT/NAME``      |
-+-------------+--------------------------------------------+--------------------------------------------------+
-| SQLite      | ``django.db.backends.sqlite3``             | ``sqlite:///PATH`` [2]_                          |
-+-------------+--------------------------------------------+--------------------------------------------------+
-| Oracle      | ``django.db.backends.oracle``              | ``oracle://USER:PASSWORD@HOST:PORT/NAME`` [3]_   |
-+-------------+--------------------------------------------+--------------------------------------------------+
-| Oracle (GIS)| ``django.contrib.gis.db.backends.oracle``  | ``oraclegis://USER:PASSWORD@HOST:PORT/NAME``     |
-+-------------+--------------------------------------------+--------------------------------------------------+
++-------------+-----------------------------------------------+--------------------------------------------------+
+| Engine      | Django Backend                                | URL                                              |
++=============+===============================================+==================================================+
+| PostgreSQL  | ``django.db.backends.postgresql_psycopg2``    | ``postgres://USER:PASSWORD@HOST:PORT/NAME`` [1]_ |
++-------------+-----------------------------------------------+--------------------------------------------------+
+| PostGIS     | ``django.contrib.gis.db.backends.postgis``    | ``postgis://USER:PASSWORD@HOST:PORT/NAME``       |
++-------------+-----------------------------------------------+--------------------------------------------------+
+| MySQL       | ``django.db.backends.mysql``                  | ``mysql://USER:PASSWORD@HOST:PORT/NAME``         |
++-------------+-----------------------------------------------+--------------------------------------------------+
+| MySQL (GIS) | ``django.contrib.gis.db.backends.mysql``      | ``mysqlgis://USER:PASSWORD@HOST:PORT/NAME``      |
++-------------+-----------------------------------------------+--------------------------------------------------+
+| SQLite      | ``django.db.backends.sqlite3``                | ``sqlite:///PATH`` [2]_                          |
++-------------+-----------------------------------------------+--------------------------------------------------+
+| SpatiaLite  | ``django.contrib.gis.db.backends.spatialite`` | ``spatialite:///PATH`` [2]_                      |
++-------------+-----------------------------------------------+--------------------------------------------------+
+| Oracle      | ``django.db.backends.oracle``                 | ``oracle://USER:PASSWORD@HOST:PORT/NAME`` [3]_   |
++-------------+-----------------------------------------------+--------------------------------------------------+
+| Oracle (GIS)| ``django.contrib.gis.db.backends.oracle``     | ``oraclegis://USER:PASSWORD@HOST:PORT/NAME``     |
++-------------+-----------------------------------------------+--------------------------------------------------+
 
 .. [1] With PostgreSQL, you can also use unix domain socket paths with
        `percent encoding <http://www.postgresql.org/docs/9.2/interactive/libpq-connect.html#AEN38162>`_:

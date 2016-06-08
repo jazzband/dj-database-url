@@ -87,7 +87,7 @@ def parse(url, engine=None, conn_max_age=0):
     # Handle postgres percent-encoded paths.
     hostname = url.hostname or ''
     if '%2f' in hostname.lower():
-        hostname = hostname.replace('%2f', '/').replace('%2F', '/')
+        hostname = urlparse.unquote(hostname)
 
     # Update with environment configuration.
     config.update({

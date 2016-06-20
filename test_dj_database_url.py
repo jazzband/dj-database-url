@@ -258,7 +258,7 @@ class DatabaseTestSuite(unittest.TestCase):
         assert url['PORT'] == ''
 
     def test_redis_parsing_max(self):
-    	url = "redis://:mypassword@myhost:123/my-db-number?myoption=myvalue]"
+        url = "redis://:mypassword@myhost:123/my-db-number?myoption=myvalue]"
         assert dj_database_url.parse(url) == {
             'ENGINE': 'django_redis.cache.RedisCache',
             'HOST': 'myhost',

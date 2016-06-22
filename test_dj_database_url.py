@@ -257,29 +257,6 @@ class DatabaseTestSuite(unittest.TestCase):
         assert url['HOST'] == ''
         assert url['PORT'] == ''
 
-    def test_redis_parsing_max(self):
-        url = "redis://:mypassword@myhost:123/my-db-number?myoption=myvalue]"
-        assert dj_database_url.parse(url) == {
-            'ENGINE': 'django_redis.cache.RedisCache',
-            'HOST': 'myhost',
-            'NAME': 'my-db-number',
-            'OPTIONS': {'myoption': 'myvalue]'},
-            'CONN_MAX_AGE': 0,
-            'PASSWORD': 'mypassword',
-            'PORT': 123,
-            'USER': ''}
-
-    def test_redis_parsing_min(self):
-        url = "redis://127.0.0.1:6379/1"
-        assert dj_database_url.parse(url) == {
-            'ENGINE': 'django_redis.cache.RedisCache',
-            'HOST': '127.0.0.1',
-            'NAME': '1',
-            'CONN_MAX_AGE': 0,
-            'PASSWORD': '',
-            'PORT': 6379,
-            'USER': ''}
-
 
 if __name__ == '__main__':
     unittest.main()

@@ -21,7 +21,6 @@ urlparse.uses_netloc.append('spatialite')
 urlparse.uses_netloc.append('sqlite')
 urlparse.uses_netloc.append('oracle')
 urlparse.uses_netloc.append('oraclegis')
-urlparse.uses_netloc.append('redis')
 
 DEFAULT_ENV = 'DATABASE_URL'
 
@@ -38,7 +37,6 @@ SCHEMES = {
     'sqlite': 'django.db.backends.sqlite3',
     'oracle': 'django.db.backends.oracle',
     'oraclegis': 'django.contrib.gis.db.backends.oracle',
-    'redis': "django_redis.cache.RedisCache",
 }
 
 

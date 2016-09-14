@@ -46,7 +46,8 @@ def config(env=DEFAULT_ENV, default=None, engine=None, conn_max_age=0):
     config = {}
 
     s = os.environ.get(env, default)
-
+    assert s is not None
+    
     if s:
         config = parse(s, engine, conn_max_age)
 

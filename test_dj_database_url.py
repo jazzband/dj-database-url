@@ -256,7 +256,14 @@ class DatabaseTestSuite(unittest.TestCase):
         assert url['NAME'] == 'tnsname'
         assert url['HOST'] == ''
         assert url['PORT'] == ''
-
+        
+    def test_no_url_parsing(self):
+        try:
+            dj_database_url.parse(url)
+        except:
+            pass
+        else:
+            raise Exception
 
 if __name__ == '__main__':
     unittest.main()

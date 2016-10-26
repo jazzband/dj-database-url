@@ -257,6 +257,18 @@ class DatabaseTestSuite(unittest.TestCase):
         assert url['HOST'] == ''
         assert url['PORT'] == ''
 
+    def test_redshift_parsing(self):
+        url = 'redshift://uf07k1i6d8ia0v:wegauwhgeuioweg@ec2-107-21-253-135.compute-1.amazonaws.com:5439/d8r82722r2kuvn'
+        url = dj_database_url.parse(url)
+
+        assert url['ENGINE'] == 'django_redshift_backend'
+        assert url['NAME'] == 'd8r82722r2kuvn'
+        assert url['HOST'] == 'ec2-107-21-253-135.compute-1.amazonaws.com'
+        assert url['USER'] == 'uf07k1i6d8ia0v'
+        assert url['PASSWORD'] == 'wegauwhgeuioweg'
+        assert url['PORT'] == 5439
+
+
 
 if __name__ == '__main__':
     unittest.main()

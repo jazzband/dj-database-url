@@ -19,7 +19,7 @@ Supported Databases
 -------------------
 
 Support currently exists for PostgreSQL, PostGIS, MySQL, MySQL (GIS),
-Oracle, Oracle (GIS), and SQLite.
+Oracle, Oracle (GIS), Redshift, and SQLite.
 
 Installation
 ------------
@@ -71,6 +71,8 @@ URL schema
 | Oracle      | ``django.db.backends.oracle``                 | ``oracle://USER:PASSWORD@HOST:PORT/NAME`` [3]_   |
 +-------------+-----------------------------------------------+--------------------------------------------------+
 | Oracle (GIS)| ``django.contrib.gis.db.backends.oracle``     | ``oraclegis://USER:PASSWORD@HOST:PORT/NAME``     |
++-------------+-----------------------------------------------+--------------------------------------------------+
+| Redshift    | ``django_redshift_backend``                   | ``redshift://USER:PASSWORD@HOST:PORT/NAME``     |
 +-------------+-----------------------------------------------+--------------------------------------------------+
 
 .. [1] With PostgreSQL, you can also use unix domain socket paths with

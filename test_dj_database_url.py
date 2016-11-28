@@ -44,7 +44,7 @@ class DatabaseTestSuite(unittest.TestCase):
         assert url['PASSWORD'] == 'wegauwhgeuioweg'
         assert url['PORT'] == 5431
         assert url['OPTIONS']['options'] == '-c search_path=otherschema'
-
+        assert 'currentSchema' not in url['OPTIONS']
 
     def test_postgres_parsing_with_special_characters(self):
         url = 'postgres://%23user:%23password@ec2-107-21-253-135.compute-1.amazonaws.com:5431/%23database'
@@ -258,7 +258,7 @@ class DatabaseTestSuite(unittest.TestCase):
         assert url['PORT'] == ''
 
     def test_redshift_parsing(self):
-        url = 'redshift://uf07k1i6d8ia0v:wegauwhgeuioweg@ec2-107-21-253-135.compute-1.amazonaws.com:5439/d8r82722r2kuvn'
+        url = 'redshift://uf07k1i6d8ia0v:wegauwhgeuioweg@ec2-107-21-253-135.compute-1.amazonaws.com:5439/d8r82722r2kuvn?currentSchema=otherschema'
         url = dj_database_url.parse(url)
 
         assert url['ENGINE'] == 'django_redshift_backend'
@@ -267,7 +267,8 @@ class DatabaseTestSuite(unittest.TestCase):
         assert url['USER'] == 'uf07k1i6d8ia0v'
         assert url['PASSWORD'] == 'wegauwhgeuioweg'
         assert url['PORT'] == 5439
-
+        assert url['OPTIONS']['options'] == '-c search_path=otherschema'
+        assert 'currentSchema' not in url['OPTIONS']
 
 
 if __name__ == '__main__':

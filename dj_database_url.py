@@ -114,8 +114,11 @@ def parse(url, engine=None, conn_max_age=0):
         options[key] = values[-1]
 
     # Support for Postgres Schema URLs
-    if 'currentSchema' in options and engine == 'django.db.backends.postgresql_psycopg2':
-        options['options'] = '-c search_path={0}'.format(options['currentSchema'])
+    if 'currentSchema' in options and engine in (
+        'django.db.backends.postgresql_psycopg2',
+        'django_redshift_backend',
+    ):
+        options['options'] = '-c search_path={0}'.format(options.pop('currentSchema'))
 
     if options:
         config['OPTIONS'] = options

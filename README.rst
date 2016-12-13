@@ -1,7 +1,7 @@
 DJ-Database-URL
 ~~~~~~~~~~~~~~~
 
-.. image:: https://secure.travis-ci.org/kennethreitz/dj-database-url.png?branch=master
+.. image:: https://secure.travis-ci.org/kennethreitz/dj-database-url.svg?branch=master
    :target: http://travis-ci.org/kennethreitz/dj-database-url
 
 This simple Django utility allows you to utilize the

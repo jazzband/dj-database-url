@@ -115,6 +115,7 @@ def parse(url, engine=None, conn_max_age=0):
 
     # Support for Postgres Schema URLs
     if 'currentSchema' in options and engine in (
+        'django.contrib.gis.db.backends.postgis',
         'django.db.backends.postgresql_psycopg2',
         'django_redshift_backend',
     ):

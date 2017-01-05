@@ -56,6 +56,7 @@ request. Use ``None`` for unlimited persistent connections.
 """
 
 import sys
+import os
 from setuptools import setup
 
 if sys.argv[-1] == "publish":

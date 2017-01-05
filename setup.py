@@ -55,11 +55,16 @@ request. Use ``None`` for unlimited persistent connections.
 
 """
 
+import sys
 from setuptools import setup
+
+if sys.argv[-1] == "publish":
+    os.system("python setup.py sdist bdist_wheel upload")
+    sys.exit()
 
 setup(
     name='dj-database-url',
-    version='0.4.1',
+    version='0.4.2',
     url='https://github.com/kennethreitz/dj-database-url',
     license='BSD',
     author='Kenneth Reitz',

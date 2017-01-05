@@ -34,6 +34,19 @@ class DatabaseTestSuite(unittest.TestCase):
         assert url['PASSWORD'] == ''
         assert url['PORT'] == ''
 
+
+    def test_cloudsql_unix_socket_parsing(self):
+        url = 'mysql://uf07k1i6d8ia0v@%2fcloudsql%2fec2-107-21-253-135%3acompute-1/d8r82722r2kuvn'
+        url = dj_database_url.parse(url)
+
+        assert url['ENGINE'] == 'django.db.backends.mysql'
+        assert url['NAME'] == 'd8r82722r2kuvn'
+        assert url['HOST'] == '/cloudsql/ec2-107-21-253-135:compute-1'
+        assert url['USER'] == 'uf07k1i6d8ia0v'
+        assert url['PASSWORD'] == ''
+        assert url['PORT'] == ''
+
+
     def test_postgres_search_path_parsing(self):
         url = 'postgres://uf07k1i6d8ia0v:wegauwhgeuioweg@ec2-107-21-253-135.compute-1.amazonaws.com:5431/d8r82722r2kuvn?currentSchema=otherschema'
         url = dj_database_url.parse(url)

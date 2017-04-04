@@ -87,13 +87,14 @@ def parse(url, engine=None, conn_max_age=0):
         path = ':memory:'
 
     # Handle postgres percent-encoded paths.
-    netloc = url.netloc
-    if "@" in netloc:
-        netloc = netloc.rsplit("@", 1)[1]
-    if ":" in netloc:
-        netloc = netloc.split(":", 1)[0]
-    hostname = netloc or ''
+    hostname = url.hostname or ''
     if '%2f' in hostname.lower():
+        # Switch to url.netloc to avoid lower cased paths
+        hostname = url.netloc
+        if "@" in hostname:
+            hostname = hostname.rsplit("@", 1)[1]
+        if ":" in hostname:
+            hostname = hostname.split(":", 1)[0]
         hostname = hostname.replace('%2f', '/').replace('%2F', '/')
 
     # Update with environment configuration.

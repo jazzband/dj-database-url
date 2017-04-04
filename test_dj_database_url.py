@@ -43,6 +43,17 @@ class DatabaseTestSuite(unittest.TestCase):
         assert url['PASSWORD'] == ''
         assert url['PORT'] == ''
 
+    def test_ipv6_parsing(self):
+        url = 'postgres://ieRaekei9wilaim7:wegauwhgeuioweg@[2001:db8:1234::1234:5678:90af]:5431/d8r82722r2kuvn'
+        url = dj_database_url.parse(url)
+
+        assert url['ENGINE'] == 'django.db.backends.postgresql_psycopg2'
+        assert url['NAME'] == 'd8r82722r2kuvn'
+        assert url['HOST'] == '2001:db8:1234::1234:5678:90af'
+        assert url['USER'] == 'ieRaekei9wilaim7'
+        assert url['PASSWORD'] == 'wegauwhgeuioweg'
+        assert url['PORT'] == 5431
+
     def test_postgres_search_path_parsing(self):
         url = 'postgres://uf07k1i6d8ia0v:wegauwhgeuioweg@ec2-107-21-253-135.compute-1.amazonaws.com:5431/d8r82722r2kuvn?currentSchema=otherschema'
         url = dj_database_url.parse(url)

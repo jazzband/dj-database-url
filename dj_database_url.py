@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import os
+import inspect
 
 try:
     import urlparse
@@ -44,6 +45,12 @@ SCHEMES = {
 
 def config(env=DEFAULT_ENV, default=None, engine=None, conn_max_age=0):
     """Returns configured DATABASE dictionary from DATABASE_URL."""
+
+    if default is None:
+        callers_source_filename = inspect.stack()[1][1]
+        base_dir = os.path.dirname(os.path.dirname(callers_source_filename))
+        db_filename = os.path.join(base_dir, 'db.sqlite3')
+        default = "sqlite:///{db_filename}".format(db_filename=db_filename)
 
     config = {}
 

@@ -242,7 +242,7 @@ class DatabaseTestSuite(unittest.TestCase):
         assert url['HOST'] == 'oraclehost'
         assert url['USER'] == 'scott'
         assert url['PASSWORD'] == 'tiger'
-        assert url['PORT'] == 1521
+        assert url['PORT'] == '1521'
 
     def test_oracle_gis_parsing(self):
         url = 'oraclegis://scott:tiger@oraclehost:1521/hr'

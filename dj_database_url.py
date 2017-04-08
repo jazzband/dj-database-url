@@ -97,18 +97,21 @@ def parse(url, engine=None, conn_max_age=0):
             hostname = hostname.split(":", 1)[0]
         hostname = hostname.replace('%2f', '/').replace('%2F', '/')
 
+    # Lookup specified engine.
+    engine = SCHEMES[url.scheme] if engine is None else engine
+
+    port = (str(url.port) if url.port and engine == SCHEMES['oracle']
+            else url.port)
+
     # Update with environment configuration.
     config.update({
         'NAME': urlparse.unquote(path or ''),
         'USER': urlparse.unquote(url.username or ''),
         'PASSWORD': urlparse.unquote(url.password or ''),
         'HOST': hostname,
-        'PORT': url.port or '',
+        'PORT': port or '',
         'CONN_MAX_AGE': conn_max_age,
     })
-
-    # Lookup specified engine.
-    engine = SCHEMES[url.scheme] if engine is None else engine
 
     # Pass the query string into OPTIONS.
     options = {}

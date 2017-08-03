@@ -72,7 +72,7 @@ URL schema
 +-------------+-----------------------------------------------+--------------------------------------------------+
 | Oracle (GIS)| ``django.contrib.gis.db.backends.oracle``     | ``oraclegis://USER:PASSWORD@HOST:PORT/NAME``     |
 +-------------+-----------------------------------------------+--------------------------------------------------+
-| Redshift    | ``django_redshift_backend``                   | ``redshift://USER:PASSWORD@HOST:PORT/NAME``     |
+| Redshift    | ``django_redshift_backend``                   | ``redshift://USER:PASSWORD@HOST:PORT/NAME``      |
 +-------------+-----------------------------------------------+--------------------------------------------------+
 
 .. [1] With PostgreSQL, you can also use unix domain socket paths with
@@ -86,4 +86,3 @@ URL schema
        from using other Oracle tools (like SQLPlus) i.e. user and password are separated
        by ``:`` not by ``/``. Also you can omit ``HOST`` and ``PORT``
        and provide a full DSN string or TNS name in ``NAME`` part.
-

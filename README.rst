@@ -60,6 +60,8 @@ URL schema
 +-------------+-----------------------------------------------+--------------------------------------------------+
 | PostGIS     | ``django.contrib.gis.db.backends.postgis``    | ``postgis://USER:PASSWORD@HOST:PORT/NAME``       |
 +-------------+-----------------------------------------------+--------------------------------------------------+
+| MSSQL       | ``sql_server.pyodbc``                         | ``mssql://USER:PASSWORD@HOST:PORT/NAME``         |
++-------------+-----------------------------------------------+--------------------------------------------------+
 | MySQL       | ``django.db.backends.mysql``                  | ``mysql://USER:PASSWORD@HOST:PORT/NAME``         |
 +-------------+-----------------------------------------------+--------------------------------------------------+
 | MySQL (GIS) | ``django.contrib.gis.db.backends.mysql``      | ``mysqlgis://USER:PASSWORD@HOST:PORT/NAME``      |

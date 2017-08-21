@@ -17,6 +17,7 @@ urlparse.uses_netloc.append('mysql')
 urlparse.uses_netloc.append('mysql2')
 urlparse.uses_netloc.append('mysqlgis')
 urlparse.uses_netloc.append('mysql-connector')
+urlparse.uses_netloc.append('mssql')
 urlparse.uses_netloc.append('spatialite')
 urlparse.uses_netloc.append('sqlite')
 urlparse.uses_netloc.append('oracle')
@@ -34,6 +35,7 @@ SCHEMES = {
     'mysql2': 'django.db.backends.mysql',
     'mysqlgis': 'django.contrib.gis.db.backends.mysql',
     'mysql-connector': 'mysql.connector.django',
+    'mssql': 'sql_server.pyodbc',
     'spatialite': 'django.contrib.gis.db.backends.spatialite',
     'sqlite': 'django.db.backends.sqlite3',
     'oracle': 'django.db.backends.oracle',

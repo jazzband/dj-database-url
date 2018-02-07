@@ -102,7 +102,7 @@ def parse(url, engine=None, conn_max_age=0):
     # Lookup specified engine.
     engine = SCHEMES[url.scheme] if engine is None else engine
 
-    port = (str(url.port) if url.port and engine == SCHEMES['oracle']
+    port = (str(url.port) if url.port and engine in [SCHEMES['oracle'], SCHEMES['mssql']]
             else url.port)
 
     # Update with environment configuration.

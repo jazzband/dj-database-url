@@ -44,7 +44,7 @@ SCHEMES = {
 }
 
 
-def config(env=DEFAULT_ENV, default=None, engine=None, conn_max_age=0):
+def config(env=DEFAULT_ENV, default=None, engine=None, conn_max_age=0, ssl_require=False):
     """Returns configured DATABASE dictionary from DATABASE_URL."""
 
     config = {}
@@ -52,12 +52,12 @@ def config(env=DEFAULT_ENV, default=None, engine=None, conn_max_age=0):
     s = os.environ.get(env, default)
 
     if s:
-        config = parse(s, engine, conn_max_age)
+        config = parse(s, engine, conn_max_age, ssl_require)
 
     return config
 
 
-def parse(url, engine=None, conn_max_age=0):
+def parse(url, engine=None, conn_max_age=0, ssl_require=False):
     """Parses a database URL."""
 
     if url == 'sqlite://:memory:':
@@ -123,6 +123,9 @@ def parse(url, engine=None, conn_max_age=0):
             continue
 
         options[key] = values[-1]
+
+    if ssl_require:
+        options['sslmode'] = 'require'
 
     # Support for Postgres Schema URLs
     if 'currentSchema' in options and engine in (

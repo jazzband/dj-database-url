@@ -37,7 +37,7 @@ Configure your database in ``settings.py`` from ``DATABASE_URL``::
 
     import dj_database_url
 
-    DATABASES['default'] = dj_database_url.config(conn_max_age=600)
+    DATABASES['default'] = dj_database_url.config(conn_max_age=600, ssl_require=True)
 
 Provide a default::
 
@@ -59,7 +59,7 @@ from setuptools import setup
 
 setup(
     name='dj-database-url',
-    version='0.4.1',
+    version='0.5.0',
     url='https://github.com/kennethreitz/dj-database-url',
     license='BSD',
     author='Kenneth Reitz',

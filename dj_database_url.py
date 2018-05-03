@@ -7,6 +7,11 @@ try:
 except ImportError:
     import urllib.parse as urlparse
 
+try:
+    from django import VERSION as DJANGO_VERSION
+except ImportError:
+    DJANGO_VERSION = None
+
 
 # Register database schemes in URLs.
 urlparse.uses_netloc.append('postgres')
@@ -27,9 +32,6 @@ urlparse.uses_netloc.append('redshift')
 DEFAULT_ENV = 'DATABASE_URL'
 
 SCHEMES = {
-    'postgres': 'django.db.backends.postgresql_psycopg2',
-    'postgresql': 'django.db.backends.postgresql_psycopg2',
-    'pgsql': 'django.db.backends.postgresql_psycopg2',
     'postgis': 'django.contrib.gis.db.backends.postgis',
     'mysql': 'django.db.backends.mysql',
     'mysql2': 'django.db.backends.mysql',
@@ -42,6 +44,16 @@ SCHEMES = {
     'oraclegis': 'django.contrib.gis.db.backends.oracle',
     'redshift': 'django_redshift_backend',
 }
+
+# https://docs.djangoproject.com/en/2.0/releases/2.0/#id1
+if DJANGO_VERSION and DJANGO_VERSION < (2, 0):
+    SCHEMES['postgres'] = 'django.db.backends.postgresql_psycopg2'
+    SCHEMES['postgresql'] = 'django.db.backends.postgresql_psycopg2'
+    SCHEMES['pgsql'] = 'django.db.backends.postgresql_psycopg2'
+else:
+    SCHEMES['postgres'] = 'django.db.backends.postgresql'
+    SCHEMES['postgresql'] = 'django.db.backends.postgresql'
+    SCHEMES['pgsql'] = 'django.db.backends.postgresql'
 
 
 def config(env=DEFAULT_ENV, default=None, engine=None, conn_max_age=0, ssl_require=False):
@@ -131,6 +143,7 @@ def parse(url, engine=None, conn_max_age=0, ssl_require=False):
     if 'currentSchema' in options and engine in (
         'django.contrib.gis.db.backends.postgis',
         'django.db.backends.postgresql_psycopg2',
+        'django.db.backends.postgresql',
         'django_redshift_backend',
     ):
         options['options'] = '-c search_path={0}'.format(options.pop('currentSchema'))

@@ -21,7 +21,7 @@ if DJANGO_VERSION < (2, 0):
 class DatabaseTestSuite(unittest.TestCase):
     def setUp(self):
         # clear env
-        for k, v in os.environ.items():
+        for k, v in os.environ.copy().items():
             if k.endswith(dj_database_url.DEFAULT_ENV):
                 del os.environ[k]
 

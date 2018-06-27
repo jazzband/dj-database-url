@@ -61,10 +61,13 @@ def config(env=DEFAULT_ENV, default=None, engine=None, conn_max_age=0, ssl_requi
 
     config = {}
 
-    s = os.environ.get(env, default)
+    for k, v in os.environ.items():
+        if k.endswith(env):
+            config_key = k.replace('_%s' % env, '')
+            config['default' if config_key == DEFAULT_ENV else config_key.lower()] = parse(v, engine, conn_max_age, ssl_require)
 
-    if s:
-        config = parse(s, engine, conn_max_age, ssl_require)
+    if len(config.keys()) == 1 and list(config.keys())[0] == 'default':
+        return config['default']
 
     return config
 

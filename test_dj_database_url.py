@@ -19,6 +19,11 @@ if DJANGO_VERSION < (2, 0):
 
 
 class DatabaseTestSuite(unittest.TestCase):
+    def setUp(self):
+        # clear env
+        for k, v in os.environ.items():
+            if k.endswith(dj_database_url.DEFAULT_ENV):
+                del os.environ[k]
 
     def test_postgres_parsing(self):
         url = 'postgres://uf07k1i6d8ia0v:wegauwhgeuioweg@ec2-107-21-253-135.compute-1.amazonaws.com:5431/d8r82722r2kuvn'
@@ -142,7 +147,8 @@ class DatabaseTestSuite(unittest.TestCase):
         assert url['PORT'] == ''
 
     def test_database_url(self):
-        del os.environ['DATABASE_URL']
+        if os.environ.get('DATABASE_URL'):
+            del os.environ['DATABASE_URL']
         a = dj_database_url.config()
         assert not a
 
@@ -335,6 +341,24 @@ class DatabaseTestSuite(unittest.TestCase):
         assert url['PORT'] == '12345'
         assert url['OPTIONS']['driver'] == 'ODBC Driver 13 for SQL Server'
         assert 'currentSchema' not in url['OPTIONS']
+
+    def test_multiple_database_parsing(self):
+        os.environ.setdefault('DB1_DATABASE_URL', 'postgres://user1:pass1@host-1.localhost.com:5432/test_db')
+        os.environ.setdefault('DB2_DATABASE_URL', 'mysql://user2:pass2@host-2.localhost.com:3306/test_db')
+
+        databases = dj_database_url.config()
+
+        assert databases['db1']['NAME'] == 'test_db'
+        assert databases['db1']['HOST'] == 'host-1.localhost.com'
+        assert databases['db1']['USER'] == 'user1'
+        assert databases['db1']['PASSWORD'] == 'pass1'
+        assert databases['db1']['PORT'] == 5432
+
+        assert databases['db2']['NAME'] == 'test_db'
+        assert databases['db2']['HOST'] == 'host-2.localhost.com'
+        assert databases['db2']['USER'] == 'user2'
+        assert databases['db2']['PASSWORD'] == 'pass2'
+        assert databases['db2']['PORT'] == 3306
 
 
 if __name__ == '__main__':

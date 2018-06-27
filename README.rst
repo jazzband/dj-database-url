@@ -45,6 +45,13 @@ Parse an arbitrary Database URL::
 
     DATABASES['default'] = dj_database_url.parse('postgres://...', conn_max_age=600)
 
+Multiple databases::
+
+    os.environ.setdefault('DB1_DATABASE_URL', 'postgres://user1:pass1@host-1.localhost.com:5432/test_db')
+    os.environ.setdefault('DB2_DATABASE_URL', 'mysql://user2:pass2@host-2.localhost.com:3306/test_db')
+
+    DATABASES = dj_database_url.config()
+
 The ``conn_max_age`` attribute is the lifetime of a database connection in seconds
 and is available in Django 1.6+. If you do not set a value, it will default to ``0``
 which is Django's historical behavior of using a new database connection on each

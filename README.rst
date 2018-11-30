@@ -66,7 +66,7 @@ URL schema
 +-------------+-----------------------------------------------+--------------------------------------------------+
 | MSSQL       | ``sql_server.pyodbc``                         | ``mssql://USER:PASSWORD@HOST:PORT/NAME``         |
 +-------------+-----------------------------------------------+--------------------------------------------------+
-| MySQL       | ``django.db.backends.mysql``                  | ``mysql://USER:PASSWORD@HOST:PORT/NAME``         |
+| MySQL       | ``django.db.backends.mysql``                  | ``mysql://USER:PASSWORD@HOST:PORT/NAME`` [1]_    |
 +-------------+-----------------------------------------------+--------------------------------------------------+
 | MySQL (GIS) | ``django.contrib.gis.db.backends.mysql``      | ``mysqlgis://USER:PASSWORD@HOST:PORT/NAME``      |
 +-------------+-----------------------------------------------+--------------------------------------------------+
@@ -81,9 +81,9 @@ URL schema
 | Redshift    | ``django_redshift_backend``                   | ``redshift://USER:PASSWORD@HOST:PORT/NAME``      |
 +-------------+-----------------------------------------------+--------------------------------------------------+
 
-.. [1] With PostgreSQL, you can also use unix domain socket paths with
+.. [1] With PostgreSQL or CloudSQL, you can also use unix domain socket paths with
        `percent encoding <http://www.postgresql.org/docs/9.2/interactive/libpq-connect.html#AEN38162>`_:
-       ``postgres://%2Fvar%2Flib%2Fpostgresql/dbname``.
+       ``postgres://%2Fvar%2Flib%2Fpostgresql/dbname``, ``mysql://uf07k1i6d8ia0v@%2fcloudsql%2fec2-107-21-253-135%3acompute-1/d8r82722r2kuvn``.
 .. [2] SQLite connects to file based databases. The same URL format is used, omitting
        the hostname, and using the "file" portion as the filename of the database.
        This has the effect of four slashes being present for an absolute file path:

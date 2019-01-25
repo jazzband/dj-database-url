@@ -1,17 +1,12 @@
 language: python
 python:
   - 2.7
-  - 3.2
-  - 3.3
   - 3.4
   - 3.5
   - 3.6
 
 env:
   matrix:
-   - DJANGO="Django>=1.8,<1.9"
-   - DJANGO="Django>=1.9,<1.10"
-   - DJANGO="Django>=1.10,<1.11"
    - DJANGO="Django>=1.11,<2.0"
    - DJANGO="Django>=2.0,<2.1"
    - DJANGO="Django>=2.1,<2.2"
@@ -19,9 +14,6 @@ env:
 
 matrix:
   fast_finish: true
-  include:
-    - python: 3.3
-      env: DJANGO="Django>=1.8,<1.9"
   exclude:
     # Django 2 dropped support for Python 2.
     - python: 2.7
@@ -34,10 +26,6 @@ matrix:
     - python: 3.4
       env: DJANGO="Django>=2.1,<2.2"
     # Django master dropped support for Python < 3.5.
-    - python: 3.2
-      env: DJANGO="https://github.com/django/django/archive/master.tar.gz"
-    - python: 3.3
-      env: DJANGO="https://github.com/django/django/archive/master.tar.gz"
     - python: 3.4
       env: DJANGO="https://github.com/django/django/archive/master.tar.gz"
   allow_failures:

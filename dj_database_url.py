@@ -56,7 +56,7 @@ else:
     SCHEMES['pgsql'] = 'django.db.backends.postgresql'
 
 
-def config(env=DEFAULT_ENV, default=None, engine=None, conn_max_age=0, ssl_require=False):
+def config(env=DEFAULT_ENV, default=None, engine=None, conn_max_age=0, ssl_require=False, test={}):
     """Returns configured DATABASE dictionary from DATABASE_URL."""
 
     config = {}
@@ -64,12 +64,12 @@ def config(env=DEFAULT_ENV, default=None, engine=None, conn_max_age=0, ssl_requi
     s = os.environ.get(env, default)
 
     if s:
-        config = parse(s, engine, conn_max_age, ssl_require)
+        config = parse(s, engine, conn_max_age, ssl_require, test)
 
     return config
 
 
-def parse(url, engine=None, conn_max_age=0, ssl_require=False):
+def parse(url, engine=None, conn_max_age=0, ssl_require=False, test={}):
     """Parses a database URL."""
 
     if url == 'sqlite://:memory:':
@@ -126,6 +126,8 @@ def parse(url, engine=None, conn_max_age=0, ssl_require=False):
         'PORT': port or '',
         'CONN_MAX_AGE': conn_max_age,
     })
+    if test:
+        config.update(test)
 
     # Pass the query string into OPTIONS.
     options = {}

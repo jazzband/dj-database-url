@@ -60,7 +60,7 @@ URL schema
 +-------------+-----------------------------------------------+--------------------------------------------------+
 | Engine      | Django Backend                                | URL                                              |
 +=============+===============================================+==================================================+
-| PostgreSQL  | ``django.db.backends.postgresql_psycopg2``    | ``postgres://USER:PASSWORD@HOST:PORT/NAME`` [1]_ |
+| PostgreSQL  | ``django.db.backends.postgresql``             | ``postgres://USER:PASSWORD@HOST:PORT/NAME`` [1]_ |
 +-------------+-----------------------------------------------+--------------------------------------------------+
 | PostGIS     | ``django.contrib.gis.db.backends.postgis``    | ``postgis://USER:PASSWORD@HOST:PORT/NAME``       |
 +-------------+-----------------------------------------------+--------------------------------------------------+

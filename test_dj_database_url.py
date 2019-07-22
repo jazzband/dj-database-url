@@ -130,6 +130,14 @@ class DatabaseTestSuite(unittest.TestCase):
         assert url['PASSWORD'] == 'wegauwhgeuioweg'
         assert url['PORT'] == 5431
 
+    def test_config_test_dictionary(self):
+        test_config = {
+            'NAME': 'mytestdatabase',
+        }
+        url = dj_database_url.config(test=test_config)
+
+        assert url['TEST']['NAME'] == 'mytestdatabase'
+
     def test_cleardb_parsing(self):
         url = 'mysql://bea6eb025ca0d8:69772142@us-cdbr-east.cleardb.com/heroku_97681db3eff7580?reconnect=true'
         url = dj_database_url.parse(url)

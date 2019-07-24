@@ -1,8 +1,8 @@
 DJ-Database-URL
 ~~~~~~~~~~~~~~~
 
-.. image:: https://secure.travis-ci.org/kennethreitz/dj-database-url.svg?branch=master
-   :target: http://travis-ci.org/kennethreitz/dj-database-url
+.. image:: https://secure.travis-ci.org/jacobian/dj-database-url.svg?branch=master
+   :target: http://travis-ci.org/jacobian/dj-database-url
 
 This simple Django utility allows you to utilize the
 `12factor <http://www.12factor.net/backing-services>`_ inspired
@@ -14,10 +14,6 @@ also a `conn_max_age` argument to easily enable Django's connection pool.
 
 If you'd rather not use an environment variable, you can pass a URL in directly
 instead to ``dj_database_url.parse``.
-
------------
-
-If you're interested in financially supporting Kenneth Reitz open source, consider `visiting this link <https://cash.me/$KennethReitz>`_. Your support helps tremendously with sustainability of motivation, as Open Source is no longer part of my day job.
 
 Supported Databases
 -------------------

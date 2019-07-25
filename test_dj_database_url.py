@@ -130,11 +130,11 @@ class DatabaseTestSuite(unittest.TestCase):
         assert url['PASSWORD'] == 'wegauwhgeuioweg'
         assert url['PORT'] == 5431
 
-    def test_config_test_dictionary(self):
-        test_config = {
+    def test_config_test_options(self):
+        test_db_config = {
             'NAME': 'mytestdatabase',
         }
-        url = dj_database_url.config(test=test_config)
+        url = dj_database_url.config(test_options=test_db_config)
 
         assert url['TEST']['NAME'] == 'mytestdatabase'
 

@@ -54,6 +54,11 @@ and is available in Django 1.6+. If you do not set a value, it will default to `
 which is Django's historical behavior of using a new database connection on each
 request. Use ``None`` for unlimited persistent connections.
 
+`TEST <https://docs.djangoproject.com/en/stable/ref/settings/#test>`_ settings can be configured using the ``test_options`` attribute::
+
+    DATABASES['default'] = dj_database_url.config(default='postgres://...', test_options={'NAME': 'mytestdatabase'})
+
+
 URL schema
 ----------
 

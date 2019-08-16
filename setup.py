@@ -70,6 +70,7 @@ setup(
     zip_safe=False,
     include_package_data=True,
     platforms='any',
+    install_requires=['django'],
     classifiers=[
         'Environment :: Web Environment',
         'Framework :: Django',

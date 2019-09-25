@@ -12,7 +12,8 @@ env:
    - DJANGO="Django>=1.11,<2.0"
    - DJANGO="Django>=2.0,<2.1"
    - DJANGO="Django>=2.1,<2.2"
-   - DJANGO="Django>=2.2a1,<3.0"
+   - DJANGO="Django>=2.2,<3.0"
+   - DJANGO="Django>=3.0a1,<3.1"
    - DJANGO="https://github.com/django/django/archive/master.tar.gz"
 
 matrix:
@@ -24,15 +25,24 @@ matrix:
     - python: 2.7
       env: DJANGO="Django>=2.1,<2.2"
     - python: 2.7
-      env: DJANGO="Django>=2.2a1,<3.0"
+      env: DJANGO="Django>=2.2,<3.0"
+    - python: 2.7
+      env: DJANGO="Django>=3.0a1,<3.1"
     - python: 2.7
       env: DJANGO="https://github.com/django/django/archive/master.tar.gz"
     # Django 2.1 dropped support for Python 3.4.
     - python: 3.4
       env: DJANGO="Django>=2.1,<2.2"
     - python: 3.4
-      env: DJANGO="Django>=2.2a1,<3.0"
+      env: DJANGO="Django>=2.2,<3.0"
     - python: 3.4
+      env: DJANGO="Django>=3.0a1,<3.1"
+    - python: 3.4
+      env: DJANGO="https://github.com/django/django/archive/master.tar.gz"
+    # Django 3.0 dropped support for Python 3.5.
+    - python: 3.5
+      env: DJANGO="Django>=3.0a1,<3.1"
+    - python: 3.5
       env: DJANGO="https://github.com/django/django/archive/master.tar.gz"
   allow_failures:
     - env: DJANGO="https://github.com/django/django/archive/master.tar.gz"

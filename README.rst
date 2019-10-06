@@ -52,11 +52,11 @@ request. Use ``None`` for unlimited persistent connections.
 
 Strings passed to ``dj_database_url`` must actually be valid URLs; in
 particular, special characters must be url-encoded. The following url will raise
-a ``ValueError``
+a ``ValueError``::
 
     postgres://user:p#ssword!@localhost/foobar
 
-and should instead be passed as
+and should instead be passed as::
 
     postgres://user:p%23ssword!@localhost/foobar
 

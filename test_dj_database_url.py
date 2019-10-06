@@ -336,6 +336,19 @@ class DatabaseTestSuite(unittest.TestCase):
         assert url['OPTIONS']['driver'] == 'ODBC Driver 13 for SQL Server'
         assert 'currentSchema' not in url['OPTIONS']
 
+    def test_invalid_url_raises_valueerror(self):
+        url = 'postgres://user:p#ssword!@localhost/foobar'
+
+        with self.assertRaises(ValueError):
+            dj_database_url.parse(url)
+
+    def test_encoded_url(self):
+        url = 'postgres://user%40domain:p%23ssword!@localhost/foobar'
+        url = dj_database_url.parse(url)
+
+        assert url['USER'] == 'user@domain'
+        assert url['PASSWORD'] == 'p#ssword!'
+
 
 if __name__ == '__main__':
     unittest.main()

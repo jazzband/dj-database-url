@@ -85,7 +85,13 @@ def parse(url, engine=None, conn_max_age=0, ssl_require=False):
     # otherwise parse the url as normal
     config = {}
 
-    url = urlparse.urlparse(url)
+    try:
+        url = urlparse.urlparse(url)
+    except ValueError:
+        raise ValueError(
+            'This string is not a valid url, possibly because the username or '
+            'password is not url-encoded.'
+        )
 
     # Split query strings from path.
     path = url.path[1:]

@@ -31,19 +31,37 @@ Installation is simple::
 Usage
 -----
 
-Configure your database in ``settings.py`` from ``DATABASE_URL``::
+1. If ``DATABASES`` is already defined:
+
+- Configure your database in ``settings.py`` from ``DATABASE_URL``::
 
     import dj_database_url
 
     DATABASES['default'] = dj_database_url.config(conn_max_age=600)
 
-Provide a default::
+- Provide a default::
 
     DATABASES['default'] = dj_database_url.config(default='postgres://...')
 
-Parse an arbitrary Database URL::
+- Parse an arbitrary Database URL::
 
     DATABASES['default'] = dj_database_url.parse('postgres://...', conn_max_age=600)
+
+2. If ``DATABASES`` is not defined:
+
+- Configure your database in ``settings.py`` from ``DATABASE_URL``::
+
+    import dj_database_url
+
+    DATABASES = {'default': dj_database_url.config(conn_max_age=600)}
+
+- Provide a default::
+
+    DATABASES = {'default': dj_database_url.config(default='postgres://...')}
+
+- Parse an arbitrary Database URL::
+
+    DATABASES = {'default': dj_database_url.parse('postgres://...', conn_max_age=600)}
 
 The ``conn_max_age`` attribute is the lifetime of a database connection in seconds
 and is available in Django 1.6+. If you do not set a value, it will default to ``0``

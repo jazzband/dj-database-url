@@ -336,6 +336,16 @@ class DatabaseTestSuite(unittest.TestCase):
         assert url['OPTIONS']['driver'] == 'ODBC Driver 13 for SQL Server'
         assert 'currentSchema' not in url['OPTIONS']
 
+    def test_sqlserver_parsing(self):
+        url = 'sqlserver://uf07k1i6d8ia0v:wegauwhgeuioweg@ec2-107-21-253-135.compute-1.amazonaws.com\\insnsnss:12345/d8r82722r2kuvn'
+        url = dj_database_url.parse(url)
+
+        assert url['ENGINE'] == 'sqlserver'
+        assert url['NAME'] == 'd8r82722r2kuvn'
+        assert url['HOST'] == 'ec2-107-21-253-135.compute-1.amazonaws.com\\insnsnss'
+        assert url['USER'] == 'uf07k1i6d8ia0v'
+        assert url['PASSWORD'] == 'wegauwhgeuioweg'
+        assert url['PORT'] == '12345'
 
 if __name__ == '__main__':
     unittest.main()

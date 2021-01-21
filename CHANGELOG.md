@@ -1,7 +1,20 @@
 # CHANGELOG
 
-## master
+## v0.6.0 (unreleased)
 
+- Add Python 3.9 and Django 3.1 trove classifiers and testing
+- Add Django as an explicit dependency
+- Add Python 3.8 / Django 3.0 trove classifiers
+- Point the ci badge at GH actions
+- Moving to github ci
+- Set long_description to README.rst
+- Update LICENSE to reflect multiple contributors
+- Update the build image
+- Remove outdated sponsorship link
+- Update PostgreSQL Django Backend name
+- Add testing for Python 3.7
+- Add testing for Django 2.2
+- Drop testing for Django < 1.11
 - Add Django trove classifiers
 - Add testing for Django 2.1
 - Add EXPECTED_POSTGRES_ENGINE

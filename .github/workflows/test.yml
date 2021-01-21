@@ -5,8 +5,8 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: [2.7, 3.5, 3.6, 3.7, 3.8]
-        django-version: [1.11, 2.0, 2.1, 2.2, 3.0]
+        python-version: [2.7, 3.5, 3.6, 3.7, 3.8, 3.9]
+        django-version: [1.11, 2.0, 2.1, 2.2, 3.0, 3.1]
         exclude:
           # Python 2.7 is only compatible with Django 1.11
           - python-version: 2.7
@@ -17,8 +17,30 @@ jobs:
             django-version: 2.2
           - python-version: 2.7
             django-version: 3.0
-          # Python 3.5 is compatible with Django 1.11 to 2.2 but not 3.0
+          - python-version: 2.7
+            django-version: 3.1
+          # Python 3.5 is compatible with Django 1.11 to 2.2 but not 3.0+
           - python-version: 3.5
+            django-version: 3.0
+          - python-version: 3.5
+            django-version: 3.1
+          # Python 3.8 is compatible with Django 2.2+
+          - python-version: 3.8
+            django-version: 1.11
+          - python-version: 3.8
+            django-version: 2.0
+          - python-version: 3.8
+            django-version: 2.1
+          # Python 3.9 is compatible with Django 3.1+
+          - python-version: 3.9
+            django-version: 1.11
+          - python-version: 3.9
+            django-version: 2.0
+          - python-version: 3.9
+            django-version: 2.1
+          - python-version: 3.9
+            django-version: 2.2
+          - python-version: 3.9
             django-version: 3.0
       fail-fast: false
     steps:

@@ -76,6 +76,8 @@ URL schema
 +-------------+-----------------------------------------------+--------------------------------------------------+
 | Redshift    | ``django_redshift_backend``                   | ``redshift://USER:PASSWORD@HOST:PORT/NAME``      |
 +-------------+-----------------------------------------------+--------------------------------------------------+
+| CockroachDB | ``django_cockroachdb``                        | ``cockroach://USER:PASSWORD@HOST:PORT/NAME``     |
++-------------+-----------------------------------------------+--------------------------------------------------+
 
 .. [1] The django.db.backends.postgresql backend is named django.db.backends.postgresql_psycopg2 in older releases. For
        backwards compatibility, the old name still works in newer versions. (The new name does not work in older versions).

@@ -51,6 +51,17 @@ class DatabaseTestSuite(unittest.TestCase):
         assert url['PASSWORD'] == ''
         assert url['PORT'] == ''
 
+    def test_postgres_google_cloud_parsing(self):
+        url = 'postgres://uf07k1i6d8ia0v:wegauwhgeuioweg@%2Fcloudsql%2Fproject_id%3Aregion%3Ainstance_id:5431/d8r82722r2kuvn'
+        url = dj_database_url.parse(url)
+
+        assert url['ENGINE'] == EXPECTED_POSTGRES_ENGINE
+        assert url['NAME'] == 'd8r82722r2kuvn'
+        assert url['HOST'] == '/cloudsql/project_id:region:instance_id'
+        assert url['USER'] == 'uf07k1i6d8ia0v'
+        assert url['PASSWORD'] == 'wegauwhgeuioweg'
+        assert url['PORT'] == 5431
+
     def test_ipv6_parsing(self):
         url = 'postgres://ieRaekei9wilaim7:wegauwhgeuioweg@[2001:db8:1234::1234:5678:90af]:5431/d8r82722r2kuvn'
         url = dj_database_url.parse(url)

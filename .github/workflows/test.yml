@@ -1,40 +1,39 @@
-name: test
-on: [push]
+name: CI
+
+on: [push, pull_request]
+
 jobs:
+  checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - name: Set up Python
+        uses: actions/setup-python@v1
+        with:
+          python-version: "3.x"
+      - name: Install Checkers
+        run: pip install black isort flake8
+      - name: black
+        run: black --check .
+      - name: isort
+        run: isort --check .
+      - name: flake8
+        run: flake8 dj_database_url.py
+
   test:
     runs-on: ubuntu-latest
     strategy:
-      matrix:
-        python-version: [2.7, 3.5, 3.6, 3.7, 3.8]
-        django-version: [1.11, 2.0, 2.1, 2.2, 3.0]
-        exclude:
-          # Python 2.7 is only compatible with Django 1.11
-          - python-version: 2.7
-            django-version: 2.0
-          - python-version: 2.7
-            django-version: 2.1
-          - python-version: 2.7
-            django-version: 2.2
-          - python-version: 2.7
-            django-version: 3.0
-          # Python 3.5 is compatible with Django 1.11 to 2.2 but not 3.0
-          - python-version: 3.5
-            django-version: 3.0
       fail-fast: false
+      matrix:
+        django-version: [2.0, 2.1, 2.2, 3.0, 3.1, 3.2]
+        python-version: [3.6, 3.7, 3.8, 3.9]
     steps:
       - uses: actions/checkout@v1
-
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v1
         with:
           python-version: ${{ matrix.python-version }}
-
-      - name: Install dependencies
-        run: |
-          pip install -U pip
-          pip install "Django~=${{ matrix.django-version }}.0" .
-
+      - name: Install Django
+        run: pip install "Django~=${{ matrix.django-version }}.0"
       - name: Run Tests
-        run: |
-          echo "$(python --version) / Django $(django-admin --version)"
-          python -m unittest discover
+        run: python -m unittest discover

@@ -56,7 +56,9 @@ else:
     SCHEMES['pgsql'] = 'django.db.backends.postgresql'
 
 
-def config(env=DEFAULT_ENV, default=None, engine=None, conn_max_age=0, ssl_require=False):
+def config(
+    env=DEFAULT_ENV, default=None, engine=None, conn_max_age=0, ssl_require=False
+):
     """Returns configured DATABASE dictionary from DATABASE_URL."""
 
     config = {}
@@ -76,10 +78,7 @@ def parse(url, engine=None, conn_max_age=0, ssl_require=False):
         # this is a special case, because if we pass this URL into
         # urlparse, urlparse will choke trying to interpret "memory"
         # as a port number
-        return {
-            'ENGINE': SCHEMES['sqlite'],
-            'NAME': ':memory:'
-        }
+        return {'ENGINE': SCHEMES['sqlite'], 'NAME': ':memory:'}
         # note: no other settings are required for sqlite
 
     # otherwise parse the url as normal
@@ -114,18 +113,23 @@ def parse(url, engine=None, conn_max_age=0, ssl_require=False):
     # Lookup specified engine.
     engine = SCHEMES[url.scheme] if engine is None else engine
 
-    port = (str(url.port) if url.port and engine in [SCHEMES['oracle'], SCHEMES['mssql']]
-            else url.port)
+    port = (
+        str(url.port)
+        if url.port and engine in [SCHEMES['oracle'], SCHEMES['mssql']]
+        else url.port
+    )
 
     # Update with environment configuration.
-    config.update({
-        'NAME': urlparse.unquote(path or ''),
-        'USER': urlparse.unquote(url.username or ''),
-        'PASSWORD': urlparse.unquote(url.password or ''),
-        'HOST': hostname,
-        'PORT': port or '',
-        'CONN_MAX_AGE': conn_max_age,
-    })
+    config.update(
+        {
+            'NAME': urlparse.unquote(path or ''),
+            'USER': urlparse.unquote(url.username or ''),
+            'PASSWORD': urlparse.unquote(url.password or ''),
+            'HOST': hostname,
+            'PORT': port or '',
+            'CONN_MAX_AGE': conn_max_age,
+        }
+    )
 
     # Pass the query string into OPTIONS.
     options = {}

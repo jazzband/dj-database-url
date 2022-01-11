@@ -90,3 +90,26 @@ URL schema
        from using other Oracle tools (like SQLPlus) i.e. user and password are separated
        by ``:`` not by ``/``. Also you can omit ``HOST`` and ``PORT``
        and provide a full DSN string or TNS name in ``NAME`` part.
+
+Contributing
+------------
+
+We welcome contributions to this project. Projects can take two forms:
+
+1. Raising issues or helping others through the github issue tracker.
+2. Contributing code.
+
+Raising Issues or helping others:
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+When submitting an issue or helping other remember you are talking to humans who have feelings, jobs and lives of their
+own. Be nice, be kind, be polite. Remember english may not be someone first language, if you do not understand or
+something is not clear be polite and re-ask/ re-word.
+
+Contributing code:
+^^^^^^^^^^^^^^^^^^
+
+* Before writing code be sure to check existing PR's and issues in the tracker.
+* Write code to the pylint spec.
+* Large or wide sweeping changes will take longer, and may face more scrutiny than smaller confined changes.
+* Code should be pass `black` and `flake8` validation.

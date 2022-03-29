@@ -1,6 +1,10 @@
 DJ-Database-URL
 ~~~~~~~~~~~~~~~
 
+.. image:: https://jazzband.co/static/img/badge.png
+   :target: https://jazzband.co/
+   :alt: Jazzband
+
 .. image:: https://img.shields.io/endpoint.svg?url=https%3A%2F%2Factions-badge.atrox.dev%2Fjacobian%2Fdj-database-url%2Fbadge&style=for-the-badge
    :target: https://actions-badge.atrox.dev/jacobian/dj-database-url/goto
 

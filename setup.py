@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from setuptools import setup
 
-with open('README.rst') as readme_rst:
+with open("README.rst") as readme_rst:
     readme = readme_rst.read()
 
 setup(

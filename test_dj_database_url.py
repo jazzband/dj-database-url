@@ -350,7 +350,7 @@ class DatabaseTestSuite(unittest.TestCase):
         assert url['USER'] == 'testuser'
         assert url['PASSWORD'] == 'testpass'
         assert url['PORT'] == 26257
-        assert url['OPTIONS']['sslmode'] == 'verify-full'        
+        assert url['OPTIONS']['sslmode'] == 'verify-full'
         assert url['OPTIONS']['sslrootcert'] == '/certs/ca.crt'
         assert url['OPTIONS']['sslcert'] == '/certs/client.myprojectuser.crt'
         assert url['OPTIONS']['sslkey'] == '/certs/client.myprojectuser.key'

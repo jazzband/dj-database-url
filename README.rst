@@ -5,8 +5,8 @@ DJ-Database-URL
    :target: https://jazzband.co/
    :alt: Jazzband
 
-.. image:: https://img.shields.io/endpoint.svg?url=https%3A%2F%2Factions-badge.atrox.dev%2Fjacobian%2Fdj-database-url%2Fbadge&style=for-the-badge
-   :target: https://actions-badge.atrox.dev/jacobian/dj-database-url/goto
+.. image:: https://github.com/jazzband/dj-database-url/actions/workflows/test.yml/badge.svg
+   :target: https://github.com/jazzband/dj-database-url/actions/workflows/test.yml
 
 This simple Django utility allows you to utilize the
 `12factor <http://www.12factor.net/backing-services>`_ inspired

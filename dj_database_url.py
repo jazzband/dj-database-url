@@ -102,6 +102,7 @@ def parse(url, engine=None, conn_max_age=0, ssl_require=False):
 
     # Handle postgres percent-encoded paths.
     hostname = url.hostname or ''
+    # %2f - / character, %3a - : character
     if any(urldecode_char in hostname.lower() for urldecode_char in ['%2f', '%3a']):
         # Switch to url.netloc to avoid lower cased paths
         hostname = url.netloc

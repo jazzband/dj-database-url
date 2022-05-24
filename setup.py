@@ -52,7 +52,7 @@ and is available in Django 1.6+. If you do not set a value, it will default to `
 which is Django's historical behavior of using a new database connection on each
 request. Use ``None`` for unlimited persistent connections.
 
-Strings passed to `dj_database_url` must actually be valid URLs; in
+Strings passed to `dj_database_url` must be valid URLs; in
 particular, special characters must be url-encoded. The following url will raise
 a `ValueError`::
 

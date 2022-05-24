@@ -28,6 +28,7 @@ urlparse.uses_netloc.append("sqlite")
 urlparse.uses_netloc.append("oracle")
 urlparse.uses_netloc.append("oraclegis")
 urlparse.uses_netloc.append("redshift")
+urlparse.uses_netloc.append("cockroach")
 
 DEFAULT_ENV = "DATABASE_URL"
 
@@ -43,6 +44,7 @@ SCHEMES = {
     "oracle": "django.db.backends.oracle",
     "oraclegis": "django.contrib.gis.db.backends.oracle",
     "redshift": "django_redshift_backend",
+    "cockroach": "django_cockroachdb",
 }
 
 # https://docs.djangoproject.com/en/2.0/releases/2.0/#id1

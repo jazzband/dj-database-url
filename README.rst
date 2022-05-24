@@ -26,7 +26,7 @@ Supported Databases
 -------------------
 
 Support currently exists for PostgreSQL, PostGIS, MySQL, MySQL (GIS),
-Oracle, Oracle (GIS), Redshift, and SQLite.
+Oracle, Oracle (GIS), Redshift, CockroachDB, and SQLite.
 
 Installation
 ------------
@@ -82,6 +82,8 @@ URL schema
 | Oracle (GIS)| ``django.contrib.gis.db.backends.oracle``     | ``oraclegis://USER:PASSWORD@HOST:PORT/NAME``     |
 +-------------+-----------------------------------------------+--------------------------------------------------+
 | Redshift    | ``django_redshift_backend``                   | ``redshift://USER:PASSWORD@HOST:PORT/NAME``      |
++-------------+-----------------------------------------------+--------------------------------------------------+
+| CockroachDB | ``django_cockroachdb``                        | ``cockroach://USER:PASSWORD@HOST:PORT/NAME``     |
 +-------------+-----------------------------------------------+--------------------------------------------------+
 
 .. [1] The django.db.backends.postgresql backend is named django.db.backends.postgresql_psycopg2 in older releases. For

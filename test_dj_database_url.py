@@ -341,6 +341,20 @@ class DatabaseTestSuite(unittest.TestCase):
         assert url["OPTIONS"]["driver"] == "ODBC Driver 13 for SQL Server"
         assert "currentSchema" not in url["OPTIONS"]
 
+    def test_cockroach(self):
+        url = "cockroach://testuser:testpass@testhost:26257/cockroach?sslmode=verify-full&sslrootcert=/certs/ca.crt&sslcert=/certs/client.myprojectuser.crt&sslkey=/certs/client.myprojectuser.key"
+        url = dj_database_url.parse(url)
+        assert url['ENGINE'] == 'django_cockroachdb'
+        assert url['NAME'] == 'cockroach'
+        assert url['HOST'] == 'testhost'
+        assert url['USER'] == 'testuser'
+        assert url['PASSWORD'] == 'testpass'
+        assert url['PORT'] == 26257
+        assert url['OPTIONS']['sslmode'] == 'verify-full'
+        assert url['OPTIONS']['sslrootcert'] == '/certs/ca.crt'
+        assert url['OPTIONS']['sslcert'] == '/certs/client.myprojectuser.crt'
+        assert url['OPTIONS']['sslkey'] == '/certs/client.myprojectuser.key'
+
 
 if __name__ == "__main__":
     unittest.main()

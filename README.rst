@@ -94,6 +94,8 @@ URL schema
 +-------------+-----------------------------------------------+--------------------------------------------------+
 | MSSQL       | ``sql_server.pyodbc``                         | ``mssql://USER:PASSWORD@HOST:PORT/NAME``         |
 +-------------+-----------------------------------------------+--------------------------------------------------+
+| MSSQL [5]_  | ``mssql``                                     | ``mssqlms://USER:PASSWORD@HOST:PORT/NAME``       |
++-------------+-----------------------------------------------+--------------------------------------------------+
 | MySQL       | ``django.db.backends.mysql``                  | ``mysql://USER:PASSWORD@HOST:PORT/NAME``         |
 +-------------+-----------------------------------------------+--------------------------------------------------+
 | MySQL (GIS) | ``django.contrib.gis.db.backends.mysql``      | ``mysqlgis://USER:PASSWORD@HOST:PORT/NAME``      |
@@ -124,6 +126,7 @@ URL schema
        from using other Oracle tools (like SQLPlus) i.e. user and password are separated
        by ``:`` not by ``/``. Also you can omit ``HOST`` and ``PORT``
        and provide a full DSN string or TNS name in ``NAME`` part.
+.. [5] Microsoft official `mssql-django <https://github.com/microsoft/mssql-django>`_ adapter.
 
 Contributing
 ------------

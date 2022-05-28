@@ -355,6 +355,19 @@ class DatabaseTestSuite(unittest.TestCase):
         assert url['OPTIONS']['sslcert'] == '/certs/client.myprojectuser.crt'
         assert url['OPTIONS']['sslkey'] == '/certs/client.myprojectuser.key'
 
+    def test_mssqlms_parsing(self):
+        url = "mssqlms://uf07k1i6d8ia0v:wegauwhgeuioweg@ec2-107-21-253-135.compute-1.amazonaws.com/d8r82722r2kuvn?driver=ODBC Driver 13 for SQL Server"
+        url = dj_database_url.parse(url)
+
+        assert url["ENGINE"] == "mssql"
+        assert url["NAME"] == "d8r82722r2kuvn"
+        assert url["HOST"] == "ec2-107-21-253-135.compute-1.amazonaws.com"
+        assert url["USER"] == "uf07k1i6d8ia0v"
+        assert url["PASSWORD"] == "wegauwhgeuioweg"
+        assert url["PORT"] == ""
+        assert url["OPTIONS"]["driver"] == "ODBC Driver 13 for SQL Server"
+        assert "currentSchema" not in url["OPTIONS"]
+
 
 if __name__ == "__main__":
     unittest.main()

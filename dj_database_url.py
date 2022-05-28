@@ -23,6 +23,7 @@ urlparse.uses_netloc.append("mysql2")
 urlparse.uses_netloc.append("mysqlgis")
 urlparse.uses_netloc.append("mysql-connector")
 urlparse.uses_netloc.append("mssql")
+urlparse.uses_netloc.append("mssqlms")
 urlparse.uses_netloc.append("spatialite")
 urlparse.uses_netloc.append("sqlite")
 urlparse.uses_netloc.append("oracle")
@@ -39,6 +40,7 @@ SCHEMES = {
     "mysqlgis": "django.contrib.gis.db.backends.mysql",
     "mysql-connector": "mysql.connector.django",
     "mssql": "sql_server.pyodbc",
+    "mssqlms": "mssql",
     "spatialite": "django.contrib.gis.db.backends.spatialite",
     "sqlite": "django.db.backends.sqlite3",
     "oracle": "django.db.backends.oracle",
@@ -117,7 +119,8 @@ def parse(url, engine=None, conn_max_age=0, ssl_require=False):
 
     port = (
         str(url.port)
-        if url.port and engine in [SCHEMES["oracle"], SCHEMES["mssql"]]
+        if url.port
+        and engine in [SCHEMES["oracle"], SCHEMES["mssql"], SCHEMES["mssqlms"]]
         else url.port
     )
 

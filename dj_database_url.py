@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 import os
-
 import urllib.parse as urlparse
 
 try:

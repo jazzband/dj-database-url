@@ -1,11 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import os
-
-try:
-    import urlparse
-except ImportError:
-    import urllib.parse as urlparse
+import urllib.parse as urlparse
 
 try:
     from django import VERSION as DJANGO_VERSION

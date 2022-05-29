@@ -64,15 +64,12 @@ def config(
     env=DEFAULT_ENV, default=None, engine=None, conn_max_age=0, ssl_require=False
 ):
     """Returns configured DATABASE dictionary from DATABASE_URL."""
-
-    config = {}
-
     s = os.environ.get(env, default)
 
     if s:
-        config = parse(s, engine, conn_max_age, ssl_require)
+        return parse(s, engine, conn_max_age, ssl_require)
 
-    return config
+    return {}
 
 
 def parse(url, engine=None, conn_max_age=0, ssl_require=False):
@@ -86,7 +83,7 @@ def parse(url, engine=None, conn_max_age=0, ssl_require=False):
         # note: no other settings are required for sqlite
 
     # otherwise parse the url as normal
-    config = {}
+    parsed_config = {}
 
     url = urlparse.urlparse(url)
 
@@ -125,7 +122,7 @@ def parse(url, engine=None, conn_max_age=0, ssl_require=False):
     )
 
     # Update with environment configuration.
-    config.update(
+    parsed_config.update(
         {
             "NAME": urlparse.unquote(path or ""),
             "USER": urlparse.unquote(url.username or ""),
@@ -158,9 +155,9 @@ def parse(url, engine=None, conn_max_age=0, ssl_require=False):
         options["options"] = "-c search_path={0}".format(options.pop("currentSchema"))
 
     if options:
-        config["OPTIONS"] = options
+        parsed_config["OPTIONS"] = options
 
     if engine:
-        config["ENGINE"] = engine
+        parsed_config["ENGINE"] = engine
 
-    return config
+    return parsed_config

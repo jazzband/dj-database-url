@@ -1,7 +1,10 @@
 import os
 import unittest
 
-from django import VERSION as DJANGO_VERSION
+try:
+    from django import VERSION as DJANGO_VERSION
+except ImportError:
+    DJANGO_VERSION = None
 
 import dj_database_url
 
@@ -10,7 +13,7 @@ POSTGIS_URL = "postgis://uf07k1i6d8ia0v:wegauwhgeuioweg@ec2-107-21-253-135.compu
 # Django deprecated the `django.db.backends.postgresql_psycopg2` in 2.0.
 # https://docs.djangoproject.com/en/2.0/releases/2.0/#id1
 EXPECTED_POSTGRES_ENGINE = "django.db.backends.postgresql"
-if DJANGO_VERSION < (2, 0):
+if DJANGO_VERSION and DJANGO_VERSION < (2, 0):
     EXPECTED_POSTGRES_ENGINE = "django.db.backends.postgresql_psycopg2"
 
 

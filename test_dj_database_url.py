@@ -379,6 +379,12 @@ class DatabaseTestSuite(unittest.TestCase):
         assert url["OPTIONS"]["driver"] == "ODBC Driver 13 for SQL Server"
         assert "currentSchema" not in url["OPTIONS"]
 
+    def test_database_options(self):
+        url = "postgres://user:pass@host/db"
+        url = dj_database_url.parse(url, ATOMIC_REQUESTS=True, TEST={"NAME": "testdb"})
+        assert url["ATOMIC_REQUESTS"] is True
+        assert url["TEST"] == {"NAME": "testdb"}
+
 
 if __name__ == "__main__":
     unittest.main()

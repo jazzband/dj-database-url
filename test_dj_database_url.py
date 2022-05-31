@@ -1,20 +1,28 @@
 import os
 import unittest
 
-try:
-    from django import VERSION as DJANGO_VERSION
-except ImportError:
-    DJANGO_VERSION = None
-
 import dj_database_url
+
+dj_database_url.register("mysql.connector.django", "mysql-connector")
+dj_database_url.register("sql_server.pyodbc", "mssql", string_ports=True)
+dj_database_url.register("mssql", "mssqlms")
+dj_database_url.register(
+    "django_redshift_backend",
+    "redshift",
+    options={
+        "currentSchema": lambda values: {
+            "options": "-c search_path={}".format(values[-1])
+        },
+    },
+)
+dj_database_url.register("django_cockroachdb", "cockroach")
+
 
 POSTGIS_URL = "postgis://uf07k1i6d8ia0v:wegauwhgeuioweg@ec2-107-21-253-135.compute-1.amazonaws.com:5431/d8r82722r2kuvn"
 
 # Django deprecated the `django.db.backends.postgresql_psycopg2` in 2.0.
 # https://docs.djangoproject.com/en/2.0/releases/2.0/#id1
 EXPECTED_POSTGRES_ENGINE = "django.db.backends.postgresql"
-if DJANGO_VERSION and DJANGO_VERSION < (2, 0):
-    EXPECTED_POSTGRES_ENGINE = "django.db.backends.postgresql_psycopg2"
 
 
 class DatabaseTestSuite(unittest.TestCase):

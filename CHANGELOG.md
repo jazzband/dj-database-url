@@ -1,11 +1,15 @@
 # CHANGELOG
 
-## master
+## v1.0.0 (2022-18-06)
 
-- Add Django trove classifiers
-- Add testing for Django 2.1
-- Add EXPECTED_POSTGRES_ENGINE
-- Fix #96 deprecated postgres backend strings
+Initial release of code now dj-database-urls is part of jazzband.
+
+* Add support for cockroachdb.
+* Add support for the offical MSSQL connector.
+* Update License to be compatible with Jazzband.
+* Remove support for Python < 3.5 including Python 2.7
+* Update source code to Black format.
+* Update CI using pre-commit
 
 ## v0.5.0 (2018-03-01)
 

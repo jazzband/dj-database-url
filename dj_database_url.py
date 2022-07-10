@@ -26,6 +26,8 @@ urlparse.uses_netloc.append("oracle")
 urlparse.uses_netloc.append("oraclegis")
 urlparse.uses_netloc.append("redshift")
 urlparse.uses_netloc.append("cockroach")
+urlparse.uses_netloc.append("timescale")
+urlparse.uses_netloc.append("timescalegis")
 
 DEFAULT_ENV = "DATABASE_URL"
 
@@ -43,6 +45,8 @@ SCHEMES = {
     "oraclegis": "django.contrib.gis.db.backends.oracle",
     "redshift": "django_redshift_backend",
     "cockroach": "django_cockroachdb",
+    "timescale": "timescale.db.backends.postgresql",
+    "timescalegis": "timescale.db.backends.postgis",
 }
 
 # https://docs.djangoproject.com/en/2.0/releases/2.0/#id1
@@ -147,6 +151,8 @@ def parse(url, engine=None, conn_max_age=0, ssl_require=False):
         "django.db.backends.postgresql_psycopg2",
         "django.db.backends.postgresql",
         "django_redshift_backend",
+        "timescale.db.backends.postgresql",
+        "timescale.db.backends.postgis",
     ):
         options["options"] = "-c search_path={0}".format(options.pop("currentSchema"))
 

@@ -371,6 +371,136 @@ class DatabaseTestSuite(unittest.TestCase):
         assert url["OPTIONS"]["driver"] == "ODBC Driver 13 for SQL Server"
         assert "currentSchema" not in url["OPTIONS"]
 
+    def test_timescale_parsing(self):
+        url = "timescale://uf07k1i6d8ia0v:wegauwhgeuioweg@ec2-107-21-253-135.compute-1.amazonaws.com:5431/d8r82722r2kuvn"
+        url = dj_database_url.parse(url)
+
+        assert url["ENGINE"] == "timescale.db.backends.postgresql"
+        assert url["NAME"] == "d8r82722r2kuvn"
+        assert url["HOST"] == "ec2-107-21-253-135.compute-1.amazonaws.com"
+        assert url["USER"] == "uf07k1i6d8ia0v"
+        assert url["PASSWORD"] == "wegauwhgeuioweg"
+        assert url["PORT"] == 5431
+
+    def test_timescale_unix_socket_parsing(self):
+        url = "timescale://%2Fvar%2Frun%2Fpostgresql/d8r82722r2kuvn"
+        url = dj_database_url.parse(url)
+
+        assert url["ENGINE"] == "timescale.db.backends.postgresql"
+        assert url["NAME"] == "d8r82722r2kuvn"
+        assert url["HOST"] == "/var/run/postgresql"
+        assert url["USER"] == ""
+        assert url["PASSWORD"] == ""
+        assert url["PORT"] == ""
+
+        url = "timescale://%2FUsers%2Fpostgres%2FRuN/d8r82722r2kuvn"
+        url = dj_database_url.parse(url)
+
+        assert url["ENGINE"] == "timescale.db.backends.postgresql"
+        assert url["HOST"] == "/Users/postgres/RuN"
+        assert url["USER"] == ""
+        assert url["PASSWORD"] == ""
+        assert url["PORT"] == ""
+
+    def test_timescale_ipv6_parsing(self):
+        url = "timescale://ieRaekei9wilaim7:wegauwhgeuioweg@[2001:db8:1234::1234:5678:90af]:5431/d8r82722r2kuvn"
+        url = dj_database_url.parse(url)
+
+        assert url["ENGINE"] == "timescale.db.backends.postgresql"
+        assert url["NAME"] == "d8r82722r2kuvn"
+        assert url["HOST"] == "2001:db8:1234::1234:5678:90af"
+        assert url["USER"] == "ieRaekei9wilaim7"
+        assert url["PASSWORD"] == "wegauwhgeuioweg"
+        assert url["PORT"] == 5431
+
+    def test_timescale_search_path_parsing(self):
+        url = "timescale://uf07k1i6d8ia0v:wegauwhgeuioweg@ec2-107-21-253-135.compute-1.amazonaws.com:5431/d8r82722r2kuvn?currentSchema=otherschema"
+        url = dj_database_url.parse(url)
+        assert url["ENGINE"] == "timescale.db.backends.postgresql"
+        assert url["NAME"] == "d8r82722r2kuvn"
+        assert url["HOST"] == "ec2-107-21-253-135.compute-1.amazonaws.com"
+        assert url["USER"] == "uf07k1i6d8ia0v"
+        assert url["PASSWORD"] == "wegauwhgeuioweg"
+        assert url["PORT"] == 5431
+        assert url["OPTIONS"]["options"] == "-c search_path=otherschema"
+        assert "currentSchema" not in url["OPTIONS"]
+
+    def test_timescale_parsing_with_special_characters(self):
+        url = "timescale://%23user:%23password@ec2-107-21-253-135.compute-1.amazonaws.com:5431/%23database"
+        url = dj_database_url.parse(url)
+
+        assert url["ENGINE"] == "timescale.db.backends.postgresql"
+        assert url["NAME"] == "#database"
+        assert url["HOST"] == "ec2-107-21-253-135.compute-1.amazonaws.com"
+        assert url["USER"] == "#user"
+        assert url["PASSWORD"] == "#password"
+        assert url["PORT"] == 5431
+
+    def test_timescalegis_parsing(self):
+        url = "timescalegis://uf07k1i6d8ia0v:wegauwhgeuioweg@ec2-107-21-253-135.compute-1.amazonaws.com:5431/d8r82722r2kuvn"
+        url = dj_database_url.parse(url)
+
+        assert url["ENGINE"] == "timescale.db.backends.postgis"
+        assert url["NAME"] == "d8r82722r2kuvn"
+        assert url["HOST"] == "ec2-107-21-253-135.compute-1.amazonaws.com"
+        assert url["USER"] == "uf07k1i6d8ia0v"
+        assert url["PASSWORD"] == "wegauwhgeuioweg"
+        assert url["PORT"] == 5431
+
+    def test_timescalegis_unix_socket_parsing(self):
+        url = "timescalegis://%2Fvar%2Frun%2Fpostgresql/d8r82722r2kuvn"
+        url = dj_database_url.parse(url)
+
+        assert url["ENGINE"] == "timescale.db.backends.postgis"
+        assert url["NAME"] == "d8r82722r2kuvn"
+        assert url["HOST"] == "/var/run/postgresql"
+        assert url["USER"] == ""
+        assert url["PASSWORD"] == ""
+        assert url["PORT"] == ""
+
+        url = "timescalegis://%2FUsers%2Fpostgres%2FRuN/d8r82722r2kuvn"
+        url = dj_database_url.parse(url)
+
+        assert url["ENGINE"] == "timescale.db.backends.postgis"
+        assert url["HOST"] == "/Users/postgres/RuN"
+        assert url["USER"] == ""
+        assert url["PASSWORD"] == ""
+        assert url["PORT"] == ""
+
+    def test_timescalegis_ipv6_parsing(self):
+        url = "timescalegis://ieRaekei9wilaim7:wegauwhgeuioweg@[2001:db8:1234::1234:5678:90af]:5431/d8r82722r2kuvn"
+        url = dj_database_url.parse(url)
+
+        assert url["ENGINE"] == "timescale.db.backends.postgis"
+        assert url["NAME"] == "d8r82722r2kuvn"
+        assert url["HOST"] == "2001:db8:1234::1234:5678:90af"
+        assert url["USER"] == "ieRaekei9wilaim7"
+        assert url["PASSWORD"] == "wegauwhgeuioweg"
+        assert url["PORT"] == 5431
+
+    def test_timescalegis_search_path_parsing(self):
+        url = "timescalegis://uf07k1i6d8ia0v:wegauwhgeuioweg@ec2-107-21-253-135.compute-1.amazonaws.com:5431/d8r82722r2kuvn?currentSchema=otherschema"
+        url = dj_database_url.parse(url)
+        assert url["ENGINE"] == "timescale.db.backends.postgis"
+        assert url["NAME"] == "d8r82722r2kuvn"
+        assert url["HOST"] == "ec2-107-21-253-135.compute-1.amazonaws.com"
+        assert url["USER"] == "uf07k1i6d8ia0v"
+        assert url["PASSWORD"] == "wegauwhgeuioweg"
+        assert url["PORT"] == 5431
+        assert url["OPTIONS"]["options"] == "-c search_path=otherschema"
+        assert "currentSchema" not in url["OPTIONS"]
+
+    def test_timescalegis_parsing_with_special_characters(self):
+        url = "timescalegis://%23user:%23password@ec2-107-21-253-135.compute-1.amazonaws.com:5431/%23database"
+        url = dj_database_url.parse(url)
+
+        assert url["ENGINE"] == "timescale.db.backends.postgis"
+        assert url["NAME"] == "#database"
+        assert url["HOST"] == "ec2-107-21-253-135.compute-1.amazonaws.com"
+        assert url["USER"] == "#user"
+        assert url["PASSWORD"] == "#password"
+        assert url["PORT"] == 5431
+
 
 if __name__ == "__main__":
     unittest.main()

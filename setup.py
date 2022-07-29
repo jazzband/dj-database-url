@@ -6,7 +6,7 @@ with open("README.rst") as readme_rst:
 
 setup(
     name="dj-database-url",
-    version="0.5.0",
+    version="1.0.0",
     url="https://github.com/jazzband/dj-database-url",
     license="BSD",
     author="Original Author: Kenneth Reitz, Maintained by: JazzBand Community",

@@ -18,6 +18,10 @@ setup(
     zip_safe=False,
     include_package_data=True,
     platforms="any",
+    project_links={
+        'GitHub': 'https://github.com/jazzband/dj-database-url/',
+        'Release log': 'https://github.com/jazzband/dj-database-url/blob/master/CHANGELOG.md',
+    },
     classifiers=[
         "Environment :: Web Environment",
         "Framework :: Django",

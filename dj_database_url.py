@@ -61,12 +61,7 @@ else:
 
 
 def config(
-    env=DEFAULT_ENV,
-    default=None,
-    engine=None,
-    conn_max_age=0,
-    ssl_require=False,
-    options={},
+    env=DEFAULT_ENV, default=None, engine=None, conn_max_age=0, ssl_require=False, options={}
 ):
     """Returns configured DATABASE dictionary from DATABASE_URL."""
     s = os.environ.get(env, default)
@@ -135,9 +130,11 @@ def parse(url, engine=None, conn_max_age=0, ssl_require=False, options={}):
             "HOST": hostname,
             "PORT": port or "",
             "CONN_MAX_AGE": conn_max_age,
-            "OPTIONS": options,
         }
     )
+
+    if not options=={}:
+        parsed_config["OPTIONS"] = options
 
     # Pass the query string into OPTIONS.
     options = {}

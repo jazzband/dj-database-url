@@ -61,7 +61,12 @@ else:
 
 
 def config(
-    env=DEFAULT_ENV, default=None, engine=None, conn_max_age=0, ssl_require=False, options={}
+    env=DEFAULT_ENV,
+    default=None,
+    engine=None,
+    conn_max_age=0,
+    ssl_require=False,
+    options={},
 ):
     """Returns configured DATABASE dictionary from DATABASE_URL."""
     s = os.environ.get(env, default)

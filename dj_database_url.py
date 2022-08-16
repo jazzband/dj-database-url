@@ -61,18 +61,18 @@ else:
 
 
 def config(
-    env=DEFAULT_ENV, default=None, engine=None, conn_max_age=0, ssl_require=False
+    env=DEFAULT_ENV, default=None, engine=None, conn_max_age=0, ssl_require=False, options={}
 ):
     """Returns configured DATABASE dictionary from DATABASE_URL."""
     s = os.environ.get(env, default)
 
     if s:
-        return parse(s, engine, conn_max_age, ssl_require)
+        return parse(s, engine, conn_max_age, ssl_require, options)
 
     return {}
 
 
-def parse(url, engine=None, conn_max_age=0, ssl_require=False):
+def parse(url, engine=None, conn_max_age=0, ssl_require=False, options={}):
     """Parses a database URL."""
 
     if url == "sqlite://:memory:":
@@ -130,6 +130,7 @@ def parse(url, engine=None, conn_max_age=0, ssl_require=False):
             "HOST": hostname,
             "PORT": port or "",
             "CONN_MAX_AGE": conn_max_age,
+            "OPTIONS": options,
         }
     )
 

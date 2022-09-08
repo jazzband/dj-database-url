@@ -1,7 +1,6 @@
 import os
 import urllib.parse as urlparse
 
-
 # Register database schemes in URLs.
 urlparse.uses_netloc.append("postgres")
 urlparse.uses_netloc.append("postgresql")

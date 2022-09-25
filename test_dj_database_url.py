@@ -1,20 +1,9 @@
 import os
 import unittest
 
-try:
-    from django import VERSION as DJANGO_VERSION
-except ImportError:
-    DJANGO_VERSION = None
-
 import dj_database_url
 
 POSTGIS_URL = "postgis://uf07k1i6d8ia0v:wegauwhgeuioweg@ec2-107-21-253-135.compute-1.amazonaws.com:5431/d8r82722r2kuvn"
-
-# Django deprecated the `django.db.backends.postgresql_psycopg2` in 2.0.
-# https://docs.djangoproject.com/en/2.0/releases/2.0/#id1
-EXPECTED_POSTGRES_ENGINE = "django.db.backends.postgresql"
-if DJANGO_VERSION and DJANGO_VERSION < (2, 0):
-    EXPECTED_POSTGRES_ENGINE = "django.db.backends.postgresql_psycopg2"
 
 
 class DatabaseTestSuite(unittest.TestCase):
@@ -22,7 +11,7 @@ class DatabaseTestSuite(unittest.TestCase):
         url = "postgres://uf07k1i6d8ia0v:wegauwhgeuioweg@ec2-107-21-253-135.compute-1.amazonaws.com:5431/d8r82722r2kuvn"
         url = dj_database_url.parse(url)
 
-        assert url["ENGINE"] == EXPECTED_POSTGRES_ENGINE
+        assert url["ENGINE"] == "django.db.backends.postgresql"
         assert url["NAME"] == "d8r82722r2kuvn"
         assert url["HOST"] == "ec2-107-21-253-135.compute-1.amazonaws.com"
         assert url["USER"] == "uf07k1i6d8ia0v"
@@ -33,7 +22,7 @@ class DatabaseTestSuite(unittest.TestCase):
         url = "postgres://%2Fvar%2Frun%2Fpostgresql/d8r82722r2kuvn"
         url = dj_database_url.parse(url)
 
-        assert url["ENGINE"] == EXPECTED_POSTGRES_ENGINE
+        assert url["ENGINE"] == "django.db.backends.postgresql"
         assert url["NAME"] == "d8r82722r2kuvn"
         assert url["HOST"] == "/var/run/postgresql"
         assert url["USER"] == ""
@@ -43,7 +32,7 @@ class DatabaseTestSuite(unittest.TestCase):
         url = "postgres://%2FUsers%2Fpostgres%2FRuN/d8r82722r2kuvn"
         url = dj_database_url.parse(url)
 
-        assert url["ENGINE"] == EXPECTED_POSTGRES_ENGINE
+        assert url["ENGINE"] == "django.db.backends.postgresql"
         assert url["HOST"] == "/Users/postgres/RuN"
         assert url["USER"] == ""
         assert url["PASSWORD"] == ""
@@ -53,7 +42,7 @@ class DatabaseTestSuite(unittest.TestCase):
         url = "postgres://ieRaekei9wilaim7:wegauwhgeuioweg@[2001:db8:1234::1234:5678:90af]:5431/d8r82722r2kuvn"
         url = dj_database_url.parse(url)
 
-        assert url["ENGINE"] == EXPECTED_POSTGRES_ENGINE
+        assert url["ENGINE"] == "django.db.backends.postgresql"
         assert url["NAME"] == "d8r82722r2kuvn"
         assert url["HOST"] == "2001:db8:1234::1234:5678:90af"
         assert url["USER"] == "ieRaekei9wilaim7"
@@ -63,7 +52,7 @@ class DatabaseTestSuite(unittest.TestCase):
     def test_postgres_search_path_parsing(self):
         url = "postgres://uf07k1i6d8ia0v:wegauwhgeuioweg@ec2-107-21-253-135.compute-1.amazonaws.com:5431/d8r82722r2kuvn?currentSchema=otherschema"
         url = dj_database_url.parse(url)
-        assert url["ENGINE"] == EXPECTED_POSTGRES_ENGINE
+        assert url["ENGINE"] == "django.db.backends.postgresql"
         assert url["NAME"] == "d8r82722r2kuvn"
         assert url["HOST"] == "ec2-107-21-253-135.compute-1.amazonaws.com"
         assert url["USER"] == "uf07k1i6d8ia0v"
@@ -76,7 +65,7 @@ class DatabaseTestSuite(unittest.TestCase):
         url = "postgres://%23user:%23password@ec2-107-21-253-135.compute-1.amazonaws.com:5431/%23database"
         url = dj_database_url.parse(url)
 
-        assert url["ENGINE"] == EXPECTED_POSTGRES_ENGINE
+        assert url["ENGINE"] == "django.db.backends.postgresql"
         assert url["NAME"] == "#database"
         assert url["HOST"] == "ec2-107-21-253-135.compute-1.amazonaws.com"
         assert url["USER"] == "#user"
@@ -150,7 +139,7 @@ class DatabaseTestSuite(unittest.TestCase):
 
         url = dj_database_url.config()
 
-        assert url["ENGINE"] == EXPECTED_POSTGRES_ENGINE
+        assert url["ENGINE"] == "django.db.backends.postgresql"
         assert url["NAME"] == "d8r82722r2kuvn"
         assert url["HOST"] == "ec2-107-21-253-135.compute-1.amazonaws.com"
         assert url["USER"] == "uf07k1i6d8ia0v"
@@ -210,7 +199,7 @@ class DatabaseTestSuite(unittest.TestCase):
         ] = "postgres://uf07k1i6d8ia0v:wegauwhgeuioweg@ec2-107-21-253-135.compute-1.amazonaws.com:5431/d8r82722r2kuvn?sslrootcert=rds-combined-ca-bundle.pem&sslmode=verify-full"
         url = dj_database_url.config()
 
-        assert url["ENGINE"] == EXPECTED_POSTGRES_ENGINE
+        assert url["ENGINE"] == "django.db.backends.postgresql"
         assert url["NAME"] == "d8r82722r2kuvn"
         assert url["HOST"] == "ec2-107-21-253-135.compute-1.amazonaws.com"
         assert url["USER"] == "uf07k1i6d8ia0v"

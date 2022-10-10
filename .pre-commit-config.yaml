@@ -12,7 +12,7 @@ repos:
           args: ["--profile", "black"]
 
   - repo: https://github.com/psf/black
-    rev: 22.8.0
+    rev: 22.10.0
     hooks:
       - id: black
         args: [--target-version=py38]

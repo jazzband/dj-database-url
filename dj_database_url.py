@@ -70,7 +70,7 @@ def parse(url, engine=None, conn_max_age=0, ssl_require=False):
     # otherwise parse the url as normal
     parsed_config = {}
 
-    url = urlparse.urlparse(url)
+    url = urlparse.urlsplit(url)
 
     # Split query strings from path.
     path = url.path[1:]

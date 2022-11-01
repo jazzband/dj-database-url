@@ -102,7 +102,7 @@ def parse(url, engine=None, conn_max_age=0, ssl_require=False):
     port = (
         str(url.port)
         if url.port
-        and engine in [SCHEMES["oracle"], SCHEMES["mssql"], SCHEMES["mssqlms"]]
+        and engine in (SCHEMES["oracle"], SCHEMES["mssql"], SCHEMES["mssqlms"])
         else url.port
     )
 

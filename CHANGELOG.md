@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## v1.0.0 (2022-18-06)
+## v1.0.0 (2022-06-18)
 
 Initial release of code now dj-database-urls is part of jazzband.
 

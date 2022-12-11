@@ -1,13 +1,5 @@
-# -*- coding: utf-8 -*-
-
 import os
 import urllib.parse as urlparse
-
-try:
-    from django import VERSION as DJANGO_VERSION
-except ImportError:
-    DJANGO_VERSION = None
-
 
 # Register database schemes in URLs.
 urlparse.uses_netloc.append("postgres")
@@ -32,6 +24,9 @@ urlparse.uses_netloc.append("timescalegis")
 DEFAULT_ENV = "DATABASE_URL"
 
 SCHEMES = {
+    "postgres": "django.db.backends.postgresql",
+    "postgresql": "django.db.backends.postgresql",
+    "pgsql": "django.db.backends.postgresql",
     "postgis": "django.contrib.gis.db.backends.postgis",
     "mysql": "django.db.backends.mysql",
     "mysql2": "django.db.backends.mysql",
@@ -48,16 +43,6 @@ SCHEMES = {
     "timescale": "timescale.db.backends.postgresql",
     "timescalegis": "timescale.db.backends.postgis",
 }
-
-# https://docs.djangoproject.com/en/2.0/releases/2.0/#id1
-if DJANGO_VERSION and DJANGO_VERSION < (2, 0):
-    SCHEMES["postgres"] = "django.db.backends.postgresql_psycopg2"
-    SCHEMES["postgresql"] = "django.db.backends.postgresql_psycopg2"
-    SCHEMES["pgsql"] = "django.db.backends.postgresql_psycopg2"
-else:
-    SCHEMES["postgres"] = "django.db.backends.postgresql"
-    SCHEMES["postgresql"] = "django.db.backends.postgresql"
-    SCHEMES["pgsql"] = "django.db.backends.postgresql"
 
 
 def config(
@@ -85,7 +70,7 @@ def parse(url, engine=None, conn_max_age=0, ssl_require=False):
     # otherwise parse the url as normal
     parsed_config = {}
 
-    url = urlparse.urlparse(url)
+    url = urlparse.urlsplit(url)
 
     # Split query strings from path.
     path = url.path[1:]

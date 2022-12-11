@@ -4,17 +4,29 @@ jobs:
   test:
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
-        python-version: ["3.7", "3.8", "3.9", "3.10"]
-        django-version: ["3.2", "4.0"]
+        python-version: ["3.7", "3.8", "3.9", "3.10", "3.11"]
+        django-version: ["3.2", "4.0", "4.1"]
         exclude:
           # Python 3.6 is not compatible with 4.0
-          - python-version: 3.6
-            django-version: 4.0
+          - python-version: "3.6"
+            django-version: "4.0"
+          # Python 3.6 is not compatible with 4.1
+          - python-version: "3.6"
+            django-version: "4.1"
           # Python 3.7 is not compatible with 4.0
-          - python-version: 3.7
-            django-version: 4.0
-      fail-fast: false
+          - python-version: "3.7"
+            django-version: "4.0"
+          # Python 3.7 is not compatible with 4.1
+          - python-version: "3.7"
+            django-version: "4.1"
+          # Python 3.11 is not compatible with 3.2
+          - python-version: "3.11"
+            django-version: "3.2"
+          # Python 3.11 is not compatible with 4.0
+          - python-version: "3.11"
+            django-version: "4.0"
     steps:
       - uses: actions/checkout@v3
 
@@ -36,4 +48,4 @@ jobs:
           coverage report
           coverage xml
 
-      - uses: codecov/codecov-action@v2
+      - uses: codecov/codecov-action@v3

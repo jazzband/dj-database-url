@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from setuptools import setup
 
 with open("README.rst") as readme_rst:
@@ -14,7 +13,7 @@ setup(
     long_description=readme,
     long_description_content_type="text/x-rst",
     py_modules=["dj_database_url"],
-    install_requires=["Django>3.2"],
+    install_requires=["Django>=3.2"],
     zip_safe=False,
     include_package_data=True,
     platforms="any",
@@ -29,6 +28,7 @@ setup(
         "Framework :: Django",
         "Framework :: Django :: 3.2",
         "Framework :: Django :: 4.0",
+        "Framework :: Django :: 4.1",
         "Intended Audience :: Developers",
         "License :: OSI Approved :: BSD License",
         "Operating System :: OS Independent",
@@ -41,5 +41,6 @@ setup(
         "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: 3.10",
+        "Programming Language :: Python :: 3.11",
     ],
 )

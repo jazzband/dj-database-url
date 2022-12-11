@@ -57,7 +57,9 @@ def config(
     return {}
 
 
-def parse(url, engine=None, conn_max_age=0, ssl_require=False):
+def parse(
+    url, engine=None, conn_max_age=0, conn_health_checks=False, ssl_require=False
+):
     """Parses a database URL."""
 
     if url == "sqlite://:memory:":
@@ -115,6 +117,7 @@ def parse(url, engine=None, conn_max_age=0, ssl_require=False):
             "HOST": hostname,
             "PORT": port or "",
             "CONN_MAX_AGE": conn_max_age,
+            "CONN_HEALTH_CHECKS": conn_health_checks,
         }
     )
 

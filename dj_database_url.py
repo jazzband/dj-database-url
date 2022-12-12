@@ -58,7 +58,9 @@ def config(
     s = os.environ.get(env, default)
 
     if s:
-        return parse(s, engine, conn_max_age, conn_health_checks, ssl_require, test_options)
+        return parse(
+            s, engine, conn_max_age, conn_health_checks, ssl_require, test_options
+        )
 
     return {}
 

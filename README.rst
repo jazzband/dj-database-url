@@ -143,6 +143,11 @@ and should instead be passed as:
 
     postgres://user:p%23ssword!@localhost/foobar
 
+`TEST <https://docs.djangoproject.com/en/stable/ref/settings/#test>`_ settings can be configured using the ``test_options`` attribute::
+
+    DATABASES['default'] = dj_database_url.config(default='postgres://...', test_options={'NAME': 'mytestdatabase'})
+
+
 URL schema
 ----------
 

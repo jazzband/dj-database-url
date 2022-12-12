@@ -46,19 +46,32 @@ SCHEMES = {
 
 
 def config(
-    env=DEFAULT_ENV, default=None, engine=None, conn_max_age=0, ssl_require=False
+    env=DEFAULT_ENV,
+    default=None,
+    engine=None,
+    conn_max_age=0,
+    conn_health_checks=False,
+    ssl_require=False,
+    test_options={},
 ):
     """Returns configured DATABASE dictionary from DATABASE_URL."""
     s = os.environ.get(env, default)
 
     if s:
-        return parse(s, engine, conn_max_age, ssl_require)
+        return parse(
+            s, engine, conn_max_age, conn_health_checks, ssl_require, test_options
+        )
 
     return {}
 
 
 def parse(
-    url, engine=None, conn_max_age=0, conn_health_checks=False, ssl_require=False
+    url,
+    engine=None,
+    conn_max_age=0,
+    conn_health_checks=False,
+    ssl_require=False,
+    test_options={},
 ):
     """Parses a database URL."""
 
@@ -120,6 +133,12 @@ def parse(
             "CONN_HEALTH_CHECKS": conn_health_checks,
         }
     )
+    if test_options:
+        parsed_config.update(
+            {
+                'TEST': test_options,
+            }
+        )
 
     # Pass the query string into OPTIONS.
     options = {}

@@ -102,14 +102,15 @@ def parse(
 
     # Handle postgres percent-encoded paths.
     hostname = url.hostname or ""
-    if "%2f" in hostname.lower():
+    if "%" in hostname:
         # Switch to url.netloc to avoid lower cased paths
         hostname = url.netloc
         if "@" in hostname:
             hostname = hostname.rsplit("@", 1)[1]
         if ":" in hostname:
             hostname = hostname.split(":", 1)[0]
-        hostname = hostname.replace("%2f", "/").replace("%2F", "/")
+        # Use URL Parse library to decode % encodes
+        hostname = urlparse.unquote(hostname)
 
     # Lookup specified engine.
     engine = SCHEMES[url.scheme] if engine is None else engine

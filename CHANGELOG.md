@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## v1.1.0 (2022-12-12)
+
+* Option for connection health checks parameter.
+* Update supported version python 3.11.
+* Code changes, various improvments.
+* Add project links to setup.py
+
 ## v1.0.0 (2022-06-18)
 
 Initial release of code now dj-database-urls is part of jazzband.

@@ -42,7 +42,7 @@ class DatabaseTestSuite(unittest.TestCase):
         url = 'postgres://uf07k1i6d8ia0v:wegauwhgeuioweg@%2Fcloudsql%2Fproject_id%3Aregion%3Ainstance_id/d8r82722r2kuvn'
         url = dj_database_url.parse(url)
 
-        assert url['ENGINE'] == EXPECTED_POSTGRES_ENGINE
+        assert url['ENGINE'] == 'django.db.backends.postgresql'
         assert url['NAME'] == 'd8r82722r2kuvn'
         assert url['HOST'] == '/cloudsql/project_id:region:instance_id'
         assert url['USER'] == 'uf07k1i6d8ia0v'

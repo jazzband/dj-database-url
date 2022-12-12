@@ -31,7 +31,9 @@ Oracle, Oracle (GIS), Redshift, CockroachDB, Timescale, Timescale (GIS) and SQLi
 Installation
 ------------
 
-Installation is simple::
+Installation is simple:
+
+.. code-block:: console
 
     $ pip install dj-database-url
 
@@ -40,50 +42,111 @@ Usage
 
 1. If ``DATABASES`` is already defined:
 
-- Configure your database in ``settings.py`` from ``DATABASE_URL``::
+- Configure your database in ``settings.py`` from ``DATABASE_URL``:
 
-    import dj_database_url
+  .. code-block:: python
 
-    DATABASES['default'] = dj_database_url.config(conn_max_age=600)
+      import dj_database_url
 
-- Provide a default::
+      DATABASES['default'] = dj_database_url.config(
+          conn_max_age=600,
+          conn_health_checks=True,
+      )
 
-    DATABASES['default'] = dj_database_url.config(default='postgres://...')
+- Provide a default:
 
-- Parse an arbitrary Database URL::
+  .. code-block:: python
 
-    DATABASES['default'] = dj_database_url.parse('postgres://...', conn_max_age=600)
+      DATABASES['default'] = dj_database_url.config(
+          default='postgres://...',
+          conn_max_age=600,
+          conn_health_checks=True,
+      )
+
+- Parse an arbitrary Database URL:
+
+  .. code-block:: python
+
+      DATABASES['default'] = dj_database_url.parse(
+          'postgres://...',
+          conn_max_age=600,
+          conn_health_checks=True,
+      )
 
 2. If ``DATABASES`` is not defined:
 
-- Configure your database in ``settings.py`` from ``DATABASE_URL``::
+- Configure your database in ``settings.py`` from ``DATABASE_URL``:
 
-    import dj_database_url
+  .. code-block:: python
 
-    DATABASES = {'default': dj_database_url.config(conn_max_age=600)}
+      import dj_database_url
 
-- Provide a default::
+      DATABASES = {
+          'default': dj_database_url.config(
+              conn_max_age=600,
+              conn_health_checks=True,
+          ),
+      }
 
-    DATABASES = {'default': dj_database_url.config(default='postgres://...')}
+- You can provide a default, used if the ``DATABASE_URL`` setting is not defined:
 
-- Parse an arbitrary Database URL::
+  .. code-block:: python
 
-    DATABASES = {'default': dj_database_url.parse('postgres://...', conn_max_age=600)}
+      DATABASES = {
+          'default': dj_database_url.config(
+              default='postgres://...',
+              conn_max_age=600,
+              conn_health_checks=True,
+          )
+      }
 
-The ``conn_max_age`` attribute is the lifetime of a database connection in seconds
-and is available in Django 1.6+. If you do not set a value, it will default to ``0``
-which is Django's historical behavior of using a new database connection on each
-request. Use ``None`` for unlimited persistent connections.
+- Parse an arbitrary Database URL:
+
+  .. code-block:: python
+
+      DATABASES = {
+          'default': dj_database_url.parse(
+              'postgres://...',
+              conn_max_age=600,
+              conn_health_checks=True,
+          )
+      }
+
+``conn_max_age`` sets the |CONN_MAX_AGE setting|__, which tells Django to
+persist database connections between requests, up to the given lifetime in
+seconds. If you do not provide a value, it will follow Django’s default of
+``0``. Setting it is recommended for performance.
+
+.. |CONN_MAX_AGE setting| replace:: ``CONN_MAX_AGE`` setting
+__ https://docs.djangoproject.com/en/stable/ref/settings/#conn-max-age
+
+``conn_health_checks`` sets the |CONN_HEALTH_CHECKS setting|__ (new in Django
+4.1), which tells Django to check a persisted connection still works at the
+start of each request. If you do not provide a value, it will follow Django’s
+default of ``False``. Enabling it is recommended if you set a non-zero
+``conn_max_age``.
+
+.. |CONN_HEALTH_CHECKS setting| replace:: ``CONN_HEALTH_CHECKS`` setting
+__ https://docs.djangoproject.com/en/stable/ref/settings/#conn-health-checks
 
 Strings passed to `dj_database_url` must be valid URLs; in
 particular, special characters must be url-encoded. The following url will raise
-a `ValueError`::
+a `ValueError`:
+
+.. code-block:: plaintext
 
     postgres://user:p#ssword!@localhost/foobar
 
-and should instead be passed as::
+and should instead be passed as:
+
+.. code-block:: plaintext
 
     postgres://user:p%23ssword!@localhost/foobar
+
+`TEST <https://docs.djangoproject.com/en/stable/ref/settings/#test>`_ settings can be configured using the ``test_options`` attribute::
+
+    DATABASES['default'] = dj_database_url.config(default='postgres://...', test_options={'NAME': 'mytestdatabase'})
+
 
 URL schema
 ----------

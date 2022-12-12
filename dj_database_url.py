@@ -50,6 +50,7 @@ def config(
     default=None,
     engine=None,
     conn_max_age=0,
+    conn_health_checks=False,
     ssl_require=False,
     test_options={},
 ):
@@ -57,7 +58,7 @@ def config(
     s = os.environ.get(env, default)
 
     if s:
-        return parse(s, engine, conn_max_age, ssl_require, test_options)
+        return parse(s, engine, conn_max_age, conn_health_checks, ssl_require, test_options)
 
     return {}
 
@@ -131,7 +132,7 @@ def parse(
         }
     )
     if test_options:
-        config.update(
+        parsed_config.update(
             {
                 'TEST': test_options,
             }

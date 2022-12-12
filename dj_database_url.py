@@ -46,7 +46,12 @@ SCHEMES = {
 
 
 def config(
-    env=DEFAULT_ENV, default=None, engine=None, conn_max_age=0, ssl_require=False, test_options={}
+    env=DEFAULT_ENV,
+    default=None,
+    engine=None,
+    conn_max_age=0,
+    ssl_require=False,
+    test_options={},
 ):
     """Returns configured DATABASE dictionary from DATABASE_URL."""
     s = os.environ.get(env, default)
@@ -58,7 +63,12 @@ def config(
 
 
 def parse(
-    url, engine=None, conn_max_age=0, conn_health_checks=False, ssl_require=False, test_options={}
+    url,
+    engine=None,
+    conn_max_age=0,
+    conn_health_checks=False,
+    ssl_require=False,
+    test_options={},
 ):
     """Parses a database URL."""
 

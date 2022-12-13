@@ -71,10 +71,9 @@ def parse(
     conn_max_age=0,
     conn_health_checks=False,
     ssl_require=False,
-    test_options={},
+    test_options=None,
 ):
     """Parses a database URL."""
-
     if url == "sqlite://:memory:":
         # this is a special case, because if we pass this URL into
         # urlparse, urlparse will choke trying to interpret "memory"
@@ -84,6 +83,9 @@ def parse(
 
     # otherwise parse the url as normal
     parsed_config = {}
+
+    if test_options is None:
+        test_options = {}
 
     url = urlparse.urlsplit(url)
 

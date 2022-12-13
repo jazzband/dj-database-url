@@ -26,6 +26,7 @@ DEFAULT_ENV = "DATABASE_URL"
 SCHEMES = {
     "postgres": "django.db.backends.postgresql",
     "postgresql": "django.db.backends.postgresql",
+    "postgresql+psycopg2": "django.db.backends.postgresql",
     "pgsql": "django.db.backends.postgresql",
     "postgis": "django.contrib.gis.db.backends.postgis",
     "mysql": "django.db.backends.mysql",

@@ -1,5 +1,6 @@
 import os
 import unittest
+from unittest import mock
 
 import dj_database_url
 
@@ -529,6 +530,16 @@ class DatabaseTestSuite(unittest.TestCase):
 
         assert "CONN_MAX_AGE" not in url
         assert "CONN_HEALTH_CHECKS" not in url
+
+    @mock.patch.dict(
+        os.environ,
+        {"DATABASE_URL": "postgres://user:password@instance.amazonaws.com:5431/d8r8?"},
+    )
+    def test_persistent_connection_variables_config(self):
+        url = dj_database_url.config(conn_max_age=600, conn_health_checks=True)
+
+        assert url["CONN_MAX_AGE"] == 600
+        assert url["CONN_HEALTH_CHECKS"] is True
 
 
 if __name__ == "__main__":

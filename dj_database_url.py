@@ -52,7 +52,7 @@ def config(
     conn_max_age=0,
     conn_health_checks=False,
     ssl_require=False,
-    test_options={},
+    test_options=None,
 ):
     """Returns configured DATABASE dictionary from DATABASE_URL."""
     s = os.environ.get(env, default)

@@ -115,7 +115,13 @@ def parse(
         hostname = urlparse.unquote(hostname)
 
     # Lookup specified engine.
-    engine = SCHEMES[url.scheme] if engine is None else engine
+    if engine is None:
+        engine = SCHEMES.get(url.scheme)
+        if engine is None:
+            raise ValueError(
+                "No support for '%s'. We support: %s"
+                % (url.scheme, ", ".join(sorted(SCHEMES.keys())))
+            )
 
     port = (
         str(url.port)

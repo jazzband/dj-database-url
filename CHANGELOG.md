@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## v1.2.0 (2022-12-13)
+
+* Add the ability to add test databases.
+* Improve url parsing and encoding.
+* Fix missing parameter conn_health_check in check function.
+
 ## v1.1.0 (2022-12-12)
 
 * Option for connection health checks parameter.

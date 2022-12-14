@@ -130,13 +130,16 @@ class DatabaseTestSuite(unittest.TestCase):
         assert url["PORT"] == 5431
 
     def test_config_test_options(self):
-        os.environ[
-            "DATABASE_URL"
-        ] = "postgres://uf07k1i6d8ia0v:wegauwhgeuioweg@ec2-107-21-253-135.compute-1.amazonaws.com:5431/d8r82722r2kuvn?"
-        test_db_config = {
-            'NAME': 'mytestdatabase',
-        }
-        url = dj_database_url.config(test_options=test_db_config)
+        with mock.patch.dict(
+            os.environ,
+            {
+                "DATABASE_URL": "postgres://uf07k1i6d8ia0v:wegauwhgeuioweg@ec2-107-21-253-135.compute-1.amazonaws.com:5431/d8r82722r2kuvn?"
+            },
+        ):
+            test_db_config = {
+                'NAME': 'mytestdatabase',
+            }
+            url = dj_database_url.config(test_options=test_db_config)
 
         assert url['TEST']['NAME'] == 'mytestdatabase'
 
@@ -152,15 +155,16 @@ class DatabaseTestSuite(unittest.TestCase):
         assert url["PORT"] == ""
 
     def test_database_url(self):
-        del os.environ["DATABASE_URL"]
         a = dj_database_url.config()
         assert not a
 
-        os.environ[
-            "DATABASE_URL"
-        ] = "postgres://uf07k1i6d8ia0v:wegauwhgeuioweg@ec2-107-21-253-135.compute-1.amazonaws.com:5431/d8r82722r2kuvn"
-
-        url = dj_database_url.config()
+        with mock.patch.dict(
+            os.environ,
+            {
+                "DATABASE_URL": "postgres://uf07k1i6d8ia0v:wegauwhgeuioweg@ec2-107-21-253-135.compute-1.amazonaws.com:5431/d8r82722r2kuvn"
+            },
+        ):
+            url = dj_database_url.config()
 
         assert url["ENGINE"] == "django.db.backends.postgresql"
         assert url["NAME"] == "d8r82722r2kuvn"
@@ -192,10 +196,13 @@ class DatabaseTestSuite(unittest.TestCase):
 
     def test_config_engine_setting(self):
         engine = "django_mysqlpool.backends.mysqlpool"
-        os.environ[
-            "DATABASE_URL"
-        ] = "mysql://bea6eb025ca0d8:69772142@us-cdbr-east.cleardb.com/heroku_97681db3eff7580?reconnect=true"
-        url = dj_database_url.config(engine=engine)
+        with mock.patch.dict(
+            os.environ,
+            {
+                "DATABASE_URL": "mysql://bea6eb025ca0d8:69772142@us-cdbr-east.cleardb.com/heroku_97681db3eff7580?reconnect=true"
+            },
+        ):
+            url = dj_database_url.config(engine=engine)
 
         assert url["ENGINE"] == engine
 
@@ -208,19 +215,25 @@ class DatabaseTestSuite(unittest.TestCase):
 
     def test_config_conn_max_age_setting(self):
         conn_max_age = 600
-        os.environ[
-            "DATABASE_URL"
-        ] = "mysql://bea6eb025ca0d8:69772142@us-cdbr-east.cleardb.com/heroku_97681db3eff7580?reconnect=true"
-        url = dj_database_url.config(conn_max_age=conn_max_age)
+        with mock.patch.dict(
+            os.environ,
+            {
+                "DATABASE_URL": "mysql://bea6eb025ca0d8:69772142@us-cdbr-east.cleardb.com/heroku_97681db3eff7580?reconnect=true"
+            },
+        ):
+            url = dj_database_url.config(conn_max_age=conn_max_age)
 
         assert url["CONN_MAX_AGE"] == conn_max_age
 
     def test_database_url_with_options(self):
         # Test full options
-        os.environ[
-            "DATABASE_URL"
-        ] = "postgres://uf07k1i6d8ia0v:wegauwhgeuioweg@ec2-107-21-253-135.compute-1.amazonaws.com:5431/d8r82722r2kuvn?sslrootcert=rds-combined-ca-bundle.pem&sslmode=verify-full"
-        url = dj_database_url.config()
+        with mock.patch.dict(
+            os.environ,
+            {
+                "DATABASE_URL": "postgres://uf07k1i6d8ia0v:wegauwhgeuioweg@ec2-107-21-253-135.compute-1.amazonaws.com:5431/d8r82722r2kuvn?sslrootcert=rds-combined-ca-bundle.pem&sslmode=verify-full"
+            },
+        ):
+            url = dj_database_url.config()
 
         assert url["ENGINE"] == "django.db.backends.postgresql"
         assert url["NAME"] == "d8r82722r2kuvn"
@@ -234,17 +247,23 @@ class DatabaseTestSuite(unittest.TestCase):
         }
 
         # Test empty options
-        os.environ[
-            "DATABASE_URL"
-        ] = "postgres://uf07k1i6d8ia0v:wegauwhgeuioweg@ec2-107-21-253-135.compute-1.amazonaws.com:5431/d8r82722r2kuvn?"
-        url = dj_database_url.config()
+        with mock.patch.dict(
+            os.environ,
+            {
+                "DATABASE_URL": "postgres://uf07k1i6d8ia0v:wegauwhgeuioweg@ec2-107-21-253-135.compute-1.amazonaws.com:5431/d8r82722r2kuvn?"
+            },
+        ):
+            url = dj_database_url.config()
         assert "OPTIONS" not in url
 
     def test_mysql_database_url_with_sslca_options(self):
-        os.environ[
-            "DATABASE_URL"
-        ] = "mysql://uf07k1i6d8ia0v:wegauwhgeuioweg@ec2-107-21-253-135.compute-1.amazonaws.com:3306/d8r82722r2kuvn?ssl-ca=rds-combined-ca-bundle.pem"
-        url = dj_database_url.config()
+        with mock.patch.dict(
+            os.environ,
+            {
+                "DATABASE_URL": "mysql://uf07k1i6d8ia0v:wegauwhgeuioweg@ec2-107-21-253-135.compute-1.amazonaws.com:3306/d8r82722r2kuvn?ssl-ca=rds-combined-ca-bundle.pem"
+            },
+        ):
+            url = dj_database_url.config()
 
         assert url["ENGINE"] == "django.db.backends.mysql"
         assert url["NAME"] == "d8r82722r2kuvn"
@@ -255,10 +274,13 @@ class DatabaseTestSuite(unittest.TestCase):
         assert url["OPTIONS"] == {"ssl": {"ca": "rds-combined-ca-bundle.pem"}}
 
         # Test empty options
-        os.environ[
-            "DATABASE_URL"
-        ] = "mysql://uf07k1i6d8ia0v:wegauwhgeuioweg@ec2-107-21-253-135.compute-1.amazonaws.com:3306/d8r82722r2kuvn?"
-        url = dj_database_url.config()
+        with mock.patch.dict(
+            os.environ,
+            {
+                "DATABASE_URL": "mysql://uf07k1i6d8ia0v:wegauwhgeuioweg@ec2-107-21-253-135.compute-1.amazonaws.com:3306/d8r82722r2kuvn?"
+            },
+        ):
+            url = dj_database_url.config()
         assert "OPTIONS" not in url
 
     def test_oracle_parsing(self):
@@ -540,6 +562,20 @@ class DatabaseTestSuite(unittest.TestCase):
 
         assert url["CONN_MAX_AGE"] == 600
         assert url["CONN_HEALTH_CHECKS"] is True
+
+    def test_no_env_variable(self):
+        with self.assertLogs() as cm:
+            url = dj_database_url.config()
+            assert url == {}, url
+        assert cm.output == [
+            'WARNING:root:No DATABASE_URL environment variable set, and so no databases setup'
+        ], cm.output
+
+        with self.assertRaisesRegex(
+            Exception,
+            "No DATABASE_URL environment variable set, and so no databases setup",
+        ):
+            dj_database_url.config(requires_db=True)
 
 
 if __name__ == "__main__":

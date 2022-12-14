@@ -155,7 +155,8 @@ class DatabaseTestSuite(unittest.TestCase):
         assert url["PORT"] == ""
 
     def test_database_url(self):
-        a = dj_database_url.config()
+        with mock.patch.dict(os.environ, clear=True):
+            a = dj_database_url.config()
         assert not a
 
         with mock.patch.dict(
@@ -565,7 +566,8 @@ class DatabaseTestSuite(unittest.TestCase):
 
     def test_no_env_variable(self):
         with self.assertLogs() as cm:
-            url = dj_database_url.config()
+            with mock.patch.dict(os.environ, clear=True):
+                url = dj_database_url.config()
             assert url == {}, url
         assert cm.output == [
             'WARNING:root:No DATABASE_URL environment variable set, and so no databases setup'

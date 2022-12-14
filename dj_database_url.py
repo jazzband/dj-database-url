@@ -1,6 +1,8 @@
 import os
 import urllib.parse as urlparse
-from typing import Any, Optional, TypedDict, Union
+from typing import Any, Dict, Optional, Union
+
+from typing_extensions import TypedDict
 
 # Register database schemes in URLs.
 urlparse.uses_netloc.append("postgres")
@@ -56,10 +58,10 @@ class DBConfig(TypedDict, total=False):
     ENGINE: str
     HOST: str
     NAME: str
-    OPTIONS: Optional[dict[str, Any]]
+    OPTIONS: Optional[Dict[str, Any]]
     PASSWORD: str
     PORT: Union[str, int]
-    TEST: dict[str, Any]
+    TEST: Dict[str, Any]
     TIME_ZONE: str
     USER: str
 
@@ -71,7 +73,7 @@ def config(
     conn_max_age: int = 0,
     conn_health_checks: bool = False,
     ssl_require: bool = False,
-    test_options: Optional[dict] = None,
+    test_options: Optional[Dict] = None,
 ) -> DBConfig:
     """Returns configured DATABASE dictionary from DATABASE_URL."""
     s = os.environ.get(env, default)
@@ -163,7 +165,7 @@ def parse(
         )
 
     # Pass the query string into OPTIONS.
-    options: dict[str, Any] = {}
+    options: Dict[str, Any] = {}
     for key, values in query.items():
         if spliturl.scheme == "mysql" and key == "ssl-ca":
             options["ssl"] = {"ca": values[-1]}

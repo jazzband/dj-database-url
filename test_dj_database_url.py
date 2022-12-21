@@ -541,6 +541,10 @@ class DatabaseTestSuite(unittest.TestCase):
         assert url["CONN_MAX_AGE"] == 600
         assert url["CONN_HEALTH_CHECKS"] is True
 
+    def test_bad_url_parsing(self):
+        with self.assertRaisesRegex(ValueError, "No support for 'foo'. We support: "):
+            dj_database_url.parse("foo://bar")
+
 
 if __name__ == "__main__":
     unittest.main()

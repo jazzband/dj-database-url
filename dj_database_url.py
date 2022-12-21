@@ -4,26 +4,6 @@ from typing import Any, Dict, Optional, Union
 
 from typing_extensions import TypedDict
 
-# Register database schemes in URLs.
-urlparse.uses_netloc.append("postgres")
-urlparse.uses_netloc.append("postgresql")
-urlparse.uses_netloc.append("pgsql")
-urlparse.uses_netloc.append("postgis")
-urlparse.uses_netloc.append("mysql")
-urlparse.uses_netloc.append("mysql2")
-urlparse.uses_netloc.append("mysqlgis")
-urlparse.uses_netloc.append("mysql-connector")
-urlparse.uses_netloc.append("mssql")
-urlparse.uses_netloc.append("mssqlms")
-urlparse.uses_netloc.append("spatialite")
-urlparse.uses_netloc.append("sqlite")
-urlparse.uses_netloc.append("oracle")
-urlparse.uses_netloc.append("oraclegis")
-urlparse.uses_netloc.append("redshift")
-urlparse.uses_netloc.append("cockroach")
-urlparse.uses_netloc.append("timescale")
-urlparse.uses_netloc.append("timescalegis")
-
 DEFAULT_ENV = "DATABASE_URL"
 
 SCHEMES = {
@@ -46,6 +26,10 @@ SCHEMES = {
     "timescale": "timescale.db.backends.postgresql",
     "timescalegis": "timescale.db.backends.postgis",
 }
+
+# Register database schemes in URLs.
+for key in SCHEMES.keys():
+    urlparse.uses_netloc.append(key)
 
 
 # From https://docs.djangoproject.com/en/4.0/ref/settings/#databases

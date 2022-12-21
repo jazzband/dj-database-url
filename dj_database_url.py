@@ -136,7 +136,13 @@ def parse(
         hostname = urlparse.unquote(hostname)
 
     # Lookup specified engine.
-    engine = SCHEMES[spliturl.scheme] if engine is None else engine
+    if engine is None:
+        engine = SCHEMES.get(spliturl.scheme)
+        if engine is None:
+            raise ValueError(
+                "No support for '%s'. We support: %s"
+                % (spliturl.scheme, ", ".join(sorted(SCHEMES.keys())))
+            )
 
     port = (
         str(spliturl.port)

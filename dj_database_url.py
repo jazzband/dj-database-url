@@ -1,8 +1,11 @@
 import os
 import urllib.parse as urlparse
-from typing import Any, Dict, Optional, Union, Sequence, Literal
+from typing import Any, Dict, Optional, Union, Sequence
 
-from typing_extensions import TypedDict
+# Support Python 3.7.
+# `try: from typing import Literal` causes:
+# error: Module 'typing' has no attribute 'Literal'  [attr-defined]
+from typing_extensions import TypedDict, Literal
 
 # Register database schemes in URLs.
 urlparse.uses_netloc.append("postgres")

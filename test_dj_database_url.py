@@ -531,6 +531,114 @@ class DatabaseTestSuite(unittest.TestCase):
         assert "CONN_MAX_AGE" not in url
         assert "CONN_HEALTH_CHECKS" not in url
 
+    def test_mongodb_parsing_least_args(self):
+        url = "mongodb://10.0.0.100"
+        url = dj_database_url.parse(url)
+
+        self.assertEqual(url["ENGINE"], "djongo")
+        self.assertEqual(url["NAME"], "db")
+        self.assertEqual(url["CLIENT"]["host"], "mongodb://10.0.0.100")
+
+    def test_mongodb_parsing_full_args(self):
+        url = "mongodb://foo:bar@10.0.0.100:27017/database?enforceSchema=true&retryWrites=true&w=majority"
+        url = dj_database_url.parse(url)
+
+        self.assertEqual(url["ENGINE"], "djongo")
+        self.assertEqual(url["NAME"], "database")
+        self.assertEqual(
+            url["CLIENT"]["host"],
+            "mongodb://foo:bar@10.0.0.100:27017/database"
+            "?retryWrites=true&w=majority",
+        )
+        self.assertTrue(url["ENFORCE_SCHEMA"])
+
+    def test_mongodb_unix_socket_parsing(self):
+        url = "mongodb://%2Fvar%2Frun%2Fmongo/foo"
+        url = dj_database_url.parse(url)
+
+        self.assertEqual(url["ENGINE"], "djongo")
+        self.assertEqual(url["NAME"], "foo")
+        self.assertEqual(url["CLIENT"]["host"], "mongodb://%2Fvar%2Frun%2Fmongo/foo")
+
+    def test_mongodb_parsing_with_special_characters(self):
+        url = "mongodb://%23user:%23password@mongo.example.com/%23database"
+        url = dj_database_url.parse(url)
+
+        self.assertEqual(url["ENGINE"], "djongo")
+        self.assertEqual(url["NAME"], "#database")
+        self.assertEqual(
+            url["CLIENT"]["host"],
+            "mongodb://%23user:%23password@mongo.example.com/%23database",
+        )
+
+    def test_mongodb_replica_set_with_members_on_different_machines(self):
+        url = "mongodb://db1.example.net,db2.example.com/?replicaSet=test"
+        url = dj_database_url.parse(url)
+
+        self.assertEqual(url["ENGINE"], "djongo")
+        self.assertEqual(url["NAME"], "db")
+        self.assertEqual(
+            url["CLIENT"]["host"],
+            "mongodb://db1.example.net,db2.example.com/?replicaSet=test",
+        )
+
+    def test_mongodb_replica_set_with_members_on_same_machine(self):
+        url = "mongodb://localhost,localhost:27018,localhost:27019/?replicaSet=test"
+        url = dj_database_url.parse(url)
+
+        self.assertEqual(url["ENGINE"], "djongo")
+        self.assertEqual(url["NAME"], "db")
+        self.assertEqual(
+            url["CLIENT"]["host"],
+            "mongodb://localhost,localhost:27018,localhost:27019/?replicaSet=test",
+        )
+
+    def test_mongodb_replica_set_with_read_distribution(self):
+        url = "mongodb://example1.com,example2.com,example3.com/?replicaSet=test&readPreference=secondary"
+        url = dj_database_url.parse(url)
+
+        self.assertEqual(url["ENGINE"], "djongo")
+        self.assertEqual(url["NAME"], "db")
+        self.assertEqual(
+            url["CLIENT"]["host"],
+            "mongodb://example1.com,example2.com,example3.com/"
+            "?replicaSet=test&readPreference=secondary",
+        )
+
+    def test_mongodb_shared_cluster(self):
+        url = "mongodb://router1.example.com:27017,router2.example2.com:27017,router3.example3.com:27017/"
+        url = dj_database_url.parse(url)
+
+        self.assertEqual(url["ENGINE"], "djongo")
+        self.assertEqual(url["NAME"], "db")
+        self.assertEqual(
+            url["CLIENT"]["host"],
+            "mongodb://router1.example.com:27017,router2.example2.com:27017,"
+            "router3.example3.com:27017/",
+        )
+
+    def test_mongodb_srv_parsing_least_args(self):
+        url = "mongodb+srv://server.example.com/database"
+        url = dj_database_url.parse(url)
+
+        self.assertEqual(url["ENGINE"], "djongo")
+        self.assertEqual(url["NAME"], "database")
+        self.assertEqual(
+            url["CLIENT"]["host"], "mongodb+srv://server.example.com/database"
+        )
+
+    def test_mongodb_srv_parsing_full_args(self):
+        url = "mongodb+srv://server.example.com/?enforceSchema=false&retryWrites=true&w=majority"
+        url = dj_database_url.parse(url)
+
+        self.assertEqual(url["ENGINE"], "djongo")
+        self.assertEqual(url["NAME"], "db")
+        self.assertEqual(
+            url["CLIENT"]["host"],
+            "mongodb+srv://server.example.com/?retryWrites=true&w=majority",
+        )
+        self.assertFalse(url["ENFORCE_SCHEMA"])
+
     @mock.patch.dict(
         os.environ,
         {"DATABASE_URL": "postgres://user:password@instance.amazonaws.com:5431/d8r8?"},

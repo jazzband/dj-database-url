@@ -151,37 +151,39 @@ and should instead be passed as:
 URL schema
 ----------
 
-+----------------------+-----------------------------------------------+--------------------------------------------------+
-| Engine               | Django Backend                                | URL                                              |
-+======================+===============================================+==================================================+
-| PostgreSQL           | ``django.db.backends.postgresql`` [1]_        | ``postgres://USER:PASSWORD@HOST:PORT/NAME`` [2]_ |
-+----------------------+-----------------------------------------------+--------------------------------------------------+
-| PostGIS              | ``django.contrib.gis.db.backends.postgis``    | ``postgis://USER:PASSWORD@HOST:PORT/NAME``       |
-+----------------------+-----------------------------------------------+--------------------------------------------------+
-| MSSQL                | ``sql_server.pyodbc``                         | ``mssql://USER:PASSWORD@HOST:PORT/NAME``         |
-+----------------------+-----------------------------------------------+--------------------------------------------------+
-| MSSQL [5]_           | ``mssql``                                     | ``mssqlms://USER:PASSWORD@HOST:PORT/NAME``       |
-+----------------------+-----------------------------------------------+--------------------------------------------------+
-| MySQL                | ``django.db.backends.mysql``                  | ``mysql://USER:PASSWORD@HOST:PORT/NAME`` [2]_    |
-+----------------------+-----------------------------------------------+--------------------------------------------------+
-| MySQL (GIS)          | ``django.contrib.gis.db.backends.mysql``      | ``mysqlgis://USER:PASSWORD@HOST:PORT/NAME``      |
-+----------------------+-----------------------------------------------+--------------------------------------------------+
-| SQLite               | ``django.db.backends.sqlite3``                | ``sqlite:///PATH`` [3]_                          |
-+----------------------+-----------------------------------------------+--------------------------------------------------+
-| SpatiaLite           | ``django.contrib.gis.db.backends.spatialite`` | ``spatialite:///PATH`` [3]_                      |
-+----------------------+-----------------------------------------------+--------------------------------------------------+
-| Oracle               | ``django.db.backends.oracle``                 | ``oracle://USER:PASSWORD@HOST:PORT/NAME`` [4]_   |
-+----------------------+-----------------------------------------------+--------------------------------------------------+
-| Oracle (GIS)         | ``django.contrib.gis.db.backends.oracle``     | ``oraclegis://USER:PASSWORD@HOST:PORT/NAME``     |
-+----------------------+-----------------------------------------------+--------------------------------------------------+
-| Redshift             | ``django_redshift_backend``                   | ``redshift://USER:PASSWORD@HOST:PORT/NAME``      |
-+----------------------+-----------------------------------------------+--------------------------------------------------+
-| CockroachDB          | ``django_cockroachdb``                        | ``cockroach://USER:PASSWORD@HOST:PORT/NAME``     |
-+----------------------+-----------------------------------------------+--------------------------------------------------+
-| Timescale [6]_       | ``timescale.db.backends.postgresql``          | ``timescale://USER:PASSWORD@HOST:PORT/NAME``     |
-+----------------------+-----------------------------------------------+--------------------------------------------------+
-| Timescale (GIS) [6]_ | ``timescale.db.backend.postgis``              | ``timescalegis://USER:PASSWORD@HOST:PORT/NAME``  |
-+----------------------+-----------------------------------------------+--------------------------------------------------+
++----------------------+-----------------------------------------------+-------------------------------------------------------+
+| Engine               | Django Backend                                | URL                                                   |
++======================+===============================================+=======================================================+
+| PostgreSQL           | ``django.db.backends.postgresql`` [1]_        | ``postgres://USER:PASSWORD@HOST:PORT/NAME`` [2]_      |
++----------------------+-----------------------------------------------+-------------------------------------------------------+
+| PostGIS              | ``django.contrib.gis.db.backends.postgis``    | ``postgis://USER:PASSWORD@HOST:PORT/NAME``            |
++----------------------+-----------------------------------------------+-------------------------------------------------------+
+| MSSQL                | ``sql_server.pyodbc``                         | ``mssql://USER:PASSWORD@HOST:PORT/NAME``              |
++----------------------+-----------------------------------------------+-------------------------------------------------------+
+| MSSQL [5]_           | ``mssql``                                     | ``mssqlms://USER:PASSWORD@HOST:PORT/NAME``            |
++----------------------+-----------------------------------------------+-------------------------------------------------------+
+| MySQL                | ``django.db.backends.mysql``                  | ``mysql://USER:PASSWORD@HOST:PORT/NAME`` [2]_         |
++----------------------+-----------------------------------------------+-------------------------------------------------------+
+| MySQL (GIS)          | ``django.contrib.gis.db.backends.mysql``      | ``mysqlgis://USER:PASSWORD@HOST:PORT/NAME``           |
++----------------------+-----------------------------------------------+-------------------------------------------------------+
+| SQLite               | ``django.db.backends.sqlite3``                | ``sqlite:///PATH`` [3]_                               |
++----------------------+-----------------------------------------------+-------------------------------------------------------+
+| SpatiaLite           | ``django.contrib.gis.db.backends.spatialite`` | ``spatialite:///PATH`` [3]_                           |
++----------------------+-----------------------------------------------+-------------------------------------------------------+
+| Oracle               | ``django.db.backends.oracle``                 | ``oracle://USER:PASSWORD@HOST:PORT/NAME`` [4]_        |
++----------------------+-----------------------------------------------+-------------------------------------------------------+
+| Oracle (GIS)         | ``django.contrib.gis.db.backends.oracle``     | ``oraclegis://USER:PASSWORD@HOST:PORT/NAME``          |
++----------------------+-----------------------------------------------+-------------------------------------------------------+
+| Redshift             | ``django_redshift_backend``                   | ``redshift://USER:PASSWORD@HOST:PORT/NAME``           |
++----------------------+-----------------------------------------------+-------------------------------------------------------+
+| CockroachDB          | ``django_cockroachdb``                        | ``cockroach://USER:PASSWORD@HOST:PORT/NAME``          |
++----------------------+-----------------------------------------------+-------------------------------------------------------+
+| Timescale [6]_       | ``timescale.db.backends.postgresql``          | ``timescale://USER:PASSWORD@HOST:PORT/NAME``          |
++----------------------+-----------------------------------------------+-------------------------------------------------------+
+| Timescale (GIS) [6]_ | ``timescale.db.backend.postgis``              | ``timescalegis://USER:PASSWORD@HOST:PORT/NAME``       |
++----------------------+-----------------------------------------------+-------------------------------------------------------+
+| MongoDB [7]_         | ``djongo``                                    | ``mongodb[+srv]://USER:PASSWORD@HOST:PORT/NAME`` [8]_ |
++----------------------+-----------------------------------------------+-------------------------------------------------------+
 
 .. [1] The django.db.backends.postgresql backend is named django.db.backends.postgresql_psycopg2 in older releases. For
        backwards compatibility, the old name still works in newer versions. (The new name does not work in older versions).
@@ -199,7 +201,13 @@ URL schema
        and provide a full DSN string or TNS name in ``NAME`` part.
 .. [5] Microsoft official `mssql-django <https://github.com/microsoft/mssql-django>`_ adapter.
 .. [6] Using the django-timescaledb Package which must be installed.
-
+.. [7] Using the `djongo Package <https://pypi.org/project/djongo/>`_ which must be installed.
+       The URL support both ``mongodb`` and ``mongodb+srv`` protocols.
+.. [8] You can add extra query parameters to the URL. For example, to set the ``enforceSchema`` and ``replicaSet`` parameter, you can use the following URL:
+       ``mongodb://user:password@host:port/dbname?enforceSchema=true&replicaSet=rs0``
+       More information about the extra query parameters can be found in the `djongo documentation <https://www.djongomapper.com/get-started/#database-configuration>`_
+       and the `mongodb uri format <https://www.mongodb.com/docs/manual/reference/connection-string/#connection-string-uri-format>`_.
+       Remember convert ``: / ? # [ ] @`` using `percent encoding <https://tools.ietf.org/html/rfc3986#section-2.1>`_.
 
 Contributing
 ------------

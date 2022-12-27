@@ -1,6 +1,6 @@
 import os
 import urllib.parse as urlparse
-from typing import Any, Dict, Optional, Union
+from typing import Any, Dict, Optional, Union, Sequence, Literal
 
 from typing_extensions import TypedDict
 
@@ -23,6 +23,8 @@ urlparse.uses_netloc.append("redshift")
 urlparse.uses_netloc.append("cockroach")
 urlparse.uses_netloc.append("timescale")
 urlparse.uses_netloc.append("timescalegis")
+urlparse.uses_netloc.append("mongodb")
+urlparse.uses_netloc.append("mongodb+srv")
 
 DEFAULT_ENV = "DATABASE_URL"
 
@@ -45,6 +47,8 @@ SCHEMES = {
     "cockroach": "django_cockroachdb",
     "timescale": "timescale.db.backends.postgresql",
     "timescalegis": "timescale.db.backends.postgis",
+    "mongodb": "djongo",
+    "mongodb+srv": "djongo",
 }
 
 
@@ -64,6 +68,9 @@ class DBConfig(TypedDict, total=False):
     TEST: Dict[str, Any]
     TIME_ZONE: str
     USER: str
+    # MongoDB (djongo backend):
+    CLIENT: Optional[Dict[str, Any]]
+    ENFORCE_SCHEMA: bool
 
 
 def config(
@@ -144,12 +151,18 @@ def parse(
                 % (spliturl.scheme, ", ".join(sorted(SCHEMES.keys())))
             )
 
-    port = (
-        str(spliturl.port)
-        if spliturl.port
-        and engine in (SCHEMES["oracle"], SCHEMES["mssql"], SCHEMES["mssqlms"])
-        else spliturl.port
-    )
+    try:
+        port = (
+            str(spliturl.port)
+            if spliturl.port
+            and engine in (SCHEMES["oracle"], SCHEMES["mssql"], SCHEMES["mssqlms"])
+            else spliturl.port
+        )
+    except Exception as e:
+        if engine == "djongo":  # compatible with multiple host:port
+            port = None
+        else:
+            raise e
 
     # Update with environment configuration.
     parsed_config.update(
@@ -165,9 +178,7 @@ def parse(
     )
     if test_options:
         parsed_config.update(
-            {
-                'TEST': test_options,
-            }
+            {'TEST': test_options,}
         )
 
     # Pass the query string into OPTIONS.
@@ -198,5 +209,39 @@ def parse(
 
     if engine:
         parsed_config["ENGINE"] = engine
+
+    # MongoDB
+    if engine == "djongo":
+        if "enforceSchema" in options:
+            # Remove the enforceSchema option from the options dict
+            parsed_config["ENFORCE_SCHEMA"] = (
+                options.pop("enforceSchema").lower() == "true"
+            )
+
+        if spliturl.query == "":
+            host = url
+        else:
+            host = f"{url.split('?')[0]}?{urlparse.urlencode(options)}"
+        parsed_config["CLIENT"] = {"host": host}
+
+        # default database
+        if parsed_config['NAME'] == '':
+            parsed_config['NAME'] = 'db'
+
+        # pop unnecessary options
+        remove_key_list: Sequence[
+            Literal['USER', 'PASSWORD', 'HOST', 'PORT', 'OPTIONS']
+        ] = [
+            'USER',
+            'PASSWORD',
+            'HOST',
+            'PORT',
+            'OPTIONS',
+        ]  # cannot use list[str] directly:
+        # https://github.com/python/mypy/issues/7178#issuecomment-1208364397
+
+        for key in remove_key_list:
+            if key in parsed_config:
+                parsed_config.pop(key)
 
     return parsed_config

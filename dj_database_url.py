@@ -165,7 +165,7 @@ def parse(
         if engine == "djongo":  # compatible with multiple host:port
             port = None
         else:
-            raise e
+            raise ValueError(f'Port parse error: {e}')
 
     # Update with environment configuration.
     parsed_config.update(

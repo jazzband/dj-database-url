@@ -653,6 +653,10 @@ class DatabaseTestSuite(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "No support for 'foo'. We support: "):
             dj_database_url.parse("foo://bar")
 
+    def test_bad_port_parsing(self):
+        with self.assertRaisesRegex(Exception, "Port parse error"):
+            dj_database_url.parse("mysql://foo:bar@localhost:65536/db")
+
 
 if __name__ == "__main__":
     unittest.main()

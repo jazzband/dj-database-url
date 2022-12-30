@@ -96,11 +96,7 @@ def parse(
 
     # Split query strings from path.
     path = spliturl.path[1:]
-    if "?" in path and not spliturl.query:
-        path, raw_query = path.split("?", 2)
-    else:
-        path, raw_query = path, spliturl.query
-    query = urlparse.parse_qs(raw_query)
+    query = urlparse.parse_qs(spliturl.query)
 
     # If we are using sqlite and we have no path, then assume we
     # want an in-memory database (this is the behaviour of sqlalchemy)
@@ -114,8 +110,6 @@ def parse(
         hostname = spliturl.netloc
         if "@" in hostname:
             hostname = hostname.rsplit("@", 1)[1]
-        if ":" in hostname:
-            hostname = hostname.split(":", 1)[0]
         # Use URL Parse library to decode % encodes
         hostname = urlparse.unquote(hostname)
 
@@ -145,6 +139,7 @@ def parse(
             "PORT": port or "",
             "CONN_MAX_AGE": conn_max_age,
             "CONN_HEALTH_CHECKS": conn_health_checks,
+            "ENGINE": engine,
         }
     )
     if test_options:
@@ -179,8 +174,5 @@ def parse(
 
     if options:
         parsed_config["OPTIONS"] = options
-
-    if engine:
-        parsed_config["ENGINE"] = engine
 
     return parsed_config

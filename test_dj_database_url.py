@@ -545,6 +545,14 @@ class DatabaseTestSuite(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "No support for 'foo'. We support: "):
             dj_database_url.parse("foo://bar")
 
+    @mock.patch.dict(
+        os.environ,
+        {"DATABASE_URL": "postgres://user:password@instance.amazonaws.com:5431/d8r8?"},
+    )
+    def test_ssl_require(self):
+        url = dj_database_url.config(ssl_require=True)
+        assert url["OPTIONS"] == {'sslmode': 'require'}
+
 
 if __name__ == "__main__":
     unittest.main()

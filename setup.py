@@ -14,7 +14,7 @@ setup(
     long_description=readme,
     long_description_content_type="text/x-rst",
     py_modules=["dj_database_url"],
-    install_requires=["Django>=3.2"],
+    install_requires=["Django>=3.2", "typing_extensions >= 3.10.0.0"],
     zip_safe=False,
     include_package_data=True,
     platforms="any",

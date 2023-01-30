@@ -35,6 +35,10 @@ jobs:
           pip install -r requirements.txt
           pip install "Django~=${{ matrix.django-version }}.0" .
 
+      - name: Run mypy
+        run: |
+          python -m mypy dj_database_url.py
+
       - name: Run Tests
         run: |
           echo "$(python --version) / Django $(django-admin --version)"

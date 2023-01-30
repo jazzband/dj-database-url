@@ -1,26 +1,9 @@
 import logging
 import os
 import urllib.parse as urlparse
+from typing import Any, Dict, Optional, Union
 
-# Register database schemes in URLs.
-urlparse.uses_netloc.append("postgres")
-urlparse.uses_netloc.append("postgresql")
-urlparse.uses_netloc.append("pgsql")
-urlparse.uses_netloc.append("postgis")
-urlparse.uses_netloc.append("mysql")
-urlparse.uses_netloc.append("mysql2")
-urlparse.uses_netloc.append("mysqlgis")
-urlparse.uses_netloc.append("mysql-connector")
-urlparse.uses_netloc.append("mssql")
-urlparse.uses_netloc.append("mssqlms")
-urlparse.uses_netloc.append("spatialite")
-urlparse.uses_netloc.append("sqlite")
-urlparse.uses_netloc.append("oracle")
-urlparse.uses_netloc.append("oraclegis")
-urlparse.uses_netloc.append("redshift")
-urlparse.uses_netloc.append("cockroach")
-urlparse.uses_netloc.append("timescale")
-urlparse.uses_netloc.append("timescalegis")
+from typing_extensions import TypedDict
 
 DEFAULT_ENV = "DATABASE_URL"
 
@@ -45,24 +28,43 @@ SCHEMES = {
     "timescalegis": "timescale.db.backends.postgis",
 }
 
+# Register database schemes in URLs.
+for key in SCHEMES.keys():
+    urlparse.uses_netloc.append(key)
+
+
+# From https://docs.djangoproject.com/en/4.0/ref/settings/#databases
+class DBConfig(TypedDict, total=False):
+    ATOMIC_REQUESTS: bool
+    AUTOCOMMIT: bool
+    CONN_MAX_AGE: int
+    CONN_HEALTH_CHECKS: bool
+    DISABLE_SERVER_SIDE_CURSORS: bool
+    ENGINE: str
+    HOST: str
+    NAME: str
+    OPTIONS: Optional[Dict[str, Any]]
+    PASSWORD: str
+    PORT: Union[str, int]
+    TEST: Dict[str, Any]
+    TIME_ZONE: str
+    USER: str
+
 
 def config(
-    env=DEFAULT_ENV,
-    default=None,
-    engine=None,
-    conn_max_age=0,
-    conn_health_checks=False,
-    ssl_require=False,
-    test_options=None,
-    requires_db: bool = False,
-):
+    env: str = DEFAULT_ENV,
+    default: Optional[str] = None,
+    engine: Optional[str] = None,
+    conn_max_age: int = 0,
+    conn_health_checks: bool = False,
+    ssl_require: bool = False,
+    test_options: Optional[Dict] = None,
+) -> DBConfig:
     """Returns configured DATABASE dictionary from DATABASE_URL."""
     s = os.environ.get(env, default)
 
     if s is None:
         message = "No %s environment variable set, and so no databases setup" % env
-        if requires_db:
-            raise Exception(message)
         logging.warning(message)
 
     if s:
@@ -74,13 +76,13 @@ def config(
 
 
 def parse(
-    url,
-    engine=None,
-    conn_max_age=0,
-    conn_health_checks=False,
-    ssl_require=False,
-    test_options=None,
-):
+    url: str,
+    engine: Optional[str] = None,
+    conn_max_age: int = 0,
+    conn_health_checks: bool = False,
+    ssl_require: bool = False,
+    test_options: Optional[dict] = None,
+) -> DBConfig:
     """Parses a database URL."""
     if url == "sqlite://:memory:":
         # this is a special case, because if we pass this URL into
@@ -90,58 +92,59 @@ def parse(
         # note: no other settings are required for sqlite
 
     # otherwise parse the url as normal
-    parsed_config = {}
+    parsed_config: DBConfig = {}
 
     if test_options is None:
         test_options = {}
 
-    url = urlparse.urlsplit(url)
+    spliturl = urlparse.urlsplit(url)
 
     # Split query strings from path.
-    path = url.path[1:]
-    if "?" in path and not url.query:
-        path, query = path.split("?", 2)
-    else:
-        path, query = path, url.query
-    query = urlparse.parse_qs(query)
+    path = spliturl.path[1:]
+    query = urlparse.parse_qs(spliturl.query)
 
     # If we are using sqlite and we have no path, then assume we
     # want an in-memory database (this is the behaviour of sqlalchemy)
-    if url.scheme == "sqlite" and path == "":
+    if spliturl.scheme == "sqlite" and path == "":
         path = ":memory:"
 
     # Handle postgres percent-encoded paths.
-    hostname = url.hostname or ""
+    hostname = spliturl.hostname or ""
     if "%" in hostname:
         # Switch to url.netloc to avoid lower cased paths
-        hostname = url.netloc
+        hostname = spliturl.netloc
         if "@" in hostname:
             hostname = hostname.rsplit("@", 1)[1]
-        if ":" in hostname:
-            hostname = hostname.split(":", 1)[0]
         # Use URL Parse library to decode % encodes
         hostname = urlparse.unquote(hostname)
 
     # Lookup specified engine.
-    engine = SCHEMES[url.scheme] if engine is None else engine
+    if engine is None:
+        engine = SCHEMES.get(spliturl.scheme)
+        if engine is None:
+            raise ValueError(
+                "No support for '%s'. We support: %s"
+                % (spliturl.scheme, ", ".join(sorted(SCHEMES.keys())))
+            )
 
     port = (
-        str(url.port)
-        if url.port
+        str(spliturl.port)
+        if spliturl.port
         and engine in (SCHEMES["oracle"], SCHEMES["mssql"], SCHEMES["mssqlms"])
-        else url.port
+        else spliturl.port
     )
 
     # Update with environment configuration.
     parsed_config.update(
         {
             "NAME": urlparse.unquote(path or ""),
-            "USER": urlparse.unquote(url.username or ""),
-            "PASSWORD": urlparse.unquote(url.password or ""),
+            "USER": urlparse.unquote(spliturl.username or ""),
+            "PASSWORD": urlparse.unquote(spliturl.password or ""),
             "HOST": hostname,
             "PORT": port or "",
             "CONN_MAX_AGE": conn_max_age,
             "CONN_HEALTH_CHECKS": conn_health_checks,
+            "ENGINE": engine,
         }
     )
     if test_options:
@@ -152,9 +155,9 @@ def parse(
         )
 
     # Pass the query string into OPTIONS.
-    options = {}
+    options: Dict[str, Any] = {}
     for key, values in query.items():
-        if url.scheme == "mysql" and key == "ssl-ca":
+        if spliturl.scheme == "mysql" and key == "ssl-ca":
             options["ssl"] = {"ca": values[-1]}
             continue
 
@@ -176,8 +179,5 @@ def parse(
 
     if options:
         parsed_config["OPTIONS"] = options
-
-    if engine:
-        parsed_config["ENGINE"] = engine
 
     return parsed_config

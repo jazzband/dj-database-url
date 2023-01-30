@@ -1,3 +1,4 @@
+import logging
 import os
 import urllib.parse as urlparse
 from typing import Any, Dict, Optional, Union
@@ -61,6 +62,11 @@ def config(
 ) -> DBConfig:
     """Returns configured DATABASE dictionary from DATABASE_URL."""
     s = os.environ.get(env, default)
+
+    if s is None:
+        logging.warning(
+            "No %s environment variable set, and so no databases setup" % env
+        )
 
     if s:
         return parse(

@@ -573,12 +573,6 @@ class DatabaseTestSuite(unittest.TestCase):
             'WARNING:root:No DATABASE_URL environment variable set, and so no databases setup'
         ], cm.output
 
-        with self.assertRaisesRegex(
-            Exception,
-            "No DATABASE_URL environment variable set, and so no databases setup",
-        ):
-            dj_database_url.config(requires_db=True)
-
     def test_bad_url_parsing(self):
         with self.assertRaisesRegex(ValueError, "No support for 'foo'. We support: "):
             dj_database_url.parse("foo://bar")

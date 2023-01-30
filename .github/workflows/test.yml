@@ -35,6 +35,9 @@ jobs:
           pip install -r requirements.txt
           pip install "Django~=${{ matrix.django-version }}.0" .
 
+      - name: Run pre-commit
+        run: pre-commit run -a
+
       - name: Run mypy
         run: |
           python -m mypy dj_database_url.py

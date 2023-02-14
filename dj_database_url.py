@@ -37,7 +37,7 @@ for key in SCHEMES.keys():
 class DBConfig(TypedDict, total=False):
     ATOMIC_REQUESTS: bool
     AUTOCOMMIT: bool
-    CONN_MAX_AGE: int
+    CONN_MAX_AGE: Optional[int]
     CONN_HEALTH_CHECKS: bool
     DISABLE_SERVER_SIDE_CURSORS: bool
     ENGINE: str
@@ -55,7 +55,7 @@ def config(
     env: str = DEFAULT_ENV,
     default: Optional[str] = None,
     engine: Optional[str] = None,
-    conn_max_age: int = 0,
+    conn_max_age: Optional[int] = 0,
     conn_health_checks: bool = False,
     ssl_require: bool = False,
     test_options: Optional[Dict] = None,
@@ -79,7 +79,7 @@ def config(
 def parse(
     url: str,
     engine: Optional[str] = None,
-    conn_max_age: int = 0,
+    conn_max_age: Optional[int] = 0,
     conn_health_checks: bool = False,
     ssl_require: bool = False,
     test_options: Optional[dict] = None,

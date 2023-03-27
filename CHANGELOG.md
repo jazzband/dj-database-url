@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## v1.3.0 (2023-03-27)
+
+* Cosmetic changes to the generation of schemes.
+* Bump isort version - 5.11.5.
+* raise warning message if database_url is not set.
+* CONN_MAX_AGE fix type - Optional[int].
+
 ## v1.2.0 (2022-12-13)
 
 * Add the ability to add test databases.

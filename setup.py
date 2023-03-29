@@ -18,7 +18,7 @@ setup(
     zip_safe=False,
     include_package_data=True,
     platforms="any",
-    project_links={
+    project_urls={
         "GitHub": "https://github.com/jazzband/dj-database-url/",
         "Release log": (
             "https://github.com/jazzband/dj-database-url/blob/master/CHANGELOG.md"

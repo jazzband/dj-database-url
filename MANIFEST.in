@@ -1,1 +1,2 @@
 include py.typed
+include test_dj_database_url.py

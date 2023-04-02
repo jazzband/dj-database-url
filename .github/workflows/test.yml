@@ -37,16 +37,16 @@ jobs:
 
       - name: Run mypy
         run: |
-          python -m mypy dj_database_url.py
+          python -m mypy dj_database_url
 
-      # - name: Run Tests
-      #   run: |
-      #     echo "$(python --version) / Django $(django-admin --version)"
-      #     coverage run --source=dj_database_url --branch -m unittest discover
-      #     coverage report
-      #     coverage xml
+      - name: Run Tests
+        run: |
+          echo "$(python --version) / Django $(django-admin --version)"
+          coverage run --source=dj_database_url --branch -m unittest discover -v
+          coverage report
+          coverage xml
 
-      # - uses: codecov/codecov-action@v3
+      - uses: codecov/codecov-action@v3
 
       - name: Check mypy types installation
         run: |

@@ -17,7 +17,7 @@ setup(
     install_requires=["Django>=3.2", "typing_extensions >= 3.10.0.0"],
     include_package_data=True,
     package_data={
-        'dj_database_url': ['py.typed'],
+        "dj_database_url": ["py.typed"],
     },
     platforms="any",
     project_links={

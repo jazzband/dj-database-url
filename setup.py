@@ -13,10 +13,12 @@ setup(
     description="Use Database URLs in your Django Application.",
     long_description=readme,
     long_description_content_type="text/x-rst",
-    py_modules=["dj_database_url"],
+    packages=["dj_database_url"],
     install_requires=["Django>=3.2", "typing_extensions >= 3.10.0.0"],
-    zip_safe=False,
     include_package_data=True,
+    package_data={
+        "dj_database_url": ["py.typed"],
+    },
     platforms="any",
     project_urls={
         "GitHub": "https://github.com/jazzband/dj-database-url/",

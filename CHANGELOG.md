@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## v2.0.0 (2023-04-27)
+
+* Update project setup such that we now install as a package.
+
+_Notes_: while this does not alter the underlying application code, we are bumping to
+2.0 incase there are unforeseen knock on use-case issues.
+
 ## v1.3.0 (2023-03-27)
 
 * Cosmetic changes to the generation of schemes.

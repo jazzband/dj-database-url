@@ -88,7 +88,7 @@ Usage
           ),
       }
 
-- You can provide a default, used if the ``DATABASE_URL`` setting is not defined:
+- You can provide a default, used if the ``DATABASE_URL`` variable is not defined:
 
   .. code-block:: python
 

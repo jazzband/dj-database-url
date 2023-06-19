@@ -1,5 +1,6 @@
 import logging
 import os
+import string
 import urllib.parse as urlparse
 from typing import Any, Dict, Optional, Union
 
@@ -27,6 +28,12 @@ SCHEMES = {
     "timescale": "timescale.db.backends.postgresql",
     "timescalegis": "timescale.db.backends.postgis",
 }
+
+QUERY_STRING_OPTIONS_OVERLAP_ERROR = (
+    "Query string options and options cannot overlap. "
+    "Query string options: $query_string_options. "
+    "Options: $options"
+)
 
 # Register database schemes in URLs.
 for key in SCHEMES.keys():
@@ -59,6 +66,7 @@ def config(
     conn_health_checks: bool = False,
     ssl_require: bool = False,
     test_options: Optional[Dict] = None,
+    options: Optional[Dict] = None,
 ) -> DBConfig:
     """Returns configured DATABASE dictionary from DATABASE_URL."""
     s = os.environ.get(env, default)
@@ -70,7 +78,13 @@ def config(
 
     if s:
         return parse(
-            s, engine, conn_max_age, conn_health_checks, ssl_require, test_options
+            url=s,
+            engine=engine,
+            conn_max_age=conn_max_age,
+            conn_health_checks=conn_health_checks,
+            ssl_require=ssl_require,
+            test_options=test_options,
+            options=options,
         )
 
     return {}
@@ -83,6 +97,7 @@ def parse(
     conn_health_checks: bool = False,
     ssl_require: bool = False,
     test_options: Optional[dict] = None,
+    options: Optional[Dict] = None,
 ) -> DBConfig:
     """Parses a database URL."""
     if url == "sqlite://:memory:":
@@ -97,6 +112,9 @@ def parse(
 
     if test_options is None:
         test_options = {}
+
+    if options is None:
+        options = {}
 
     spliturl = urlparse.urlsplit(url)
 
@@ -156,19 +174,19 @@ def parse(
         )
 
     # Pass the query string into OPTIONS.
-    options: Dict[str, Any] = {}
+    query_string_options: Dict[str, Any] = {}
     for key, values in query.items():
         if spliturl.scheme == "mysql" and key == "ssl-ca":
-            options["ssl"] = {"ca": values[-1]}
+            query_string_options["ssl"] = {"ca": values[-1]}
             continue
 
-        options[key] = values[-1]
+        query_string_options[key] = values[-1]
 
     if ssl_require:
-        options["sslmode"] = "require"
+        query_string_options["sslmode"] = "require"
 
     # Support for Postgres Schema URLs
-    if "currentSchema" in options and engine in (
+    if "currentSchema" in query_string_options and engine in (
         "django.contrib.gis.db.backends.postgis",
         "django.db.backends.postgresql_psycopg2",
         "django.db.backends.postgresql",
@@ -176,9 +194,36 @@ def parse(
         "timescale.db.backends.postgresql",
         "timescale.db.backends.postgis",
     ):
-        options["options"] = "-c search_path={0}".format(options.pop("currentSchema"))
+        query_string_options["options"] = "-c search_path={0}".format(
+            query_string_options.pop("currentSchema")
+        )
+
+    if query_string_options:
+        parsed_config["OPTIONS"] = query_string_options
+
+    check_if_query_string_options_overlaps_options(
+        query_string_options=query_string_options, options=options
+    )
 
     if options:
         parsed_config["OPTIONS"] = options
 
     return parsed_config
+
+
+def check_if_query_string_options_overlaps_options(
+    query_string_options: Dict[str, Any], options: Dict[str, Any]
+) -> None:
+    # Some query options automatically set the OPTIONS key. To maintain support
+    # and not have users accidentally wondering what broke their config. We raise
+    # a ValueError when values overlap.
+    query_string_options_set = set(query_string_options.keys())
+    options_set = set(options.keys())
+
+    if query_string_options_set & options_set:
+        query_string_options_selected = ', '.join(query_string_options_set)
+        options_selected = ', '.join(options_set)
+        message = string.Template(QUERY_STRING_OPTIONS_OVERLAP_ERROR).substitute(
+            query_string_options=query_string_options_selected, options=options_selected
+        )
+        raise ValueError(message)

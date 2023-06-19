@@ -1,4 +1,5 @@
 import os
+import string
 import unittest
 from unittest import mock
 
@@ -584,6 +585,111 @@ class DatabaseTestSuite(unittest.TestCase):
     def test_ssl_require(self):
         url = dj_database_url.config(ssl_require=True)
         assert url["OPTIONS"] == {'sslmode': 'require'}
+
+    def test_check_if_query_string_options_overlaps_options_ssl_ca(self):
+        query_string_options = {'ssl': 'rds-combined-ca-bundle.pem'}
+        options = {'ssl': {"ca": 'rds-combined-ca-bundle.pem'}}
+        with self.assertRaises(ValueError) as exc:
+            dj_database_url.check_if_query_string_options_overlaps_options(
+                query_string_options=query_string_options, options=options
+            )
+        self.assertEqual(
+            str(exc.exception),
+            string.Template(
+                dj_database_url.QUERY_STRING_OPTIONS_OVERLAP_ERROR
+            ).substitute(query_string_options='ssl', options='ssl'),
+        )
+
+    def test_check_if_query_string_options_overlaps_options_ssl_mode(self):
+        query_string_options = {'sslmode': 'required'}
+        options = {'sslmode': 'required'}
+        with self.assertRaises(ValueError) as exc:
+            dj_database_url.check_if_query_string_options_overlaps_options(
+                query_string_options=query_string_options, options=options
+            )
+        self.assertEqual(
+            str(exc.exception),
+            string.Template(
+                dj_database_url.QUERY_STRING_OPTIONS_OVERLAP_ERROR
+            ).substitute(query_string_options='sslmode', options='sslmode'),
+        )
+
+    def test_check_if_query_string_options_overlaps_options_current_schema(self):
+        pass
+        query_string_options = {'options': '-c search_path=otherschema'}
+        options = {'options': '-c search_path=typoschema'}
+        with self.assertRaises(ValueError) as exc:
+            dj_database_url.check_if_query_string_options_overlaps_options(
+                query_string_options=query_string_options, options=options
+            )
+        self.assertEqual(
+            str(exc.exception),
+            string.Template(
+                dj_database_url.QUERY_STRING_OPTIONS_OVERLAP_ERROR
+            ).substitute(query_string_options='options', options='options'),
+        )
+
+    @mock.patch(
+        'dj_database_url.check_if_query_string_options_overlaps_options', autospec=True
+    )
+    def test_check_if_query_string_options_overlaps_options_validates_options(
+        self, mock_check_if_query_string_options_overlaps_options
+    ):
+        url = "postgis://6fxVADq3vT:PfGGMziZdA@localhost:5432/zplPHwfUjh"
+        database_dict = dj_database_url.parse(url)
+        expected_database_dict: dj_database_url.DBConfig = {
+            'NAME': 'zplPHwfUjh',
+            'USER': '6fxVADq3vT',
+            'PASSWORD': 'PfGGMziZdA',
+            'HOST': 'localhost',
+            'PORT': 5432,
+            'CONN_MAX_AGE': 0,
+            'CONN_HEALTH_CHECKS': False,
+            'ENGINE': 'django.contrib.gis.db.backends.postgis',
+        }
+        self.assertEqual(database_dict, expected_database_dict)
+        mock_check_if_query_string_options_overlaps_options.assert_called_once_with(
+            {}, {}
+        )
+
+    @mock.patch(
+        'dj_database_url.check_if_query_string_options_overlaps_options', autospec=True
+    )
+    def test_check_if_query_string_options_overlaps_options_validates_options_has_value(
+        self, mock_check_if_query_string_options_overlaps_options
+    ):
+        url = "postgis://6fxVADq3vT:PfGGMziZdA@localhost:5432/zplPHwfUjh"
+        options_dict = {'options': '-c search_path=typoschema'}
+
+        database_dict = dj_database_url.parse(
+            url, options={'options': '-c search_path=typoschema'}
+        )
+        expected_database_dict: dj_database_url.DBConfig = {
+            'NAME': 'zplPHwfUjh',
+            'USER': '6fxVADq3vT',
+            'PASSWORD': 'PfGGMziZdA',
+            'HOST': 'localhost',
+            'PORT': 5432,
+            'CONN_MAX_AGE': 0,
+            'CONN_HEALTH_CHECKS': False,
+            'ENGINE': 'django.contrib.gis.db.backends.postgis',
+            'OPTIONS': options_dict,
+        }
+        self.assertEqual(database_dict, expected_database_dict)
+        mock_check_if_query_string_options_overlaps_options.assert_called_once_with(
+            {}, options_dict
+        )
+
+    @mock.patch(
+        'dj_database_url.check_if_query_string_options_overlaps_options', autospec=True
+    )
+    def test_check_if_query_string_options_overlaps_options_validates_options_raises_exception(
+        self, mock_check_if_query_string_options_overlaps_options
+    ):
+        url = "postgis://6fxVADq3vT:PfGGMziZdA@localhost:5432/zplPHwfUjh"
+        mock_check_if_query_string_options_overlaps_options.side_effect = ValueError
+        with self.assertRaises(ValueError):
+            dj_database_url.parse(url, options={'options': '-c search_path=typoschema'})
 
 
 if __name__ == "__main__":

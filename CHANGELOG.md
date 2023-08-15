@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## v2.1.0 (2023-08-15)
+
+* Add value to int parsing when deconstructing url string.
+
 ## v2.0.0 (2023-04-27)
 
 * Update project setup such that we now install as a package.

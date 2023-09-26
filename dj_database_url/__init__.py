@@ -31,6 +31,7 @@ SCHEMES = {
 # Register database schemes in URLs.
 for key in SCHEMES.keys():
     urlparse.uses_netloc.append(key)
+del key
 
 
 # From https://docs.djangoproject.com/en/4.0/ref/settings/#databases

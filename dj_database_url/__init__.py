@@ -58,6 +58,7 @@ def config(
     engine: Optional[str] = None,
     conn_max_age: Optional[int] = 0,
     conn_health_checks: bool = False,
+    disable_server_side_cursors: bool = False,
     ssl_require: bool = False,
     test_options: Optional[Dict] = None,
 ) -> DBConfig:
@@ -71,7 +72,13 @@ def config(
 
     if s:
         return parse(
-            s, engine, conn_max_age, conn_health_checks, ssl_require, test_options
+            s,
+            engine,
+            conn_max_age,
+            conn_health_checks,
+            disable_server_side_cursors,
+            ssl_require,
+            test_options,
         )
 
     return {}
@@ -82,6 +89,7 @@ def parse(
     engine: Optional[str] = None,
     conn_max_age: Optional[int] = 0,
     conn_health_checks: bool = False,
+    disable_server_side_cursors: bool = False,
     ssl_require: bool = False,
     test_options: Optional[dict] = None,
 ) -> DBConfig:
@@ -146,6 +154,7 @@ def parse(
             "PORT": port or "",
             "CONN_MAX_AGE": conn_max_age,
             "CONN_HEALTH_CHECKS": conn_health_checks,
+            "DISABLE_SERVER_SIDE_CURSORS": disable_server_side_cursors,
             "ENGINE": engine,
         }
     )

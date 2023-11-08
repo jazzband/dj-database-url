@@ -592,6 +592,15 @@ class DatabaseTestSuite(unittest.TestCase):
         )
         assert url["OPTIONS"] == {'connect_timout': 3}
 
+    @mock.patch.dict(
+        os.environ,
+        {"DATABASE_URL": "postgres://user:password@instance.amazonaws.com:5431/d8r8?"},
+    )
+    def test_server_side_cursors__config(self):
+        url = dj_database_url.config(disable_server_side_cursors=True)
+
+        assert url["DISABLE_SERVER_SIDE_CURSORS"] is True
+
 
 if __name__ == "__main__":
     unittest.main()

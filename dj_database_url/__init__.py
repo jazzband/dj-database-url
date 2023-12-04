@@ -171,7 +171,7 @@ def parse(
         if spliturl.scheme == "mysql" and key == "ssl-ca":
             options["ssl"] = {"ca": values[-1]}
             continue
-            
+
         value = values[-1]
         if value.isdigit():
             options[key] = int(value)

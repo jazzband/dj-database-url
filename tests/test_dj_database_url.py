@@ -83,6 +83,21 @@ class DatabaseTestSuite(unittest.TestCase):
         assert url["USER"] == "#user"
         assert url["PASSWORD"] == "#password"
         assert url["PORT"] == 5431
+        
+    def test_postgres_parsing_with_int_bool_str_query_string(self):
+        url = "postgres://uf07k1i6d8ia0v:wegauwhgeuioweg@ec2-107-21-253-135.compute-1.amazonaws.com:5431/d8r82722r2kuvn?server_side_binding=true&timeout=20&service=my_service&passfile=.my_pgpass"
+        url = dj_database_url.parse(url)
+
+        assert url["ENGINE"] == "django.db.backends.postgresql"
+        assert url["NAME"] == "d8r82722r2kuvn"
+        assert url["HOST"] == "ec2-107-21-253-135.compute-1.amazonaws.com"
+        assert url["USER"] == "uf07k1i6d8ia0v"
+        assert url["PASSWORD"] == "wegauwhgeuioweg"
+        assert url["PORT"] == 5431
+        assert url["OPTIONS"]["server_side_binding"] is True
+        assert url["OPTIONS"]["timeout"] == 20
+        assert url["OPTIONS"]["service"] == "my_service"
+        assert url["OPTIONS"]["passfile"] == ".my_pgpass"
 
     def test_postgis_parsing(self):
         url = "postgis://uf07k1i6d8ia0v:wegauwhgeuioweg@ec2-107-21-253-135.compute-1.amazonaws.com:5431/d8r82722r2kuvn"

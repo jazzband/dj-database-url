@@ -176,7 +176,7 @@ def parse(
         if value.isdigit():
             options[key] = int(value)
         elif value.lower() in ("true", "false"):
-            options[key] = value == "true"
+            options[key] = value.lower() == "true"
         else:
             options[key] = value
 

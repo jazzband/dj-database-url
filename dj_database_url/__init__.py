@@ -44,7 +44,7 @@ class DBConfig(TypedDict, total=False):
     ENGINE: str
     HOST: str
     NAME: str
-    OPTIONS: Optional[Dict[str, Any]]
+    OPTIONS: Dict[str, Any]
     PASSWORD: str
     PORT: Union[str, int]
     TEST: Dict[str, Any]

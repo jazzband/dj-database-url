@@ -172,10 +172,13 @@ def parse(
             options["ssl"] = {"ca": values[-1]}
             continue
 
-        try:
-            options[key] = int(values[-1])
-        except (TypeError, ValueError):
-            options[key] = values[-1]
+        value = values[-1]
+        if value.isdigit():
+            options[key] = int(value)
+        elif value.lower() in ("true", "false"):
+            options[key] = value.lower() == "true"
+        else:
+            options[key] = value
 
     if ssl_require:
         options["sslmode"] = "require"

@@ -28,6 +28,16 @@ SCHEMES = {
     "timescalegis": "timescale.db.backends.postgis",
 }
 
+SCHEMES_WITH_SEARCH_PATH = [
+    "postgres",
+    "postgresql",
+    "pgsql",
+    "postgis",
+    "redshift",
+    "timescale",
+    "timescalegis",
+]
+
 # Register database schemes in URLs.
 for key in SCHEMES.keys():
     urlparse.uses_netloc.append(key)
@@ -184,14 +194,7 @@ def parse(
         options["sslmode"] = "require"
 
     # Support for Postgres Schema URLs
-    if "currentSchema" in options and engine in (
-        "django.contrib.gis.db.backends.postgis",
-        "django.db.backends.postgresql_psycopg2",
-        "django.db.backends.postgresql",
-        "django_redshift_backend",
-        "timescale.db.backends.postgresql",
-        "timescale.db.backends.postgis",
-    ):
+    if "currentSchema" in options and spliturl.scheme in SCHEMES_WITH_SEARCH_PATH:
         options["options"] = "-c search_path={0}".format(options.pop("currentSchema"))
 
     if options:

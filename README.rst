@@ -22,12 +22,6 @@ also a `conn_max_age` argument to easily enable Django's connection pool.
 If you'd rather not use an environment variable, you can pass a URL in directly
 instead to ``dj_database_url.parse``.
 
-Supported Databases
--------------------
-
-Support currently exists for PostgreSQL, PostGIS, MySQL, MySQL (GIS),
-Oracle, Oracle (GIS), Redshift, CockroachDB, Timescale, Timescale (GIS) and SQLite.
-
 Installation
 ------------
 
@@ -147,6 +141,63 @@ and should instead be passed as:
 
     DATABASES['default'] = dj_database_url.config(default='postgres://...', test_options={'NAME': 'mytestdatabase'})
 
+
+Supported Databases
+-------------------
+
+Support currently exists for PostgreSQL, PostGIS, MySQL, MySQL (GIS),
+Oracle, Oracle (GIS), Redshift, CockroachDB, Timescale, Timescale (GIS) and SQLite.
+
+If you want to use
+some non-default backends, you need to register them first:
+
+.. code-block:: python
+
+    import dj_database_url
+
+    # registration should be performed only once
+    dj_database_url.register("mysql-connector", "mysql.connector.django")
+
+    assert dj_database_url.parse("mysql-connector://user:password@host:port/db-name") == {
+        "ENGINE": "mysql.connector.django",
+        # ...other connection params
+    }
+
+Some backends need further config adjustments (e.g. oracle and mssql
+expect ``PORT`` to be a string). For such cases you can provide a
+post-processing function to ``register()`` (note that ``register()`` is
+used as a **decorator(!)** in this case):
+
+.. code-block:: python
+
+    import dj_database_url
+
+    @dj_database_url.register("mssql", "sql_server.pyodbc")
+    def stringify_port(config):
+        config["PORT"] = str(config["PORT"])
+
+    @dj_database_url.register("redshift", "django_redshift_backend")
+    def apply_current_schema(config):
+        options = config["OPTIONS"]
+        schema = options.pop("currentSchema", None)
+        if schema:
+            options["options"] = f"-c search_path={schema}"
+
+    @dj_database_url.register("snowflake", "django_snowflake")
+    def adjust_snowflake_config(config):
+        config.pop("PORT", None)
+        config["ACCOUNT"] = config.pop("HOST")
+        name, _, schema = config["NAME"].partition("/")
+        if schema:
+            config["SCHEMA"] = schema
+            config["NAME"] = name
+        options = config.get("OPTIONS", {})
+        warehouse = options.pop("warehouse", None)
+        if warehouse:
+            config["WAREHOUSE"] = warehouse
+        role = options.pop("role", None)
+        if role:
+            config["ROLE"] = role
 
 URL schema
 ----------

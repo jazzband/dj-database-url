@@ -1,6 +1,6 @@
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.5.0
+    rev: v4.6.0
     hooks:
       - id: end-of-file-fixer
       - id: trailing-whitespace
@@ -12,7 +12,7 @@ repos:
           args: ["--profile", "black"]
 
   - repo: https://github.com/psf/black
-    rev: 24.2.0
+    rev: 24.4.0
     hooks:
       - id: black
         args: [--target-version=py38]

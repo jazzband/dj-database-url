@@ -155,6 +155,7 @@ URL schema
 | Engine               | Django Backend                                | URL                                              |
 +======================+===============================================+==================================================+
 | PostgreSQL           | ``django.db.backends.postgresql`` [1]_        | ``postgres://USER:PASSWORD@HOST:PORT/NAME`` [2]_ |
+|                      |                                               | ``postgresql://USER:PASSWORD@HOST:PORT/NAME``    |
 +----------------------+-----------------------------------------------+--------------------------------------------------+
 | PostGIS              | ``django.contrib.gis.db.backends.postgis``    | ``postgis://USER:PASSWORD@HOST:PORT/NAME``       |
 +----------------------+-----------------------------------------------+--------------------------------------------------+

@@ -1,6 +1,8 @@
 import os
+import re
 import unittest
 from unittest import mock
+from urllib.parse import uses_netloc
 
 import dj_database_url
 
@@ -202,6 +204,24 @@ class DatabaseTestSuite(unittest.TestCase):
 
         assert url["ENGINE"] == "django.db.backends.sqlite3"
         assert url["NAME"] == ":memory:"
+
+    def test_sqlite_relative_url(self):
+        url = "sqlite:///db.sqlite3"
+        config = dj_database_url.parse(url)
+
+        assert config["ENGINE"] == "django.db.backends.sqlite3"
+        assert config["NAME"] == "db.sqlite3"
+
+    def test_sqlite_absolute_url(self):
+        # 4 slashes are needed:
+        # two are part of scheme
+        # one separates host:port from path
+        # and the fourth goes to "NAME" value
+        url = "sqlite:////db.sqlite3"
+        config = dj_database_url.parse(url)
+
+        assert config["ENGINE"] == "django.db.backends.sqlite3"
+        assert config["NAME"] == "/db.sqlite3"
 
     def test_parse_engine_setting(self):
         engine = "django_mysqlpool.backends.mysqlpool"
@@ -588,9 +608,36 @@ class DatabaseTestSuite(unittest.TestCase):
             'WARNING:root:No DATABASE_URL environment variable set, and so no databases setup'
         ], cm.output
 
-    def test_bad_url_parsing(self):
-        with self.assertRaisesRegex(ValueError, "No support for 'foo'. We support: "):
-            dj_database_url.parse("foo://bar")
+    def test_credentials_unquoted__raise_value_error(self):
+        expected_message = (
+            "This string is not a valid url, possibly because some of its parts "
+            r"is not properly urllib.parse.quote()'ed."
+        )
+        with self.assertRaisesRegex(ValueError, re.escape(expected_message)):
+            dj_database_url.parse("postgres://user:passw#ord!@localhost/foobar")
+
+    def test_credentials_quoted__ok(self):
+        url = "postgres://user%40domain:p%23ssword!@localhost/foobar"
+        config = dj_database_url.parse(url)
+        assert config["USER"] == "user@domain"
+        assert config["PASSWORD"] == "p#ssword!"
+
+    def test_unknown_scheme__raise_value_error(self):
+        expected_message = (
+            "Scheme 'unknown-scheme://' is unknown. "
+            "Did you forget to register custom backend? Following schemes have registered backends:"
+        )
+        with self.assertRaisesRegex(ValueError, re.escape(expected_message)):
+            dj_database_url.parse("unknown-scheme://user:password@localhost/foobar")
+
+    def test_register_multiple_times__no_duplicates_in_uses_netloc(self):
+        # make sure that when register() function is misused,
+        # it won't pollute urllib.parse.uses_netloc list with duplicates.
+        # Otherwise, it might cause performance issue if some code assumes that
+        # that list is short and performs linear search on it.
+        dj_database_url.register("django.contrib.db.backends.bag_end", "bag-end")
+        dj_database_url.register("django.contrib.db.backends.bag_end", "bag-end")
+        assert len(uses_netloc) == len(set(uses_netloc))
 
     @mock.patch.dict(
         os.environ,

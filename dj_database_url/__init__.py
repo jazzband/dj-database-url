@@ -41,7 +41,7 @@ SCHEMES_WITH_SEARCH_PATH = [
 # Register database schemes in URLs.
 for key in SCHEMES.keys():
     urlparse.uses_netloc.append(key)
-del key
+del key  # pyright: ignore[reportPossiblyUnboundVariable]
 
 
 # From https://docs.djangoproject.com/en/4.0/ref/settings/#databases

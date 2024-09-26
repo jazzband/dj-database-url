@@ -12,6 +12,7 @@ SCHEMES = {
     "postgresql": "django.db.backends.postgresql",
     "pgsql": "django.db.backends.postgresql",
     "postgis": "django.contrib.gis.db.backends.postgis",
+    "mongodb": "django_mongodb",
     "mysql": "django.db.backends.mysql",
     "mysql2": "django.db.backends.mysql",
     "mysqlgis": "django.contrib.gis.db.backends.mysql",

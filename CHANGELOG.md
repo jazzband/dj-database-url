@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## v2.2.0 (2024-05-28)
+* Add disable_server_side_cursors parameter
+* Enhance Query String Parsing for Server-Side Binding in Django 4.2 with psycopg 3.1.8+
+* Update django 5.0 python compatability by @mattseymour in #239
+* Improved internals
+* Improved documentation
+
 ## v2.1.0 (2023-08-15)
 
 * Add value to int parsing when deconstructing url string.

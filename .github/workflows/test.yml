@@ -41,9 +41,10 @@ jobs:
           pip install -r requirements.txt
           pip install "Django~=${{ matrix.django-version }}.0" .
 
-      - name: Run mypy
+      - name: Run type checking
         run: |
           python -m mypy dj_database_url
+          python -m pyright dj_database_url
 
       - name: Run Tests
         run: |
@@ -54,8 +55,9 @@ jobs:
 
       - uses: codecov/codecov-action@v4
 
-      - name: Check mypy types installation
+      - name: Check types installation
         run: |
           pip install .
           cd tests
           python -m mypy .
+          python -m pyright .

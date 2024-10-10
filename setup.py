@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from setuptools import setup
+from setuptools import setup  # pyright: ignore[reportUnknownVariableType]
 
 readme = Path("README.rst").read_text()
 

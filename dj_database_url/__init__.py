@@ -41,7 +41,7 @@ SCHEMES_WITH_SEARCH_PATH = [
 # Register database schemes in URLs.
 for key in SCHEMES.keys():
     urlparse.uses_netloc.append(key)
-del key
+del key  # pyright: ignore[reportPossiblyUnboundVariable]
 
 
 # From https://docs.djangoproject.com/en/4.0/ref/settings/#databases
@@ -70,7 +70,7 @@ def config(
     conn_health_checks: bool = False,
     disable_server_side_cursors: bool = False,
     ssl_require: bool = False,
-    test_options: Optional[Dict] = None,
+    test_options: Optional[Dict[str, Any]] = None,
 ) -> DBConfig:
     """Returns configured DATABASE dictionary from DATABASE_URL."""
     s = os.environ.get(env, default)
@@ -101,7 +101,7 @@ def parse(
     conn_health_checks: bool = False,
     disable_server_side_cursors: bool = False,
     ssl_require: bool = False,
-    test_options: Optional[dict] = None,
+    test_options: Optional[Dict[str, Any]] = None,
 ) -> DBConfig:
     """Parses a database URL."""
     if url == "sqlite://:memory:":

@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## Unreleased
+
+* Drop dependency on `typing_extensions`.
+
 ## v2.3.0 (2024-10-23)
 * Remove Python 3.8 support.
 * Remove Django 3 support.

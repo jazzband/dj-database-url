@@ -1,9 +1,7 @@
 import logging
 import os
 import urllib.parse as urlparse
-from typing import Any, Dict, Optional, Union
-
-from typing_extensions import TypedDict
+from typing import Any, Dict, Optional, TypedDict, Union
 
 DEFAULT_ENV = "DATABASE_URL"
 

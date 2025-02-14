@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## Unreleased
+* Add Django 5.2 and 6.0 support.
+
 ## v3.0.1 (2025-07-01)
 * Drop dependency on `typing_extensions`.
 

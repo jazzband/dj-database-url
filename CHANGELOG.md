@@ -3,6 +3,7 @@
 ## Unreleased
 
 * Drop dependency on `typing_extensions`.
+* Add Django 5.2 support.
 
 ## v2.3.0 (2024-10-23)
 * Remove Python 3.8 support.

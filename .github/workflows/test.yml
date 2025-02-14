@@ -6,19 +6,26 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: ["3.9", "3.10", "3.11", "3.12", "3.13"]
-        django-version: ["4.2", "5.1"]
+        python-version:
+        - "3.9"
+        - "3.10"
+        - "3.11"
+        - "3.12"
+        - "3.13"
+        django-version:
+        - "4.2"
+        - "5.0"
+        - "5.1"
+        - "5.2"
         exclude:
-          # Python 3.11 is not compatible with 3.2
-          - python-version: "3.11"
-            django-version: "3.2"
-          - python-version: "3.12"
-            django-version: "3.2"
-          - python-version: "3.13"
-            django-version: "3.2"
-          # django 5.x is not compatible with python 3.9 or lower
+          - python-version: "3.9"
+            django-version: "5.0"
           - python-version: "3.9"
             django-version: "5.1"
+          - python-version: "3.9"
+            django-version: "5.2"
+          - python-version: "3.13"
+            django-version: "5.0"
 
     steps:
       - uses: actions/checkout@v4
@@ -32,7 +39,7 @@ jobs:
       - name: Install dependencies
         run: |
           pip install -r requirements.txt
-          pip install "Django~=${{ matrix.django-version }}.0" .
+          pip install "django~=${{ matrix.django-version }}.0a1" .
 
       - name: Run type checking
         run: |

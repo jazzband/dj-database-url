@@ -199,3 +199,14 @@ def parse(
         parsed_config["OPTIONS"] = options
 
     return parsed_config
+
+
+class DefaultURLs:
+    POSTGRES = "postgres://postgres:@localhost:5432/postgres"
+    POSTGIS = "postgis://postgres:@localhost:5432/postgres"
+    MYSQL = "mysql://root:@localhost:3306/mysql"
+    SQLITE = "sqlite://:memory:"
+    MSSQL = "sqlserver://[localhost[][:1433]]"
+    ORACLE = "oracle:thin:HR/hr@localhost:5221:orcl"
+    REDSHIFT = "redshift://localhost:5439/dev"
+    COCKROACH = "postgres://postgres:@localhost:5432/postgres"

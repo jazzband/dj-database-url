@@ -6,7 +6,7 @@ repos:
       - id: trailing-whitespace
 
   - repo: https://github.com/pycqa/isort
-    rev: "6.0.0"
+    rev: "6.0.1"
     hooks:
         - id: isort
           args: ["--profile", "black"]
@@ -18,6 +18,6 @@ repos:
         args: [--target-version=py38]
 
   - repo: https://github.com/pycqa/flake8
-    rev: '7.1.1'
+    rev: '7.2.0'
     hooks:
       - id: flake8

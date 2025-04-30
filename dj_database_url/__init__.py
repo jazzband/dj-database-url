@@ -91,7 +91,7 @@ register("cockroach", "django_cockroachdb")
 @register("sqlite", "django.db.backends.sqlite3")
 def default_to_in_memory_db(parsed_config: DBConfig) -> None:
     # mimic sqlalchemy behaviour
-    if parsed_config["NAME"] == "":
+    if not parsed_config.get("NAME"):
         parsed_config["NAME"] = ":memory:"
 
 
@@ -99,13 +99,13 @@ def default_to_in_memory_db(parsed_config: DBConfig) -> None:
 @register("mssqlms", "mssql")
 @register("mssql", "sql_server.pyodbc")
 def stringify_port(parsed_config: DBConfig) -> None:
-    parsed_config["PORT"] = str(parsed_config["PORT"])
+    parsed_config["PORT"] = str(parsed_config.get("PORT", ""))
 
 
 @register("mysql", "django.db.backends.mysql")
 @register("mysql2", "django.db.backends.mysql")
 def apply_ssl_ca(parsed_config: DBConfig) -> None:
-    options = parsed_config["OPTIONS"]
+    options = parsed_config.get("OPTIONS", {})
     ca = options.pop("ssl-ca", None)
     if ca:
         options["ssl"] = {"ca": ca}
@@ -119,7 +119,7 @@ def apply_ssl_ca(parsed_config: DBConfig) -> None:
 @register("timescale", "timescale.db.backends.postgresql")
 @register("timescalegis", "timescale.db.backends.postgis")
 def apply_current_schema(parsed_config: DBConfig) -> None:
-    options = parsed_config["OPTIONS"]
+    options = parsed_config.get("OPTIONS", {})
     schema = options.pop("currentSchema", None)
     if schema:
         options["options"] = f"-c search_path={schema}"
@@ -237,7 +237,7 @@ def _convert_to_settings(
     conn_health_checks: bool,
     disable_server_side_cursors: bool,
     ssl_require: bool,
-    test_options: Optional[dict],
+    test_options: Optional[dict[str, Any]],
 ) -> DBConfig:
     settings: DBConfig = {
         "CONN_MAX_AGE": conn_max_age,

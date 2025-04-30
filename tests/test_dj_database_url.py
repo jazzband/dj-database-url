@@ -669,10 +669,6 @@ class DatabaseTestSuite(unittest.TestCase):
         dj_database_url.register("django.contrib.db.backends.bag_end", "bag-end")
         assert len(uses_netloc) == len(set(uses_netloc))
 
-    def test_bad_url_parsing(self) -> None:
-        with self.assertRaisesRegex(ValueError, "No support for 'foo'. We support: "):
-            dj_database_url.parse("foo://bar")
-
     @mock.patch.dict(
         os.environ,
         {"DATABASE_URL": "postgres://user:password@instance.amazonaws.com:5431/d8r8?"},

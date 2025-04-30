@@ -5,9 +5,9 @@ from typing import Any, Callable, Dict, List, Optional, Union
 
 from typing_extensions import TypedDict
 
-
 DEFAULT_ENV = "DATABASE_URL"
 ENGINE_SCHEMES: Dict[str, "Engine"] = {}
+
 
 # From https://docs.djangoproject.com/en/stable/ref/settings/#databases
 class DBConfig(TypedDict, total=False):

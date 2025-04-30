@@ -1,5 +1,22 @@
 # CHANGELOG
 
+## Unreleased
+
+* Drop dependency on `typing_extensions`.
+
+## v2.3.0 (2024-10-23)
+* Remove Python 3.8 support.
+* Remove Django 3 support.
+* Add python 3.13 support.
+* Add Django 5.1 to the testing library.
+
+## v2.2.0 (2024-05-28)
+* Add disable_server_side_cursors parameter
+* Enhance Query String Parsing for Server-Side Binding in Django 4.2 with psycopg 3.1.8+
+* Update django 5.0 python compatability by @mattseymour in #239
+* Improved internals
+* Improved documentation
+
 ## v2.1.0 (2023-08-15)
 
 * Add value to int parsing when deconstructing url string.

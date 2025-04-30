@@ -5,9 +5,9 @@ from typing import Any, Callable, Dict, List, Optional, Union
 
 from typing_extensions import TypedDict
 
+
 DEFAULT_ENV = "DATABASE_URL"
 ENGINE_SCHEMES: Dict[str, "Engine"] = {}
-
 
 # From https://docs.djangoproject.com/en/stable/ref/settings/#databases
 class DBConfig(TypedDict, total=False):
@@ -133,7 +133,7 @@ def config(
     conn_health_checks: bool = False,
     disable_server_side_cursors: bool = False,
     ssl_require: bool = False,
-    test_options: Optional[Dict] = None,
+    test_options: Optional[Dict[str, Any]] = None,
 ) -> DBConfig:
     """Returns configured DATABASE dictionary from DATABASE_URL."""
     s = os.environ.get(env, default)
@@ -164,7 +164,7 @@ def parse(
     conn_health_checks: bool = False,
     disable_server_side_cursors: bool = False,
     ssl_require: bool = False,
-    test_options: Optional[dict] = None,
+    test_options: Optional[Dict[str, Any]] = None,
 ) -> DBConfig:
     """Parses a database URL and returns configured DATABASE dictionary."""
     settings = _convert_to_settings(

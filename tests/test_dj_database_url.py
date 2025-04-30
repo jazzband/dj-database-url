@@ -218,14 +218,14 @@ class DatabaseTestSuite(unittest.TestCase):
         assert url["ENGINE"] == "django.db.backends.sqlite3"
         assert url["NAME"] == ":memory:"
 
-    def test_sqlite_relative_url(self):
+    def test_sqlite_relative_url(self) -> None:
         url = "sqlite:///db.sqlite3"
         config = dj_database_url.parse(url)
 
         assert config["ENGINE"] == "django.db.backends.sqlite3"
         assert config["NAME"] == "db.sqlite3"
 
-    def test_sqlite_absolute_url(self):
+    def test_sqlite_absolute_url(self) -> None:
         # 4 slashes are needed:
         # two are part of scheme
         # one separates host:port from path
@@ -638,7 +638,7 @@ class DatabaseTestSuite(unittest.TestCase):
             'WARNING:root:No DATABASE_URL environment variable set, and so no databases setup'
         ], cm.output
 
-    def test_credentials_unquoted__raise_value_error(self):
+    def test_credentials_unquoted__raise_value_error(self) -> None:
         expected_message = (
             "This string is not a valid url, possibly because some of its parts "
             r"is not properly urllib.parse.quote()'ed."
@@ -646,13 +646,13 @@ class DatabaseTestSuite(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, re.escape(expected_message)):
             dj_database_url.parse("postgres://user:passw#ord!@localhost/foobar")
 
-    def test_credentials_quoted__ok(self):
+    def test_credentials_quoted__ok(self) -> None:
         url = "postgres://user%40domain:p%23ssword!@localhost/foobar"
         config = dj_database_url.parse(url)
         assert config["USER"] == "user@domain"
         assert config["PASSWORD"] == "p#ssword!"
 
-    def test_unknown_scheme__raise_value_error(self):
+    def test_unknown_scheme__raise_value_error(self) -> None:
         expected_message = (
             "Scheme 'unknown-scheme://' is unknown. "
             "Did you forget to register custom backend? Following schemes have registered backends:"
@@ -660,7 +660,7 @@ class DatabaseTestSuite(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, re.escape(expected_message)):
             dj_database_url.parse("unknown-scheme://user:password@localhost/foobar")
 
-    def test_register_multiple_times__no_duplicates_in_uses_netloc(self):
+    def test_register_multiple_times__no_duplicates_in_uses_netloc(self) -> None:
         # make sure that when register() function is misused,
         # it won't pollute urllib.parse.uses_netloc list with duplicates.
         # Otherwise, it might cause performance issue if some code assumes that

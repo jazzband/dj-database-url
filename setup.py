@@ -6,7 +6,7 @@ readme = Path("README.rst").read_text()
 
 setup(
     name="dj-database-url",
-    version="2.3.0",
+    version="3.0.0",
     url="https://github.com/jazzband/dj-database-url",
     license="BSD",
     author="Original Author: Kenneth Reitz, Maintained by: JazzBand Community",

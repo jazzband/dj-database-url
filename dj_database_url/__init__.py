@@ -13,7 +13,7 @@ ENGINE_SCHEMES: Dict[str, "Engine"] = {}
 class DBConfig(TypedDict, total=False):
     ATOMIC_REQUESTS: bool
     AUTOCOMMIT: bool
-    CONN_MAX_AGE: Optional[int]
+    CONN_MAX_AGE: Optional[int | None]
     CONN_HEALTH_CHECKS: bool
     DISABLE_SERVER_SIDE_CURSORS: bool
     ENGINE: str
@@ -129,7 +129,7 @@ def config(
     env: str = DEFAULT_ENV,
     default: Optional[str] = None,
     engine: Optional[str] = None,
-    conn_max_age: int = 0,
+    conn_max_age: int | None = 0,
     conn_health_checks: bool = False,
     disable_server_side_cursors: bool = False,
     ssl_require: bool = False,

@@ -1,8 +1,10 @@
 # CHANGELOG
 
-## Unreleased
-
-* Drop dependency on `typing_extensions`.
+## v3.0.0 (2025-05-18)
+> Bumping to version 3; changes to code do break some API compatability.
+* Implement a new decorator registry pattern to impement checks on database connection string.
+ * You can now support and implement your own database strings by extending the @register functionality.
+* Update supported python versions and django versions.
 
 ## v2.3.0 (2024-10-23)
 * Remove Python 3.8 support.

@@ -1,9 +1,7 @@
 import logging
 import os
 import urllib.parse as urlparse
-from typing import Any, Callable, Dict, List, Optional, Union
-
-from typing_extensions import TypedDict
+from typing import Any, Callable, Dict, List, Optional, TypedDict, Union
 
 DEFAULT_ENV = "DATABASE_URL"
 ENGINE_SCHEMES: Dict[str, "Engine"] = {}

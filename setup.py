@@ -14,7 +14,7 @@ setup(
     long_description=readme,
     long_description_content_type="text/x-rst",
     packages=["dj_database_url"],
-    install_requires=["Django>=4.2", "typing_extensions>=4.0.0"],
+    install_requires=["Django>=4.2"],
     include_package_data=True,
     package_data={
         "dj_database_url": ["py.typed"],

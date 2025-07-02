@@ -1,7 +1,6 @@
 # CHANGELOG
 
-## Unreleased
-
+## v3.0.1 (2025-07-01)
 * Drop dependency on `typing_extensions`.
 
 ## v3.0.0 (2025-05-18)

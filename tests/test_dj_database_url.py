@@ -266,8 +266,8 @@ class DatabaseTestSuite(unittest.TestCase):
 
         assert url["CONN_MAX_AGE"] == conn_max_age
 
-    def test_config_conn_max_age_setting(self) -> None:
-        conn_max_age = 600
+    def test_config_conn_max_age_setting_none(self) -> None:
+        conn_max_age = None
         with mock.patch.dict(
             os.environ,
             {

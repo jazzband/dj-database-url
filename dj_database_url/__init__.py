@@ -127,7 +127,7 @@ def config(
     env: str = DEFAULT_ENV,
     default: Optional[str] = None,
     engine: Optional[str] = None,
-    conn_max_age: int = 0,
+    conn_max_age: Optional[int] = 0,
     conn_health_checks: bool = False,
     disable_server_side_cursors: bool = False,
     ssl_require: bool = False,
@@ -158,7 +158,7 @@ def config(
 def parse(
     url: str,
     engine: Optional[str] = None,
-    conn_max_age: int = 0,
+    conn_max_age: Optional[int] = 0,
     conn_health_checks: bool = False,
     disable_server_side_cursors: bool = False,
     ssl_require: bool = False,
@@ -231,7 +231,7 @@ def _parse_value(value: str) -> OptionType:
 
 def _convert_to_settings(
     engine: Optional[str],
-    conn_max_age: int,
+    conn_max_age: Optional[int],
     conn_health_checks: bool,
     disable_server_side_cursors: bool,
     ssl_require: bool,

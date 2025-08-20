@@ -1,26 +1,29 @@
+from __future__ import annotations
+
 import logging
 import os
 import urllib.parse as urlparse
-from typing import Any, Callable, Dict, List, Optional, TypedDict, Union
+from collections.abc import Callable
+from typing import Any, TypedDict, Union
 
 DEFAULT_ENV = "DATABASE_URL"
-ENGINE_SCHEMES: Dict[str, "Engine"] = {}
+ENGINE_SCHEMES: dict[str, Engine] = {}
 
 
 # From https://docs.djangoproject.com/en/stable/ref/settings/#databases
 class DBConfig(TypedDict, total=False):
     ATOMIC_REQUESTS: bool
     AUTOCOMMIT: bool
-    CONN_MAX_AGE: Optional[int]
+    CONN_MAX_AGE: int | None
     CONN_HEALTH_CHECKS: bool
     DISABLE_SERVER_SIDE_CURSORS: bool
     ENGINE: str
     HOST: str
     NAME: str
-    OPTIONS: Dict[str, Any]
+    OPTIONS: dict[str, Any]
     PASSWORD: str
-    PORT: Union[str, int]
-    TEST: Dict[str, Any]
+    PORT: str | int
+    TEST: dict[str, Any]
     TIME_ZONE: str
     USER: str
 
@@ -125,13 +128,13 @@ def apply_current_schema(parsed_config: DBConfig) -> None:
 
 def config(
     env: str = DEFAULT_ENV,
-    default: Optional[str] = None,
-    engine: Optional[str] = None,
-    conn_max_age: Optional[int] = 0,
+    default: str | None = None,
+    engine: str | None = None,
+    conn_max_age: int | None = 0,
     conn_health_checks: bool = False,
     disable_server_side_cursors: bool = False,
     ssl_require: bool = False,
-    test_options: Optional[Dict[str, Any]] = None,
+    test_options: dict[str, Any] | None = None,
 ) -> DBConfig:
     """Returns configured DATABASE dictionary from DATABASE_URL."""
     s = os.environ.get(env, default)
@@ -157,12 +160,12 @@ def config(
 
 def parse(
     url: str,
-    engine: Optional[str] = None,
-    conn_max_age: Optional[int] = 0,
+    engine: str | None = None,
+    conn_max_age: int | None = 0,
     conn_health_checks: bool = False,
     disable_server_side_cursors: bool = False,
     ssl_require: bool = False,
-    test_options: Optional[Dict[str, Any]] = None,
+    test_options: dict[str, Any] | None = None,
 ) -> DBConfig:
     """Parses a database URL and returns configured DATABASE dictionary."""
     settings = _convert_to_settings(
@@ -216,7 +219,7 @@ def parse(
     return parsed_config
 
 
-def _parse_option_values(values: List[str]) -> Union[OptionType, List[OptionType]]:
+def _parse_option_values(values: list[str]) -> OptionType | list[OptionType]:
     parsed_values = [_parse_value(v) for v in values]
     return parsed_values[0] if len(parsed_values) == 1 else parsed_values
 
@@ -230,12 +233,12 @@ def _parse_value(value: str) -> OptionType:
 
 
 def _convert_to_settings(
-    engine: Optional[str],
-    conn_max_age: Optional[int],
+    engine: str | None,
+    conn_max_age: int | None,
     conn_health_checks: bool,
     disable_server_side_cursors: bool,
     ssl_require: bool,
-    test_options: Optional[dict[str, Any]],
+    test_options: dict[str, Any] | None,
 ) -> DBConfig:
     settings: DBConfig = {
         "CONN_MAX_AGE": conn_max_age,

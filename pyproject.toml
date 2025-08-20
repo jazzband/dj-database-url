@@ -1,11 +1,68 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "dj-database-url"
+dynamic = ["version"]
+description = "Use Database URLs in your Django Application."
+readme = "README.rst"
+license = "BSD-3-Clause"
+requires-python = ">=3.10"
+authors = [
+    { name = "Kenneth Reitz" },
+    { name = "JazzBand Community" },
+]
+maintainers = [
+    { name = "JazzBand Community" }
+]
+classifiers = [
+    "Environment :: Web Environment",
+    "Framework :: Django",
+    "Framework :: Django :: 4.2",
+    "Framework :: Django :: 5.0",
+    "Framework :: Django :: 5.1",
+    "Framework :: Django :: 5.2",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: BSD License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Topic :: Internet :: WWW/HTTP :: Dynamic Content",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+dependencies = [
+    "Django>=4.2",
+]
+
+[project.urls]
+GitHub = "https://github.com/jazzband/dj-database-url/"
+Homepage = "https://github.com/jazzband/dj-database-url"
+"Release log" = "https://github.com/jazzband/dj-database-url/blob/master/CHANGELOG.md"
+
+[tool.hatch.version]
+path = "dj_database_url/__init__.py"
+
+[tool.hatch.build.targets.sdist]
+include = [
+    "/dj_database_url",
+    "/tests",
+]
+
 [tool.black]
 skip-string-normalization = 1
 
 [tool.mypy]
-show_error_codes=true
-disallow_untyped_defs=true
-disallow_untyped_calls=true
-warn_redundant_casts=true
+show_error_codes = true
+disallow_untyped_defs = true
+disallow_untyped_calls = true
+warn_redundant_casts = true
 
 [tool.pyright]
 typeCheckingMode = "strict"

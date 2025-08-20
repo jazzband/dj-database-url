@@ -3,6 +3,8 @@ import os
 import urllib.parse as urlparse
 from typing import Any, Callable, Dict, List, Optional, TypedDict, Union
 
+__version__ = "3.0.1"
+
 DEFAULT_ENV = "DATABASE_URL"
 ENGINE_SCHEMES: Dict[str, "Engine"] = {}
 

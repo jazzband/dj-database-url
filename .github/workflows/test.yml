@@ -1,6 +1,25 @@
 name: test
 on: [push, pull_request]
 jobs:
+  typecheck:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: pip install -e . -r requirements.txt
+
+      - name: Run mypy
+        run: python -m mypy dj_database_url
+
+      - name: Run pyright
+        run: python -m pyright dj_database_url
+
   test:
     runs-on: ubuntu-latest
     strategy:
@@ -30,14 +49,7 @@ jobs:
           cache: 'pip'
 
       - name: Install dependencies
-        run: |
-          pip install -r requirements.txt
-          pip install "Django~=${{ matrix.django-version }}.0" .
-
-      - name: Run type checking
-        run: |
-          python -m mypy dj_database_url
-          python -m pyright dj_database_url
+        run: pip install -r requirements.txt "Django~=${{ matrix.django-version }}.0" .
 
       - name: Run Tests
         run: |
@@ -47,10 +59,3 @@ jobs:
           coverage xml
 
       - uses: codecov/codecov-action@v4
-
-      - name: Check types installation
-        run: |
-          pip install .
-          cd tests
-          python -m mypy .
-          python -m pyright .

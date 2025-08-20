@@ -235,7 +235,7 @@ def _convert_to_settings(
     conn_health_checks: bool,
     disable_server_side_cursors: bool,
     ssl_require: bool,
-    test_options: Optional[dict[str, Any]],
+    test_options: Optional[Dict[str, Any]],
 ) -> DBConfig:
     settings: DBConfig = {
         "CONN_MAX_AGE": conn_max_age,

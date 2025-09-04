@@ -1,3 +1,52 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "dj-database-url"
+version = "3.0.1"
+description = "Use Database URLs in your Django Application."
+readme = "README.rst"
+requires-python = ">=3.9, <3.15"
+license = { text = "BSD-3-Clause" }
+authors = [
+    { name = "Original Author: Kenneth Reitz, Maintained by: JazzBand Community" }
+]
+dependencies = [
+    "Django>=4.2"
+]
+classifiers = [
+    "Environment :: Web Environment",
+    "Framework :: Django",
+    "Framework :: Django :: 4.2",
+    "Framework :: Django :: 5.0",
+    "Framework :: Django :: 5.1",
+    "Framework :: Django :: 5.2",
+    "Intended Audience :: Developers",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Topic :: Internet :: WWW/HTTP :: Dynamic Content",
+    "Topic :: Software Development :: Libraries :: Python Modules"
+]
+
+[project.urls]
+"GitHub" = "https://github.com/jazzband/dj-database-url/"
+"Release log" = "https://github.com/jazzband/dj-database-url/blob/master/CHANGELOG.md"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["dj_database_url*"]
+
+[tool.setuptools.package-data]
+"dj_database_url" = ["py.typed"]
+
 [tool.black]
 skip-string-normalization = 1
 

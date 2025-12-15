@@ -8,7 +8,7 @@ setup(
     name="dj-database-url",
     version="3.0.1",
     url="https://github.com/jazzband/dj-database-url",
-    license="BSD",
+    license="BSD-3-Clause",
     author="Original Author: Kenneth Reitz, Maintained by: JazzBand Community",
     description="Use Database URLs in your Django Application.",
     long_description=readme,

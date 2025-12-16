@@ -1,3 +1,48 @@
+[project]
+name = "dj-database-url"
+version = "0.0.0"
+description = "Use Database URLs in your Django Application."
+authors = [
+    { name = "Jazzband community" }
+]
+readme = "README.rst"
+requires-python = ">=3.10"
+license = "BSD-3-Clause"
+license-files = ["LICENSE"]
+dependencies = [
+    "django>=4.2",
+]
+classifiers = [
+    "Environment :: Web Environment",
+    "Framework :: Django",
+    "Framework :: Django :: 4.2",
+    "Framework :: Django :: 5.2",
+    "Framework :: Django :: 6",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: BSD License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python",
+    "Topic :: Internet :: WWW/HTTP :: Dynamic Content",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+]
+
+
+[build-system]
+requires = ["uv_build>=0.9.17,<0.10.0"]
+build-backend = "uv_build"
+
+[tool.uv.build-backend]
+module-name = "dj_database_url"
+module-root = ""
+source-include = ["dj_database_url/py.typed"]
+
 [tool.black]
 skip-string-normalization = 1
 
@@ -9,3 +54,14 @@ warn_redundant_casts=true
 
 [tool.pyright]
 typeCheckingMode = "strict"
+
+[dependency-groups]
+dev = [
+    "coverage>=7.13.0",
+    "mypy>=1.19.1",
+    "pyright>=1.1.407",
+    "ruff>=0.14.9",
+    "setuptools>=80.9.0",
+    "twine>=6.2.0",
+    "wheel>=0.45.1",
+]

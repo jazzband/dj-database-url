@@ -4,8 +4,8 @@
 * Drop dependency on `typing_extensions`.
 
 ## v3.0.0 (2025-05-18)
-> Bumping to version 3; changes to code do break some API compatability.
-* Implement a new decorator registry pattern to impement checks on database connection string.
+> Bumping to version 3; changes to code do break some API compatibility.
+* Implement a new decorator registry pattern to implement checks on database connection string.
  * You can now support and implement your own database strings by extending the @register functionality.
 * Update supported python versions and django versions.
 
@@ -18,7 +18,7 @@
 ## v2.2.0 (2024-05-28)
 * Add disable_server_side_cursors parameter
 * Enhance Query String Parsing for Server-Side Binding in Django 4.2 with psycopg 3.1.8+
-* Update django 5.0 python compatability by @mattseymour in #239
+* Update django 5.0 python compatibility by @mattseymour in #239
 * Improved internals
 * Improved documentation
 
@@ -50,7 +50,7 @@ _Notes_: while this does not alter the underlying application code, we are bumpi
 
 * Option for connection health checks parameter.
 * Update supported version python 3.11.
-* Code changes, various improvments.
+* Code changes, various improvements.
 * Add project links to setup.py
 
 ## v1.0.0 (2022-06-18)
@@ -58,7 +58,7 @@ _Notes_: while this does not alter the underlying application code, we are bumpi
 Initial release of code now dj-database-urls is part of jazzband.
 
 * Add support for cockroachdb.
-* Add support for the offical MSSQL connector.
+* Add support for the official MSSQL connector.
 * Update License to be compatible with Jazzband.
 * Remove support for Python < 3.5 including Python 2.7
 * Update source code to Black format.

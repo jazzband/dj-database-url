@@ -4,58 +4,56 @@ jobs:
   typecheck:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
-      - uses: actions/setup-python@v5
+      - name: Install uv
+        uses: astral-sh/setup-uv@v7
         with:
-          python-version: '3.13'
-          cache: 'pip'
-
-      - name: Install dependencies
-        run: pip install -e . -r requirements.txt
+          python-version: "3.12"
 
       - name: Run mypy
-        run: python -m mypy dj_database_url
+        run: uvx mypy dj_database_url
 
       - name: Run pyright
-        run: python -m pyright dj_database_url
+        run: uvx pyright dj_database_url
 
   test:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        python-version: ["3.9", "3.10", "3.11", "3.12", "3.13"]
-        django-version: ["4.2", "5.1"]
+        python-version: ["3.10", "3.11", "3.12", "3.13", "3.14"]
+        django-version: ["4.2", "5.2", "6.0"]
         exclude:
-          # Python 3.11 is not compatible with 3.2
-          - python-version: "3.11"
-            django-version: "3.2"
-          - python-version: "3.12"
-            django-version: "3.2"
+          # django 4.x is not compatible with python 3.13 or higher
           - python-version: "3.13"
-            django-version: "3.2"
-          # django 5.x is not compatible with python 3.9 or lower
-          - python-version: "3.9"
-            django-version: "5.1"
+            django-version: "4.2"
+          - python-version: "3.14"
+            django-version: "4.2"
+          # django 6.x is not compatible with python 3.11 or lower
+          - python-version: "3.10"
+            django-version: "6.0"
+          - python-version: "3.11"
+            django-version: "6.0"
 
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v5
+      - name: Install uv and set the Python version
+        uses: astral-sh/setup-uv@v7
         with:
           python-version: ${{ matrix.python-version }}
-          cache: 'pip'
+          activate-environment: 'true'
 
       - name: Install dependencies
-        run: pip install -r requirements.txt "Django~=${{ matrix.django-version }}.0" .
+        run: |
+          uv pip install "Django~=${{ matrix.django-version }}.0"
 
       - name: Run Tests
         run: |
           echo "$(python --version) / Django $(django-admin --version)"
-          coverage run --source=dj_database_url --branch -m unittest discover -v
-          coverage report
-          coverage xml
+          uvx coverage run --source=dj_database_url --branch -m unittest discover -v
+          uvx coverage report
+          uvx coverage xml
 
       - uses: codecov/codecov-action@v4

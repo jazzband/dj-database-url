@@ -680,9 +680,9 @@ class DatabaseTestSuite(unittest.TestCase):
     def test_options_int_values(self) -> None:
         """Ensure that options with integer values are parsed correctly."""
         url = dj_database_url.parse(
-            "mysql://user:pw@127.0.0.1:15036/db?connect_timout=3"
+            "mysql://user:pw@127.0.0.1:15036/db?connect_timeout=3"
         )
-        assert url["OPTIONS"] == {'connect_timout': 3}
+        assert url["OPTIONS"] == {'connect_timeout': 3}
 
     @mock.patch.dict(
         os.environ,

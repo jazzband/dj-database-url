@@ -43,8 +43,14 @@ module-name = "dj_database_url"
 module-root = ""
 source-include = ["dj_database_url/py.typed"]
 
-[tool.black]
-skip-string-normalization = 1
+[tool.ruff]
+line-length = 88
+
+[tool.ruff.lint]
+extend-select = ["B", "I"]
+
+[tool.ruff.format]
+quote-style = "preserve"
 
 [tool.mypy]
 show_error_codes=true
@@ -60,7 +66,7 @@ dev = [
     "coverage>=7.13.0",
     "mypy>=1.19.1",
     "pyright>=1.1.407",
-    "ruff>=0.14.9",
+    "ruff>=0.14.10",
     "setuptools>=80.9.0",
     "twine>=6.2.0",
     "wheel>=0.45.1",

@@ -5,19 +5,12 @@ repos:
       - id: end-of-file-fixer
       - id: trailing-whitespace
 
-  - repo: https://github.com/pycqa/isort
-    rev: "7.0.0"
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: 5ba58aca0bd5bc7c0e1c0fc45af2e88d6a2bde83  # frozen: v0.14.10
     hooks:
-        - id: isort
-          args: ["--profile", "black"]
-
-  - repo: https://github.com/psf/black-pre-commit-mirror
-    rev: 25.12.0
-    hooks:
-      - id: black
-        args: [--target-version=py38]
-
-  - repo: https://github.com/pycqa/flake8
-    rev: '7.3.0'
-    hooks:
-      - id: flake8
+      - id: ruff-check
+        args:
+          - --fix
+      - id: ruff-format
+        args:
+          - --quiet

@@ -1,6 +1,22 @@
 name: test
 on: [push, pull_request]
 jobs:
+  typecheck:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v7
+        with:
+          python-version: "3.12"
+
+      - name: Run mypy
+        run: uvx mypy dj_database_url
+
+      - name: Run pyright
+        run: uvx pyright dj_database_url
+
   test:
     runs-on: ubuntu-latest
     strategy:
@@ -20,38 +36,24 @@ jobs:
           - python-version: "3.11"
             django-version: "6.0"
 
-
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v5
+      - name: Install uv and set the Python version
+        uses: astral-sh/setup-uv@v7
         with:
           python-version: ${{ matrix.python-version }}
-          cache: 'pip'
+          activate-environment: 'true'
 
       - name: Install dependencies
         run: |
-          pip install -r requirements.txt
-          pip install "Django~=${{ matrix.django-version }}.0" .
-
-      - name: Run type checking
-        run: |
-          python -m mypy dj_database_url
-          python -m pyright dj_database_url
+          uv pip install "Django~=${{ matrix.django-version }}.0"
 
       - name: Run Tests
         run: |
           echo "$(python --version) / Django $(django-admin --version)"
-          coverage run --source=dj_database_url --branch -m unittest discover -v
-          coverage report
-          coverage xml
+          uvx coverage run --source=dj_database_url --branch -m unittest discover -v
+          uvx coverage report
+          uvx coverage xml
 
       - uses: codecov/codecov-action@v4
-
-      - name: Check types installation
-        run: |
-          pip install .
-          cd tests
-          python -m mypy .
-          python -m pyright .

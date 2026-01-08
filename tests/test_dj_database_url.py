@@ -673,9 +673,54 @@ class DatabaseTestSuite(unittest.TestCase):
         os.environ,
         {"DATABASE_URL": "postgres://user:password@instance.amazonaws.com:5431/d8r8?"},
     )
-    def test_ssl_require(self) -> None:
+    def test_ssl_require_postgres(self) -> None:
         url = dj_database_url.config(ssl_require=True)
         assert url["OPTIONS"] == {'sslmode': 'require'}
+
+    @mock.patch.dict(
+        os.environ,
+        {"DATABASE_URL": "mysql://user:password@instance.amazonaws.com:3306/dbname"},
+    )
+    def test_ssl_require_mysql(self) -> None:
+        url = dj_database_url.config(ssl_require=True)
+        assert url["OPTIONS"] == {"ssl_mode": "REQUIRED"}
+
+    @mock.patch.dict(
+        os.environ,
+        {"DATABASE_URL": "mssqlms://user:password@instance.amazonaws.com:1234/dbname"},
+    )
+    def test_ssl_require_mssql(self) -> None:
+        url = dj_database_url.config(ssl_require=True)
+        assert url["OPTIONS"] == {"extra_params": "Encrypt=yes"}
+
+    @mock.patch.dict(
+        os.environ,
+        {
+            "DATABASE_URL": (
+                "mssql://user:password@instance.amazonaws.com:1234/dbname"
+                "?extra_params=TrustServerCertificate=yes"
+            )
+        },
+    )
+    def test_ssl_require_mssql_existing_extra_params(self) -> None:
+        url = dj_database_url.config(ssl_require=True)
+        assert url["OPTIONS"] == {
+            "extra_params": "TrustServerCertificate=yes;Encrypt=yes"
+        }
+
+    @mock.patch.dict(
+        os.environ,
+        {
+            "DATABASE_URL": (
+                "mssql://user:password@instance.amazonaws.com:1234/dbname"
+                "?extra_params=Encrypt=yes"
+            )
+        },
+    )
+    def test_ssl_require_mssql_already_encrypted(self) -> None:
+        url = dj_database_url.config(ssl_require=True)
+        # Should NOT append Encrypt=yes again
+        assert url["OPTIONS"] == {"extra_params": "Encrypt=yes"}
 
     def test_options_int_values(self) -> None:
         """Ensure that options with integer values are parsed correctly."""

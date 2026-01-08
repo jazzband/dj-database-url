@@ -73,6 +73,7 @@ dev = [
     "coverage>=7.13.0",
     "mypy>=1.19.1",
     "pyright>=1.1.407",
+    "pytest>=9.0.2",
     "ruff>=0.14.10",
     "setuptools>=80.9.0",
     "twine>=6.2.0",

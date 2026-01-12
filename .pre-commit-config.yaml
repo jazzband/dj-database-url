@@ -6,7 +6,7 @@ repos:
       - id: trailing-whitespace
 
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: 5ba58aca0bd5bc7c0e1c0fc45af2e88d6a2bde83  # frozen: v0.14.10
+    rev: 6ce4b4fc349b8881cbce40207dac3bf78824a88e  # frozen: v0.14.11
     hooks:
       - id: ruff-check
         args:
@@ -16,6 +16,6 @@ repos:
           - --quiet
 
   - repo: https://github.com/crate-ci/typos
-    rev: 2d0ce569feab1f8752f1dde43cc2f2aa53236e06  # frozen: v1.40.0
+    rev: 90356c2064dddca5f04a5ee3deaecb1784ba692d  # frozen: v1
     hooks:
       - id: typos

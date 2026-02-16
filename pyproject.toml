@@ -35,11 +35,9 @@ classifiers = [
 
 [project.urls]
 Homepage = "https://jazzband.co/projects/dj-database-url"
-Documentation = "https://github.com/jazzband/dj-database-url/blob/master/README.rst"
 Changelog = "https://github.com/jazzband/dj-database-url/blob/master/CHANGELOG.md"
 Funding = "https://psfmember.org/civicrm/contribute/transact/?reset=1&id=34"
-Source = "https://github.com/jazzband/dj-database-url"
-"Issue Tracker" = "https://github.com/jazzband/dj-database-url/issues"
+Bug = "https://github.com/jazzband/dj-database-url/issues"
 
 [build-system]
 requires = ["uv_build>=0.9.17,<0.10.0"]

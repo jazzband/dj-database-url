@@ -46,7 +46,7 @@ build-backend = "uv_build"
 [tool.uv.build-backend]
 module-name = "dj_database_url"
 module-root = ""
-source-include = ["dj_database_url/py.typed", "tests"]
+source-include = ["dj_database_url/py.typed", "tests/**"]
 
 [tool.ruff]
 line-length = 88

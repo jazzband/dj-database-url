@@ -12,8 +12,7 @@ jobs:
           python-version: "3.12"
 
       - name: Run ruff
-        run: uvx ruff check
-
+        run: uvx ruff@0.16.0 check
 
   typecheck:
     runs-on: ubuntu-latest

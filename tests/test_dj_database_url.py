@@ -635,7 +635,7 @@ class DatabaseTestSuite(unittest.TestCase):
                 url = dj_database_url.config()
             assert url == {}, url
         assert cm.output == [
-            'WARNING:root:No DATABASE_URL environment variable set, and so no databases setup'
+            'WARNING:dj_database_url:No DATABASE_URL environment variable set, and so no databases setup'
         ], cm.output
 
     def test_credentials_unquoted__raise_value_error(self) -> None:

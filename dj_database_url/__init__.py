@@ -7,6 +7,8 @@ from typing import Any, TypedDict
 DEFAULT_ENV = "DATABASE_URL"
 ENGINE_SCHEMES: dict[str, "Engine"] = {}
 
+logger = logging.getLogger(__name__)
+
 
 # From https://docs.djangoproject.com/en/stable/ref/settings/#databases
 class DBConfig(TypedDict, total=False):
@@ -138,9 +140,7 @@ def config(
     s = os.environ.get(env, default)
 
     if s is None:
-        logging.warning(
-            "No %s environment variable set, and so no databases setup", env
-        )
+        logger.warning("No %s environment variable set, and so no databases setup", env)
 
     if s:
         return parse(

@@ -83,6 +83,25 @@ class DatabaseTestSuite(unittest.TestCase):
         assert url["OPTIONS"]["options"] == "-c search_path=otherschema"
         assert "currentSchema" not in url["OPTIONS"]
 
+    def test_postgres_search_path_escapes_spaces(self) -> None:
+        # libpq splits the `options` string on unescaped spaces, so a schema
+        # name containing one must not be emitted as further arguments.
+        url = dj_database_url.parse(
+            "postgres://u:p@host:5431/db?currentSchema=my%20schema"
+        )
+        assert url["OPTIONS"]["options"] == "-c search_path=my\\ schema"
+
+    def test_postgres_search_path_escapes_backslashes(self) -> None:
+        url = dj_database_url.parse(
+            "postgres://u:p@host:5431/db?currentSchema=my%5Cschema"
+        )
+        assert url["OPTIONS"]["options"] == "-c search_path=my\\\\schema"
+
+    def test_postgres_search_path_accepts_non_string_values(self) -> None:
+        # digit-only query values are coerced to int before this hook runs
+        url = dj_database_url.parse("postgres://u:p@host:5431/db?currentSchema=123")
+        assert url["OPTIONS"]["options"] == "-c search_path=123"
+
     def test_postgres_parsing_with_special_characters(self) -> None:
         url = dj_database_url.parse(
             "postgres://%23user:%23password@ec2-107-21-253-135.compute-1.amazonaws.com:5431/%23database"

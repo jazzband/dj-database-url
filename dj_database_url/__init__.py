@@ -53,6 +53,17 @@ class UnknownSchemeError(ValueError):
         )
 
 
+def _escape_libpq_option_value(value: str) -> str:
+    """Escape a value for the libpq ``options`` connection parameter.
+
+    libpq treats unescaped spaces in ``options`` as separators between
+    command-line arguments, so a value containing a space would otherwise be
+    read as further arguments rather than as part of this one. A backslash
+    escapes the next character, and a doubled backslash is a literal one.
+    """
+    return value.replace("\\", "\\\\").replace(" ", "\\ ")
+
+
 def default_postprocess(parsed_config: DBConfig) -> None:
     pass
 
@@ -123,7 +134,8 @@ def apply_current_schema(parsed_config: DBConfig) -> None:
     options = parsed_config.get("OPTIONS", {})
     schema = options.pop("currentSchema", None)
     if schema:
-        options["options"] = f"-c search_path={schema}"
+        escaped = _escape_libpq_option_value(str(schema))
+        options["options"] = f"-c search_path={escaped}"
 
 
 def config(

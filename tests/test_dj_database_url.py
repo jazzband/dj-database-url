@@ -4,7 +4,7 @@ import os
 import re
 import unittest
 from unittest import mock
-from urllib.parse import uses_netloc
+from urllib.parse import quote, uses_netloc
 
 import dj_database_url
 
@@ -101,6 +101,77 @@ class DatabaseTestSuite(unittest.TestCase):
         # digit-only query values are coerced to int before this hook runs
         url = dj_database_url.parse("postgres://u:p@host:5431/db?currentSchema=123")
         assert url["OPTIONS"]["options"] == "-c search_path=123"
+
+    def test_postgres_search_path_escapes_every_libpq_separator(self) -> None:
+        # `pg_split_opts` terminates an argument on isspace(), not on the space
+        # character alone, so every one of these must be escaped or it splits
+        # the options string and the rest is read as further arguments.
+        for encoded, raw in (
+            ("%20", " "),
+            ("%09", "\t"),
+            ("%0A", "\n"),
+            ("%0B", "\v"),
+            ("%0C", "\f"),
+            ("%0D", "\r"),
+        ):
+            with self.subTest(separator=repr(raw)):
+                url = dj_database_url.parse(
+                    f"postgres://u:p@host:5431/db?currentSchema=a{encoded}b"
+                )
+                assert url["OPTIONS"]["options"] == f"-c search_path=a\\{raw}b"
+
+    def test_postgres_search_path_survives_the_libpq_splitter(self) -> None:
+        # Round-trip against the rule `pg_split_opts` implements: whatever the
+        # schema name contains, the escaped string must come back out as
+        # exactly two arguments with the name intact.
+        separators = " \t\n\v\f\r"
+
+        def split_opts(optstr: str) -> list[str]:
+            # Port of `pg_split_opts`: arguments are separated by isspace(),
+            # which in the C locale is exactly `separators`, and a backslash
+            # escapes the character that follows it.
+            argv, index, length = [], 0, len(optstr)
+            while index < length:
+                while index < length and optstr[index] in separators:
+                    index += 1
+                if index >= length:
+                    break
+                current, escaped = [], False
+                while index < length:
+                    char = optstr[index]
+                    if char in separators and not escaped:
+                        break
+                    if not escaped and char == "\\":
+                        escaped = True
+                    else:
+                        escaped = False
+                        current.append(char)
+                    index += 1
+                argv.append("".join(current))
+            return argv
+
+        # the port reproduces pg_split_opts on inputs with known results
+        assert split_opts("") == []
+        assert split_opts("  -c  foo  ") == ["-c", "foo"]
+        assert split_opts("a\\ b") == ["a b"]
+
+        base = "postgres://u:p@host:5431/db?currentSchema="
+        for schema in (
+            "public",
+            "a b",
+            "a\tb",
+            "a\nb",
+            "a\vb",
+            "a\fb",
+            "a\rb",
+            "a\\b",
+            "a\\\tb",
+            "public,other",
+        ):
+            with self.subTest(schema=repr(schema)):
+                url = base + quote(schema, safe="")
+                options = dj_database_url.parse(url)["OPTIONS"]["options"]
+                assert split_opts(options) == ["-c", f"search_path={schema}"]
 
     def test_postgres_parsing_with_special_characters(self) -> None:
         url = dj_database_url.parse(

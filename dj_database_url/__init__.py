@@ -53,15 +53,27 @@ class UnknownSchemeError(ValueError):
         )
 
 
+#: Characters that terminate an argument in the libpq ``options`` string.
+#: PostgreSQL's ``pg_split_opts`` splits on ``isspace()``, which in the C
+#: locale is these six characters, so escaping the space alone is not enough.
+#: Non-ASCII whitespace needs no handling: ``isspace()`` is applied per byte,
+#: and a character such as U+00A0 encodes to 0xC2 0xA0, neither of which it
+#: matches.
+_LIBPQ_OPTION_SEPARATORS = " \t\n\v\f\r"
+
+
 def _escape_libpq_option_value(value: str) -> str:
     """Escape a value for the libpq ``options`` connection parameter.
 
-    libpq treats unescaped spaces in ``options`` as separators between
-    command-line arguments, so a value containing a space would otherwise be
-    read as further arguments rather than as part of this one. A backslash
+    libpq treats unescaped whitespace in ``options`` as separating
+    command-line arguments, so a value containing whitespace would otherwise
+    be read as further arguments rather than as part of this one. A backslash
     escapes the next character, and a doubled backslash is a literal one.
     """
-    return value.replace("\\", "\\\\").replace(" ", "\\ ")
+    value = value.replace("\\", "\\\\")
+    for separator in _LIBPQ_OPTION_SEPARATORS:
+        value = value.replace(separator, "\\" + separator)
+    return value
 
 
 def default_postprocess(parsed_config: DBConfig) -> None:

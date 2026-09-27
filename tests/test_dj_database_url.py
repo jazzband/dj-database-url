@@ -201,6 +201,45 @@ class DatabaseTestSuite(unittest.TestCase):
         assert url["OPTIONS"]["service"] == "my_service"
         assert url["OPTIONS"]["passfile"] == ".my_pgpass"
 
+    def test_options_string_overrides_keep_zero_padded_values(self) -> None:
+        url = dj_database_url.parse(
+            "postgres://u:p@h:5432/db?passfile=0001&application_name=007"
+        )
+
+        assert url["OPTIONS"]["passfile"] == "0001"
+        assert url["OPTIONS"]["application_name"] == "007"
+
+    def test_options_string_overrides_are_case_insensitive(self) -> None:
+        url = dj_database_url.parse("postgres://u:p@h:5432/db?PASSFILE=0001")
+
+        assert url["OPTIONS"]["PASSFILE"] == "0001"
+
+    def test_options_int_fallback_requires_round_trip(self) -> None:
+        # Unlisted options keep the autodetect fallback, but only when the
+        # int conversion preserves the value's representation.
+        url = dj_database_url.parse(
+            "postgres://u:p@h:5432/db?connect_timeout=3&statement_timeout=03"
+        )
+
+        assert url["OPTIONS"]["connect_timeout"] == 3
+        assert url["OPTIONS"]["statement_timeout"] == "03"
+
+    def test_options_non_ascii_digits_stay_strings(self) -> None:
+        # "٣٣" (Arabic-Indic digits) passes isdigit() but must not become 33.
+        url = dj_database_url.parse(
+            "postgres://u:p@h:5432/db?connect_timeout=%D9%A3%D9%A3"
+        )
+
+        assert url["OPTIONS"]["connect_timeout"] == "٣٣"
+
+    def test_options_bool_values_unchanged(self) -> None:
+        url = dj_database_url.parse(
+            "postgres://u:p@h:5432/db?server_side_binding=true&keepalives=false"
+        )
+
+        assert url["OPTIONS"]["server_side_binding"] is True
+        assert url["OPTIONS"]["keepalives"] is False
+
     def test_postgis_parsing(self) -> None:
         url = dj_database_url.parse(
             "postgis://uf07k1i6d8ia0v:wegauwhgeuioweg@ec2-107-21-253-135.compute-1.amazonaws.com:5431/d8r82722r2kuvn"

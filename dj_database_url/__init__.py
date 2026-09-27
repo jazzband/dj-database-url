@@ -62,6 +62,46 @@ class UnknownSchemeError(ValueError):
 _LIBPQ_OPTION_SEPARATORS = " \t\n\v\f\r"
 
 
+#: libpq/psycopg connection options whose values are always strings, even
+#: when the value looks numeric or boolean. Without this, shape-based
+#: autodetection in ``_parse_value`` would silently change the value — e.g.
+#: ``passfile=0001`` would reach the driver as the integer ``1``.
+#: New driver options not listed here keep the autodetect fallback, so they
+#: work without requiring a new release of this package.
+_STRING_OPTIONS = frozenset(
+    {
+        "application_name",
+        "client_encoding",
+        "dbname",
+        "fallback_application_name",
+        "host",
+        "hostaddr",
+        "options",
+        "passfile",
+        "password",
+        "service",
+        "sslcert",
+        "sslcrl",
+        "sslkey",
+        "sslmode",
+        "sslrootcert",
+        "target_session_attrs",
+        "user",
+    }
+)
+
+
+def _is_plain_int(value: str) -> bool:
+    """True only for canonical ASCII decimal integers.
+
+    The conversion is round-trip safe (``str(int(value)) == value``), so
+    zero-padded strings such as ``"0001"`` are rejected. ``isascii()`` also
+    rejects non-ASCII digits such as ``"٣"`` that ``isdigit()`` accepts but
+    ``int()`` would transliterate.
+    """
+    return value.isascii() and value.isdigit() and str(int(value)) == value
+
+
 def _escape_libpq_option_value(value: str) -> str:
     """Escape a value for the libpq ``options`` connection parameter.
 
@@ -213,7 +253,7 @@ def parse(
             raise UnknownSchemeError(split_result.scheme)
         path = split_result.path[1:]
         query = urlparse.parse_qs(split_result.query)
-        options = {k: _parse_option_values(v) for k, v in query.items()}
+        options = {k: _parse_option_values(k, v) for k, v in query.items()}
         parsed_config: DBConfig = {
             "ENGINE": engine_obj.backend,
             "USER": urlparse.unquote(split_result.username or ""),
@@ -241,13 +281,15 @@ def parse(
     return parsed_config
 
 
-def _parse_option_values(values: list[str]) -> OptionType | list[OptionType]:
-    parsed_values = [_parse_value(v) for v in values]
+def _parse_option_values(name: str, values: list[str]) -> OptionType | list[OptionType]:
+    parsed_values = [_parse_value(name, v) for v in values]
     return parsed_values[0] if len(parsed_values) == 1 else parsed_values
 
 
-def _parse_value(value: str) -> OptionType:
-    if value.isdigit():
+def _parse_value(name: str, value: str) -> OptionType:
+    if name.lower() in _STRING_OPTIONS:
+        return value
+    if _is_plain_int(value):
         return int(value)
     if value.lower() in ("true", "false"):
         return value.lower() == "true"

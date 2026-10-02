@@ -95,7 +95,7 @@ class UnknownSchemeError(ValueError):
 _LIBPQ_OPTION_SEPARATORS = " \t\n\v\f\r"
 
 
-#: libpq/psycopg connection options whose values are always strings, even
+#: Connection and postprocessing options whose values are always strings, even
 #: when the value looks numeric or boolean. Without this, shape-based
 #: autodetection in ``_parse_value`` would silently change the value — e.g.
 #: ``passfile=0001`` would reach the driver as the integer ``1``.
@@ -105,6 +105,7 @@ _STRING_OPTIONS = frozenset(
     {
         "application_name",
         "client_encoding",
+        "currentschema",
         "dbname",
         "fallback_application_name",
         "host",

@@ -97,10 +97,27 @@ class DatabaseTestSuite(unittest.TestCase):
         )
         assert url["OPTIONS"]["options"] == "-c search_path=my\\\\schema"
 
-    def test_postgres_search_path_accepts_non_string_values(self) -> None:
-        # digit-only query values are coerced to int before this hook runs
+    def test_postgres_search_path_accepts_numeric_schema_names(self) -> None:
         url = dj_database_url.parse("postgres://u:p@host:5431/db?currentSchema=123")
         assert url["OPTIONS"]["options"] == "-c search_path=123"
+
+    def test_search_path_preserves_boolean_and_zero_schema_names(self) -> None:
+        for scheme in (
+            "postgres",
+            "postgresql",
+            "pgsql",
+            "postgis",
+            "redshift",
+            "timescale",
+            "timescalegis",
+        ):
+            for schema in ("false", "true", "0"):
+                with self.subTest(scheme=scheme, schema=schema):
+                    url = dj_database_url.parse(
+                        f"{scheme}://u:p@host:5431/db?currentSchema={schema}"
+                    )
+                    assert url["OPTIONS"]["options"] == f"-c search_path={schema}"
+                    assert "currentSchema" not in url["OPTIONS"]
 
     def test_postgres_search_path_escapes_every_libpq_separator(self) -> None:
         # `pg_split_opts` terminates an argument on isspace(), not on the space

@@ -106,6 +106,29 @@ Usage
           )
       }
 
+By default, ``config()`` reads ``DATABASE_URL``. Use the ``env`` argument to
+select a different environment variable, for example when configuring multiple
+databases:
+
+.. code-block:: python
+
+    import dj_database_url
+
+    DATABASES = {
+        'default': dj_database_url.config(),
+        'analytics': dj_database_url.config(
+            env='ANALYTICS_DATABASE_URL',
+            default='sqlite:///analytics.sqlite3',
+        ),
+    }
+
+Here, the default database uses ``DATABASE_URL`` and the analytics database uses
+``ANALYTICS_DATABASE_URL``. The optional ``default`` URL applies to the selected
+environment variable: if ``ANALYTICS_DATABASE_URL`` is not set, the analytics
+database uses ``analytics.sqlite3``.
+If the selected variable is set to an empty string, ``config()`` returns an empty
+dictionary instead of using the default URL.
+
 ``conn_max_age`` sets the |CONN_MAX_AGE setting|__, which tells Django to
 persist database connections between requests, up to the given lifetime in
 seconds. If you do not provide a value, it will follow Django’s default of

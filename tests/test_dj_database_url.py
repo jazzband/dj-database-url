@@ -2,6 +2,7 @@
 
 import os
 import re
+import sys
 import unittest
 from unittest import mock
 from urllib.parse import quote, uses_netloc
@@ -231,6 +232,23 @@ class DatabaseTestSuite(unittest.TestCase):
         )
 
         assert url["OPTIONS"]["connect_timeout"] == "٣٣"
+
+    @unittest.skipUnless(
+        hasattr(sys, "set_int_max_str_digits"), "requires an integer conversion limit"
+    )
+    def test_options_exceeding_integer_conversion_limit_stay_strings(self) -> None:
+        previous_limit = sys.get_int_max_str_digits()
+        try:
+            sys.set_int_max_str_digits(640)
+            for value in ("1" * 641, "0" * 641):
+                with self.subTest(value=value[:1]):
+                    url = dj_database_url.parse("postgres://u:p@h/db?custom=" + value)
+                    assert url["OPTIONS"]["custom"] == value
+
+            url = dj_database_url.parse("postgres://u:p@h/db?custom=" + "1" * 640)
+            assert url["OPTIONS"]["custom"] == int("1" * 640)
+        finally:
+            sys.set_int_max_str_digits(previous_limit)
 
     def test_options_bool_values_unchanged(self) -> None:
         url = dj_database_url.parse(

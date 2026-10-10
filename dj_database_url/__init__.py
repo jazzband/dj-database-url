@@ -132,7 +132,14 @@ def _is_plain_int(value: str) -> bool:
     rejects non-ASCII digits such as ``"٣"`` that ``isdigit()`` accepts but
     ``int()`` would transliterate.
     """
-    return value.isascii() and value.isdigit() and str(int(value)) == value
+    if not value.isascii() or not value.isdigit():
+        return False
+    try:
+        return str(int(value)) == value
+    except ValueError:
+        # Python can limit the number of decimal digits accepted by int().
+        # Such a query value still belongs to a valid URL; keep it as text.
+        return False
 
 
 def _escape_libpq_option_value(value: str) -> str:

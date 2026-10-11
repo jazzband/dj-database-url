@@ -12,7 +12,7 @@ jobs:
           python-version: "3.12"
 
       - name: Run ruff
-        run: uvx ruff@0.16.0 check
+        run: uv run ruff check
 
   typecheck:
     runs-on: ubuntu-latest
@@ -25,10 +25,10 @@ jobs:
           python-version: "3.12"
 
       - name: Run mypy
-        run: uvx mypy dj_database_url
+        run: uv run mypy dj_database_url
 
       - name: Run pyright
-        run: uvx pyright dj_database_url
+        run: uv run pyright dj_database_url
 
   test:
     runs-on: ubuntu-latest
@@ -66,8 +66,8 @@ jobs:
       - name: Run Tests
         run: |
           echo "$(python --version) / Django $(django-admin --version)"
-          uvx coverage run --source=dj_database_url --branch -m unittest discover -v
-          uvx coverage report
-          uvx coverage xml
+          uv run coverage run --source=dj_database_url --branch -m unittest discover -v
+          uv run coverage report
+          uv run coverage xml
 
       - uses: codecov/codecov-action@v4

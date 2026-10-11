@@ -65,6 +65,9 @@ warn_redundant_casts=true
 [tool.pyright]
 typeCheckingMode = "strict"
 
+[tool.coverage.report]
+fail_under = 100
+
 [dependency-groups]
 dev = [
     "coverage>=7.13.0",

@@ -66,8 +66,8 @@ jobs:
       - name: Run Tests
         run: |
           echo "$(python --version) / Django $(django-admin --version)"
-          uvx coverage run --source=dj_database_url --branch -m unittest discover -v
-          uvx coverage report
-          uvx coverage xml
+          uv run coverage run --source=dj_database_url --branch -m unittest discover -v
+          uv run coverage report
+          uv run coverage xml
 
       - uses: codecov/codecov-action@v4

@@ -74,4 +74,5 @@ dev = [
     "ruff>=0.14.10",
     "twine>=6.2.0",
     "wheel>=0.45.1",
+    "pre-commit",
 ]

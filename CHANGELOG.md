@@ -50,7 +50,7 @@ _Notes_: while this does not alter the underlying application code, we are bumpi
 
 ## v1.1.0 (2022-12-12)
 * Option for connection health checks parameter.
-* Update the supported python version (3.11).
+* Update supported version python 3.11.
 * Code changes, various improvements.
 * Add project links to `setup.py`.
 

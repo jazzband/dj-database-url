@@ -2,9 +2,10 @@
 
 import os
 import re
+import sys
 import unittest
 from unittest import mock
-from urllib.parse import uses_netloc
+from urllib.parse import quote, uses_netloc
 
 import dj_database_url
 
@@ -83,6 +84,96 @@ class DatabaseTestSuite(unittest.TestCase):
         assert url["OPTIONS"]["options"] == "-c search_path=otherschema"
         assert "currentSchema" not in url["OPTIONS"]
 
+    def test_postgres_search_path_escapes_spaces(self) -> None:
+        # libpq splits the `options` string on unescaped spaces, so a schema
+        # name containing one must not be emitted as further arguments.
+        url = dj_database_url.parse(
+            "postgres://u:p@host:5431/db?currentSchema=my%20schema"
+        )
+        assert url["OPTIONS"]["options"] == "-c search_path=my\\ schema"
+
+    def test_postgres_search_path_escapes_backslashes(self) -> None:
+        url = dj_database_url.parse(
+            "postgres://u:p@host:5431/db?currentSchema=my%5Cschema"
+        )
+        assert url["OPTIONS"]["options"] == "-c search_path=my\\\\schema"
+
+    def test_postgres_search_path_accepts_non_string_values(self) -> None:
+        # digit-only query values are coerced to int before this hook runs
+        url = dj_database_url.parse("postgres://u:p@host:5431/db?currentSchema=123")
+        assert url["OPTIONS"]["options"] == "-c search_path=123"
+
+    def test_postgres_search_path_escapes_every_libpq_separator(self) -> None:
+        # `pg_split_opts` terminates an argument on isspace(), not on the space
+        # character alone, so every one of these must be escaped or it splits
+        # the options string and the rest is read as further arguments.
+        for encoded, raw in (
+            ("%20", " "),
+            ("%09", "\t"),
+            ("%0A", "\n"),
+            ("%0B", "\v"),
+            ("%0C", "\f"),
+            ("%0D", "\r"),
+        ):
+            with self.subTest(separator=repr(raw)):
+                url = dj_database_url.parse(
+                    f"postgres://u:p@host:5431/db?currentSchema=a{encoded}b"
+                )
+                assert url["OPTIONS"]["options"] == f"-c search_path=a\\{raw}b"
+
+    def test_postgres_search_path_survives_the_libpq_splitter(self) -> None:
+        # Round-trip against the rule `pg_split_opts` implements: whatever the
+        # schema name contains, the escaped string must come back out as
+        # exactly two arguments with the name intact.
+        separators = " \t\n\v\f\r"
+
+        def split_opts(optstr: str) -> list[str]:
+            # Port of `pg_split_opts`: arguments are separated by isspace(),
+            # which in the C locale is exactly `separators`, and a backslash
+            # escapes the character that follows it.
+            argv, index, length = [], 0, len(optstr)
+            while index < length:
+                while index < length and optstr[index] in separators:
+                    index += 1
+                if index >= length:
+                    break
+                current, escaped = [], False
+                while index < length:
+                    char = optstr[index]
+                    if char in separators and not escaped:
+                        break
+                    if not escaped and char == "\\":
+                        escaped = True
+                    else:
+                        escaped = False
+                        current.append(char)
+                    index += 1
+                argv.append("".join(current))
+            return argv
+
+        # the port reproduces pg_split_opts on inputs with known results
+        assert split_opts("") == []
+        assert split_opts("  -c  foo  ") == ["-c", "foo"]
+        assert split_opts("a\\ b") == ["a b"]
+
+        base = "postgres://u:p@host:5431/db?currentSchema="
+        for schema in (
+            "public",
+            "a b",
+            "a\tb",
+            "a\nb",
+            "a\vb",
+            "a\fb",
+            "a\rb",
+            "a\\b",
+            "a\\\tb",
+            "public,other",
+        ):
+            with self.subTest(schema=repr(schema)):
+                url = base + quote(schema, safe="")
+                options = dj_database_url.parse(url)["OPTIONS"]["options"]
+                assert split_opts(options) == ["-c", f"search_path={schema}"]
+
     def test_postgres_parsing_with_special_characters(self) -> None:
         url = dj_database_url.parse(
             "postgres://%23user:%23password@ec2-107-21-253-135.compute-1.amazonaws.com:5431/%23database"
@@ -110,6 +201,62 @@ class DatabaseTestSuite(unittest.TestCase):
         assert url["OPTIONS"]["timeout"] == 20
         assert url["OPTIONS"]["service"] == "my_service"
         assert url["OPTIONS"]["passfile"] == ".my_pgpass"
+
+    def test_options_string_overrides_keep_zero_padded_values(self) -> None:
+        url = dj_database_url.parse(
+            "postgres://u:p@h:5432/db?passfile=0001&application_name=007"
+        )
+
+        assert url["OPTIONS"]["passfile"] == "0001"
+        assert url["OPTIONS"]["application_name"] == "007"
+
+    def test_options_string_overrides_are_case_insensitive(self) -> None:
+        url = dj_database_url.parse("postgres://u:p@h:5432/db?PASSFILE=0001")
+
+        assert url["OPTIONS"]["PASSFILE"] == "0001"
+
+    def test_options_int_fallback_requires_round_trip(self) -> None:
+        # Unlisted options keep the autodetect fallback, but only when the
+        # int conversion preserves the value's representation.
+        url = dj_database_url.parse(
+            "postgres://u:p@h:5432/db?connect_timeout=3&statement_timeout=03"
+        )
+
+        assert url["OPTIONS"]["connect_timeout"] == 3
+        assert url["OPTIONS"]["statement_timeout"] == "03"
+
+    def test_options_non_ascii_digits_stay_strings(self) -> None:
+        # "٣٣" (Arabic-Indic digits) passes isdigit() but must not become 33.
+        url = dj_database_url.parse(
+            "postgres://u:p@h:5432/db?connect_timeout=%D9%A3%D9%A3"
+        )
+
+        assert url["OPTIONS"]["connect_timeout"] == "٣٣"
+
+    @unittest.skipUnless(
+        hasattr(sys, "set_int_max_str_digits"), "requires an integer conversion limit"
+    )
+    def test_options_exceeding_integer_conversion_limit_stay_strings(self) -> None:
+        previous_limit = sys.get_int_max_str_digits()
+        try:
+            sys.set_int_max_str_digits(640)
+            for value in ("1" * 641, "0" * 641):
+                with self.subTest(value=value[:1]):
+                    url = dj_database_url.parse("postgres://u:p@h/db?custom=" + value)
+                    assert url["OPTIONS"]["custom"] == value
+
+            url = dj_database_url.parse("postgres://u:p@h/db?custom=" + "1" * 640)
+            assert url["OPTIONS"]["custom"] == int("1" * 640)
+        finally:
+            sys.set_int_max_str_digits(previous_limit)
+
+    def test_options_bool_values_unchanged(self) -> None:
+        url = dj_database_url.parse(
+            "postgres://u:p@h:5432/db?server_side_binding=true&keepalives=false"
+        )
+
+        assert url["OPTIONS"]["server_side_binding"] is True
+        assert url["OPTIONS"]["keepalives"] is False
 
     def test_postgis_parsing(self) -> None:
         url = dj_database_url.parse(
@@ -635,7 +782,7 @@ class DatabaseTestSuite(unittest.TestCase):
                 url = dj_database_url.config()
             assert url == {}, url
         assert cm.output == [
-            'WARNING:root:No DATABASE_URL environment variable set, and so no databases setup'
+            'WARNING:dj_database_url:No DATABASE_URL environment variable set, and so no databases setup'
         ], cm.output
 
     def test_credentials_unquoted__raise_value_error(self) -> None:
@@ -673,16 +820,61 @@ class DatabaseTestSuite(unittest.TestCase):
         os.environ,
         {"DATABASE_URL": "postgres://user:password@instance.amazonaws.com:5431/d8r8?"},
     )
-    def test_ssl_require(self) -> None:
+    def test_ssl_require_postgres(self) -> None:
         url = dj_database_url.config(ssl_require=True)
         assert url["OPTIONS"] == {'sslmode': 'require'}
+
+    @mock.patch.dict(
+        os.environ,
+        {"DATABASE_URL": "mysql://user:password@instance.amazonaws.com:3306/dbname"},
+    )
+    def test_ssl_require_mysql(self) -> None:
+        url = dj_database_url.config(ssl_require=True)
+        assert url["OPTIONS"] == {"ssl_mode": "REQUIRED"}
+
+    @mock.patch.dict(
+        os.environ,
+        {"DATABASE_URL": "mssqlms://user:password@instance.amazonaws.com:1234/dbname"},
+    )
+    def test_ssl_require_mssql(self) -> None:
+        url = dj_database_url.config(ssl_require=True)
+        assert url["OPTIONS"] == {"extra_params": "Encrypt=yes"}
+
+    @mock.patch.dict(
+        os.environ,
+        {
+            "DATABASE_URL": (
+                "mssql://user:password@instance.amazonaws.com:1234/dbname"
+                "?extra_params=TrustServerCertificate=yes"
+            )
+        },
+    )
+    def test_ssl_require_mssql_existing_extra_params(self) -> None:
+        url = dj_database_url.config(ssl_require=True)
+        assert url["OPTIONS"] == {
+            "extra_params": "TrustServerCertificate=yes;Encrypt=yes"
+        }
+
+    @mock.patch.dict(
+        os.environ,
+        {
+            "DATABASE_URL": (
+                "mssql://user:password@instance.amazonaws.com:1234/dbname"
+                "?extra_params=Encrypt=yes"
+            )
+        },
+    )
+    def test_ssl_require_mssql_already_encrypted(self) -> None:
+        url = dj_database_url.config(ssl_require=True)
+        # Should NOT append Encrypt=yes again
+        assert url["OPTIONS"] == {"extra_params": "Encrypt=yes"}
 
     def test_options_int_values(self) -> None:
         """Ensure that options with integer values are parsed correctly."""
         url = dj_database_url.parse(
-            "mysql://user:pw@127.0.0.1:15036/db?connect_timout=3"
+            "mysql://user:pw@127.0.0.1:15036/db?connect_timeout=3"
         )
-        assert url["OPTIONS"] == {'connect_timout': 3}
+        assert url["OPTIONS"] == {'connect_timeout': 3}
 
     @mock.patch.dict(
         os.environ,

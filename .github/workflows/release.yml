@@ -30,7 +30,7 @@ jobs:
         run: |
           uv version ${{ env.VERSION }}
           uv build
-          uvx twine check dist/*
+          uv run twine check dist/*
 
       - name: Upload packages to Jazzband
         uses: pypa/gh-action-pypi-publish@release/v1

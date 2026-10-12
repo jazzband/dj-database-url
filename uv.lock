@@ -296,6 +296,11 @@ wheels = [
     { url = "https://files.pythonhosted.org/packages/8d/4c/1968f32fb9a2604645827e11ff84a31e59d532e01995f904723b4f5328b3/coverage-7.13.0-py3-none-any.whl", hash = "sha256:850d2998f380b1e266459ca5b47bc9e7daf9af1d070f66317972f382d46f1904", size = 210068, upload-time = "2025-12-08T13:14:36.236Z" },
 ]
 
+[package.optional-dependencies]
+toml = [
+    { name = "tomli", marker = "python_full_version <= '3.11'" },
+]
+
 [[package]]
 name = "cryptography"
 version = "50.0.0"
@@ -364,7 +369,7 @@ dependencies = [
 
 [package.dev-dependencies]
 dev = [
-    { name = "coverage" },
+    { name = "coverage", extra = ["toml"] },
     { name = "mypy" },
     { name = "pre-commit" },
     { name = "pyright" },
@@ -379,7 +384,7 @@ requires-dist = [{ name = "django", specifier = ">=4.2" }]
 
 [package.metadata.requires-dev]
 dev = [
-    { name = "coverage", specifier = ">=7.13.0" },
+    { name = "coverage", extras = ["toml"], specifier = ">=7.13.0" },
     { name = "mypy", specifier = ">=1.19.1" },
     { name = "pre-commit" },
     { name = "pyright", specifier = ">=1.1.407" },

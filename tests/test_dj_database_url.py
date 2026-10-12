@@ -869,6 +869,15 @@ class DatabaseTestSuite(unittest.TestCase):
         # Should NOT append Encrypt=yes again
         assert url["OPTIONS"] == {"extra_params": "Encrypt=yes"}
 
+    @mock.patch.dict(
+        os.environ,
+        {"DATABASE_URL": "sqlite://foo.db"},
+    )
+    def test_ssl_require_sqlite(self) -> None:
+        url = dj_database_url.config(ssl_require=True)
+        assert url['ENGINE'] == 'django.db.backends.sqlite3'
+        assert url['HOST'] == 'foo.db'
+
     def test_options_int_values(self) -> None:
         """Ensure that options with integer values are parsed correctly."""
         url = dj_database_url.parse(

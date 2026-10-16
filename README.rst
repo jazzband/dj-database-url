@@ -275,6 +275,44 @@ URL schema
 .. [5] Microsoft official `mssql-django <https://github.com/microsoft/mssql-django>`_ adapter.
 .. [6] Using the django-timescaledb Package which must be installed.
 
+Example database URLs
+---------------------
+
+``config()`` reads ``DATABASE_URL`` and uses the ``default`` URL only when
+that environment variable is not set. To use a particular backend as the
+default, pass a URL for that backend:
+
+.. code-block:: python
+
+    import dj_database_url
+
+    DATABASES = {
+        'default': dj_database_url.config(
+            default='postgres://user:password@localhost:5432/mydatabase',
+        ),
+    }
+
+Replace the ``default`` value with an example URL for the backend you use:
+
+* PostgreSQL: ``postgres://user:password@localhost:5432/mydatabase``
+* PostGIS: ``postgis://user:password@localhost:5432/mydatabase``
+* MSSQL (pyodbc): ``mssql://user:password@localhost:1433/mydatabase``
+* MSSQL (official): ``mssqlms://user:password@localhost:1433/mydatabase``
+* MySQL: ``mysql://user:password@localhost:3306/mydatabase``
+* MySQL (GIS): ``mysqlgis://user:password@localhost:3306/mydatabase``
+* SQLite: ``sqlite:////absolute/path/to/mydatabase.sqlite3``
+* SpatiaLite: ``spatialite:////absolute/path/to/mydatabase.sqlite3``
+* Oracle: ``oracle://user:password@localhost:1521/myservice``
+* Oracle (GIS): ``oraclegis://user:password@localhost:1521/myservice``
+* Redshift: ``redshift://user:password@localhost:5439/mydatabase``
+* CockroachDB: ``cockroach://user:password@localhost:26257/mydatabase``
+* Timescale: ``timescale://user:password@localhost:5432/mydatabase``
+* Timescale (GIS): ``timescalegis://user:password@localhost:5432/mydatabase``
+
+For SQLite, use four slashes before an absolute file path, as shown above.
+For connection options specific to a backend, see the URL schema notes and
+your Django backend's documentation.
+
 
 Contributing
 ------------

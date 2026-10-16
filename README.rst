@@ -148,7 +148,7 @@ __ https://docs.djangoproject.com/en/stable/ref/settings/#conn-health-checks
 
 Strings passed to `dj_database_url` must be valid URLs; in
 particular, special characters must be url-encoded. The following url will raise
-a `ValueError`:
+a `ParseError`:
 
 .. code-block:: plaintext
 
@@ -159,6 +159,10 @@ and should instead be passed as:
 .. code-block:: plaintext
 
     postgres://user:p%23ssword!@localhost/foobar
+
+All URL parsing and configuration exceptions (such as ``ParseError`` and
+``UnknownSchemeError``) inherit from ``DatabaseURLError``, which itself inherits
+from ``ValueError`` for backward compatibility.
 
 `TEST <https://docs.djangoproject.com/en/stable/ref/settings/#test>`_ settings can be configured using the ``test_options`` attribute::
 

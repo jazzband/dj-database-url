@@ -65,7 +65,11 @@ PostprocessCallable = Callable[[DBConfig], None]
 OptionType = int | str | bool
 
 
-class ParseError(ValueError):
+class DatabaseURLError(ValueError):
+    """Base exception for all database URL parsing errors."""
+
+
+class ParseError(DatabaseURLError):
     def __str__(self) -> str:
         return (
             "This string is not a valid url, possibly because some of its parts"
@@ -73,7 +77,7 @@ class ParseError(ValueError):
         )
 
 
-class UnknownSchemeError(ValueError):
+class UnknownSchemeError(DatabaseURLError):
     def __init__(self, scheme: str):
         self.scheme = scheme
 

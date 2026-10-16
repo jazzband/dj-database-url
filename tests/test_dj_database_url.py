@@ -807,6 +807,23 @@ class DatabaseTestSuite(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, re.escape(expected_message)):
             dj_database_url.parse("unknown-scheme://user:password@localhost/foobar")
 
+    def test_database_url_error_hierarchy(self) -> None:
+        assert issubclass(dj_database_url.DatabaseURLError, ValueError)
+        assert issubclass(dj_database_url.ParseError, dj_database_url.DatabaseURLError)
+        assert issubclass(dj_database_url.ParseError, ValueError)
+        assert issubclass(
+            dj_database_url.UnknownSchemeError, dj_database_url.DatabaseURLError
+        )
+        assert issubclass(dj_database_url.UnknownSchemeError, ValueError)
+
+        with self.assertRaises(dj_database_url.DatabaseURLError) as cm_parse:
+            dj_database_url.parse("postgres://user:passw#ord!@localhost/foobar")
+        assert isinstance(cm_parse.exception, dj_database_url.ParseError)
+
+        with self.assertRaises(dj_database_url.DatabaseURLError) as cm_scheme:
+            dj_database_url.parse("unknown-scheme://user:password@localhost/foobar")
+        assert isinstance(cm_scheme.exception, dj_database_url.UnknownSchemeError)
+
     def test_register_multiple_times__no_duplicates_in_uses_netloc(self) -> None:
         # make sure that when register() function is misused,
         # it won't pollute urllib.parse.uses_netloc list with duplicates.

@@ -1,26 +1,38 @@
 name: Release
 
 on:
-  release:
-    types: [published]
+  push:
+    tags:
+      # Order matters, the last rule that applies to a tag
+      # is the one that takes effect:
+      # https://docs.github.com/en/actions/writing-workflows/workflow-syntax-for-github-actions#example-including-and-excluding-branches-and-tags
+      - '*'
+      # There should be no dev tags created, but to be safe,
+      # let's not publish them.
+      - '!*.dev*'
+
+env:
+  PYPI_URL: https://pypi.org/p/dj-database-url
+
+permissions: {}
 
 jobs:
   build:
+    name: Build distribution
     if: github.repository == 'jazzband/dj-database-url'
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
 
     steps:
       - uses: actions/checkout@v6
         with:
-          fetch-depth: 0
+          persist-credentials: false
 
       - name: Set version from release/tag
-        id: version
         run: |
-          VERSION=${GITHUB_REF#refs/*/}
-          VERSION=${VERSION#v}
+          VERSION=${GITHUB_REF_NAME#v}
           echo "VERSION=$VERSION" >> $GITHUB_ENV
-          echo "version=$VERSION" >> $GITHUB_OUTPUT
 
       - uses: astral-sh/setup-uv@v7
         with:
@@ -30,11 +42,61 @@ jobs:
         run: |
           uv version ${{ env.VERSION }}
           uv build
-          uv run twine check dist/*
 
-      - name: Upload packages to Jazzband
-        uses: pypa/gh-action-pypi-publish@release/v1
+      - name: Store the distribution packages
+        uses: actions/upload-artifact@v7
         with:
-          user: jazzband
-          password: ${{ secrets.JAZZBAND_RELEASE_KEY }}
-          repository_url: https://jazzband.co/projects/dj-database-url/upload
+          name: python-package-distributions
+          path: dist/
+
+  publish-to-pypi:
+    name: Publish distribution to PyPI
+    needs: [build]
+    runs-on: ubuntu-latest
+    environment:
+      name: pypi
+      url: ${{ env.PYPI_URL }}
+    permissions:
+      id-token: write  # IMPORTANT: mandatory for trusted publishing
+
+    steps:
+      - name: Download all the dists
+        uses: actions/download-artifact@v8
+        with:
+          name: python-package-distributions
+          path: dist/
+
+      - name: Publish distribution to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+
+  github-release:
+    name: Upload the distribution to GitHub Release
+    needs: [publish-to-pypi]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write  # IMPORTANT: mandatory for making GitHub Releases
+
+    steps:
+      - name: Download all the dists
+        uses: actions/download-artifact@v8
+        with:
+          name: python-package-distributions
+          path: dist/
+
+      - name: Create GitHub Release
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: >-
+          gh release create
+          "${GITHUB_REF_NAME}"
+          --repo '${{ github.repository }}'
+          --draft
+          --generate-notes
+
+      - name: Upload artifact to GitHub Release
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: >-
+          gh release upload
+          "${GITHUB_REF_NAME}" dist/**
+          --repo '${{ github.repository }}'

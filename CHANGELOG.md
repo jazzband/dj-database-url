@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## Unreleased
+* Switched to trusted publisher release process with Django Commons.
+
 ## v3.1.0 (2026-01-03)
 * Add support for Django 6.0
 * Update CI structure.

@@ -32,7 +32,7 @@ jobs:
       - name: Set version from release/tag
         run: |
           VERSION=${GITHUB_REF_NAME#v}
-          echo "VERSION=$VERSION" >> $GITHUB_ENV
+          echo "VERSION=$VERSION" >> "$GITHUB_ENV"
 
       - uses: astral-sh/setup-uv@v7
         with:

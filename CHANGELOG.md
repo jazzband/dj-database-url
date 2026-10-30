@@ -1,8 +1,18 @@
 # CHANGELOG
 
-## Unreleased
-* Switched to trusted publisher release process with Django Commons.
-* Switch from Jazzband org to Django Commons.
+## v3.2.0 (Unreleased)
+* Migrate project from jazzband to django-commons
+* Bump supported django versions
+* Fix regression in packaging where tests were not being included.
+* Improved documentation
+* Reserve options beyond Python integer conversion limits #326
+* Implement ssl_require parameter mapping for various database backends (#288)
+* Keep string-typed options as strings (#324)
+
+## v3.1.1 (2026-02-16)
+* Use ruff for formatting and checking
+* Update project package links
+* Update pytest dependencies
 
 ## v3.1.0 (2026-01-03)
 * Add support for Django 6.0

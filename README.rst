@@ -331,4 +331,4 @@ Contributing code:
 * Before writing code be sure to check existing PR's and issues in the tracker.
 * Write code to the pylint spec.
 * Large or wide sweeping changes will take longer, and may face more scrutiny than smaller confined changes.
-* Code should be pass `black` and `flake8` validation.
+* Code should be pass `ruff` validation.

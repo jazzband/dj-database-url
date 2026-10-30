@@ -1,15 +1,11 @@
 DJ-Database-URL
 ~~~~~~~~~~~~~~~
 
-.. image:: https://jazzband.co/static/img/badge.png
-   :target: https://jazzband.co/
-   :alt: Jazzband
+.. image:: https://github.com/django-commons/dj-database-url/actions/workflows/test.yml/badge.svg
+   :target: https://github.com/django-commons/dj-database-url/actions/workflows/test.yml
 
-.. image:: https://github.com/jazzband/dj-database-url/actions/workflows/test.yml/badge.svg
-   :target: https://github.com/jazzband/dj-database-url/actions/workflows/test.yml
-
-.. image:: https://codecov.io/gh/jazzband/dj-database-url/branch/master/graph/badge.svg?token=7srBUpszOa
-   :target: https://codecov.io/gh/jazzband/dj-database-url
+.. image:: https://codecov.io/gh/django-commons/dj-database-url/branch/master/graph/badge.svg?token=7srBUpszOa
+   :target: https://codecov.io/gh/django-commons/dj-database-url
 
 This simple Django utility allows you to utilize the
 `12factor <http://www.12factor.net/backing-services>`_ inspired

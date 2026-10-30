@@ -3,7 +3,7 @@ name = "dj-database-url"
 version = "0.0.0"
 description = "Use Database URLs in your Django Application."
 authors = [
-    { name = "Jazzband community" }
+    { name = "Django Commons community" }
 ]
 readme = "README.rst"
 requires-python = ">=3.11"
@@ -32,10 +32,10 @@ classifiers = [
 ]
 
 [project.urls]
-Homepage = "https://jazzband.co/projects/dj-database-url"
-Changelog = "https://github.com/jazzband/dj-database-url/blob/master/CHANGELOG.md"
-Funding = "https://psfmember.org/civicrm/contribute/transact/?reset=1&id=34"
-Bug = "https://github.com/jazzband/dj-database-url/issues"
+Homepage = "https://github.com/django-commons/dj-database-url"
+Changelog = "https://github.com/django-commons/dj-database-url/blob/master/CHANGELOG.md"
+Funding = "https://opencollective.com/django-commons"
+Bug = "https://github.com/django-commons/dj-database-url/issues"
 
 [build-system]
 requires = ["uv_build>=0.9.17,<0.10.0"]
@@ -74,7 +74,6 @@ dev = [
     "pyright>=1.1.407",
     "pytest>=9.0.2",
     "ruff>=0.14.10",
-    "twine>=6.2.0",
     "wheel>=0.45.1",
     "pre-commit",
 ]
